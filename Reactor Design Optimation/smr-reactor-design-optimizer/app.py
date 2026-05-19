@@ -1,6 +1,13 @@
 import streamlit as st
 from model import RodDesign, estimate_costs_and_interval, REF
 
+def money_short(value):
+    if value >= 1e7:
+        return f"${value/1e6:.2f}M"
+    if value <= 1e4:
+        return f"${value/1e3:.1f}K"
+    return f"${value:,.0f}"
+
 def optimize_design(base_design, rod_min, rod_max, diam_min, diam_max):
 
     best_score = float("inf")
@@ -198,12 +205,12 @@ with right:
     with c1:
         st.metric("Core thermal power (MWt)", f"{results['core_power_MWt']:.1f}")
         st.metric("Estimated rod count", results["num_rods"])
-        st.metric("Estimated rod change interval", f"{results['rod_change_interval_years']:.2f} years")
+        st.metric("Estimated rod change interval", f"{results['rod_change_interval_years']:.2f} yrs")
 
     with c2:
-        st.metric("Estimated core procurement cost", f"${results['installation_cost']:,.0f}")
-        st.metric("Estimated operational cost / year", f"${results['operational_cost_per_year']:,.0f}")
-        st.metric("Estimated maintenance cost / year", f"${results['maintenance_cost_per_year']:,.0f}")
+        st.metric("Core procurement cost", money_short(results["installation_cost"]))
+        st.metric("Operational cost / year", money_short(results["operational_cost_per_year"]))
+        st.metric("Maintenance cost / year", money_short(results["maintenance_cost_per_year"]))
     
     with c3:
         st.metric(
