@@ -1,3 +1,40 @@
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment/secrets
+.env
+.env.*
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs/temp files
+*.log
+logs/
+tmp/
+temp/
+
+# Build/cache outputs
+build/
+dist/
+*.egg-info/
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Playwright/browser test artifacts
+test-results/
+playwright-report/
