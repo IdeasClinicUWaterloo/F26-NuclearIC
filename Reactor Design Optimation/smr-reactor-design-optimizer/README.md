@@ -52,5 +52,6 @@ The application links:
 
 ```bash
 pip install -r requirements.txt
-streamlit run app.py
+python -m streamlit run app.py 
 ```
+This will allow you to run the program without adding streamlit to PATH.
