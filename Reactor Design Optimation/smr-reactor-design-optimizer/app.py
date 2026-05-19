@@ -198,14 +198,14 @@ with right:
             core_power_MWt=core_power
         )
 
-    st.markdown("### Results")
+    st.markdown("### Results (Estimated)")
 
     c1, c2, c3 = st.columns(3)
 
     with c1:
         st.metric("Core thermal power (MWt)", f"{results['core_power_MWt']:.1f}")
-        st.metric("Estimated rod count", results["num_rods"])
-        st.metric("Estimated rod change interval", f"{results['rod_change_interval_years']:.2f} yrs")
+        st.metric("Rod count", results["num_rods"])
+        st.metric("Rod change interval", f"{results['rod_change_interval_years']:.2f} yrs")
 
     with c2:
         st.metric("Core procurement cost", money_short(results["installation_cost"]))
