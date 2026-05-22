@@ -296,3 +296,68 @@ with right:
             "Fuel procurement $/MWh",
             f"${results['normalized']['procurement_$per_MWh_e']:.2f}",
         )
+
+# Make a table of the different fuel components and how they affect cost
+st.markdown("### Fuel Type Comparison")
+
+#We need to run through the different fuel types, keeping all other parameter the same
+#We need to collect the results in a dataframe, then make a table for lifecycle $/MWh, procurement, and maintenance
+
+fuel_rows = []
+
+for fuel in ["UO2", "MOX", "TRISO"]:
+
+  
+
+    #Make the design first
+    compare_design = RodDesign(
+    length_m=length,
+    outer_diameter_m=outer_d,
+    pellet_diameter_m=pellet_d,
+    clad_thickness_m=clad_t,
+    num_rods=rods,
+    pellet_material=fuel,
+    cladding_material=clad,
+    guide_tube_material=guide,
+    spacer_material=spacer,
+    nozzle_material=nozzle,
+    smr_type=smr_type,
+)
+    
+    #Then get the results
+
+    compare_results = estimate_costs_and_interval(
+        compare_design,
+        scenario=scenario,
+        capacity_factor=capacity_factor,
+        power_mode=power_mode,
+        core_power_MWt=core_power,
+    )
+
+    fuel_rows.append(
+        {
+            "Fuel": fuel,
+            "Lifecycle $/MWh (thermal)": compare_results["normalized"]["lifecycle_$per_MWh_th"],
+            "Lifecycle $/MWh (electric)": compare_results["normalized"]["lifecycle_$per_MWh_e"],
+            "Fuel procurement $/MWh": compare_results["normalized"]["procurement_$per_MWh_e"],
+            "Rod change interval (yrs)": compare_results["rod_change_interval_years"],
+            "Core procurement cost": compare_results["installation_cost"],
+            "Operational cost / year": compare_results["operational_cost_per_year"],
+            "Maintenance cost / year": compare_results["maintenance_cost_per_year"],
+        }
+    )
+
+fuel_df = pd.DataFrame(fuel_rows)
+    
+st.dataframe(fuel_df.style.format({
+        "Lifecycle $/MWh (thermal)": "${:,.2f}",
+        "Lifecycle $/MWh (electric)": "${:,.2f}",
+        "Fuel procurement $/MWh": "${:,.2f}",
+        "Core procurement cost": "${:,.2f}",
+        "Operational cost / year": "${:,.2f}",
+        "Maintenance cost / year": "${:,.2f}",
+    }))
+
+
+# Make a graph of sensitivity analysis 
+
