@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 from model import RodDesign, estimate_costs_and_interval, REF
 
 
