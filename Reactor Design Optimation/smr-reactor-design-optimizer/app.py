@@ -3,12 +3,15 @@ import pandas as pd
 from model import RodDesign, estimate_costs_and_interval, REF
 
 
+# -------------------------
+# HELPER FUNCTIONS
+# -------------------------
+
 # Simple function to format large dollar values in a more readable way
 def money_short(value):
     if value >= 10_000_000:
         return f"${value / 1_000_000:.2f}M"
     return f"${value:,.0f}"
-
 
 def optimize_design(
     base_design,
@@ -70,11 +73,167 @@ def optimize_design(
     return best_design, best_results
 
 
+def build_fuel_comparison_df(
+    metrics,
+    length,
+    outer_d,
+    pellet_d,
+    clad_t,
+    rods,
+    clad,
+    guide,
+    spacer,
+    nozzle,
+    smr_type,
+    scenario,
+    capacity_factor,
+    power_mode,
+    core_power,
+):
+    fuel_rows = []
+
+    for fuel in ["UO2", "MOX", "TRISO"]:
+
+        compare_design = RodDesign(
+            length_m=length,
+            outer_diameter_m=outer_d,
+            pellet_diameter_m=pellet_d,
+            clad_thickness_m=clad_t,
+            num_rods=rods,
+            pellet_material=fuel,
+            cladding_material=clad,
+            guide_tube_material=guide,
+            spacer_material=spacer,
+            nozzle_material=nozzle,
+            smr_type=smr_type,
+        )
+
+        compare_results = estimate_costs_and_interval(
+            compare_design,
+            scenario=scenario,
+            capacity_factor=capacity_factor,
+            power_mode=power_mode,
+            core_power_MWt=core_power,
+        )
+
+        row = {"Fuel": fuel}
+
+        for metric, get_value in metrics:
+            row[metric] = get_value(compare_results)
+
+        fuel_rows.append(row)
+
+    return pd.DataFrame(fuel_rows)
+
+
+def show_fuel_comparison_table(fuel_df):
+    st.dataframe(
+        fuel_df.style.format(
+            {
+                "Rod change interval (yrs)": "{:.2f} yrs",
+                "Core procurement cost": "${:,.2f}",
+                "Operational cost / year": "${:,.2f}",
+                "Maintenance cost / year": "${:,.2f}",
+                "Lifecycle $/MWh (thermal)": "${:,.2f}",
+                "Lifecycle $/MWh (electric)": "${:,.2f}",
+                "Fuel procurement $/MWh": "${:,.2f}",
+            }
+        ),
+        hide_index=True,
+    )
+
+
+def build_optimization_comparison_df(
+    metrics,
+    design,
+    best_design,
+    scenario,
+    capacity_factor,
+    power_mode,
+    core_power,
+):
+    design_comparison_rows = []
+
+    results_before = estimate_costs_and_interval(
+        design,
+        scenario=scenario,
+        capacity_factor=capacity_factor,
+        power_mode=power_mode,
+        core_power_MWt=core_power,
+    )
+
+    results_after = estimate_costs_and_interval(
+        best_design,
+        scenario=scenario,
+        capacity_factor=capacity_factor,
+        power_mode=power_mode,
+        core_power_MWt=core_power,
+    )
+
+    for metric, get_value in metrics:
+
+        metric_unoptimized = get_value(results_before)
+        metric_optimized = get_value(results_after)
+
+        percent_change = (
+            (metric_optimized - metric_unoptimized) / metric_unoptimized * 100
+            if metric_unoptimized != 0
+            else 0
+        )
+
+        design_comparison_rows.append(
+            {
+                "Metric": metric,
+                "Unoptimized": metric_unoptimized,
+                "Optimized": metric_optimized,
+                "Change (%)": percent_change,
+            }
+        )
+
+    return pd.DataFrame(design_comparison_rows)
+
+
+def show_optimization_comparison_table(optimization_df):
+    st.dataframe(
+        optimization_df.style.format(
+            {
+                "Unoptimized": "{:,.2f}",
+                "Optimized": "{:,.2f}",
+                "Change (%)": "{:+.2f}%",
+            }
+        ),
+        hide_index=True,
+    )
+
+
+# -------------------------
+# METRICS USED IN TABLES
+# -------------------------
+
+metrics = [
+    ("Rod change interval (yrs)", lambda r: r["rod_change_interval_years"]),
+    ("Core procurement cost", lambda r: r["installation_cost"]),
+    ("Operational cost / year", lambda r: r["operational_cost_per_year"]),
+    ("Maintenance cost / year", lambda r: r["maintenance_cost_per_year"]),
+    ("Lifecycle $/MWh (thermal)", lambda r: r["normalized"]["lifecycle_$per_MWh_th"]),
+    ("Lifecycle $/MWh (electric)", lambda r: r["normalized"]["lifecycle_$per_MWh_e"]),
+    ("Fuel procurement $/MWh", lambda r: r["normalized"]["procurement_$per_MWh_e"]),
+]
+
+
+# -------------------------
+# PAGE SETUP
+# -------------------------
+
 st.set_page_config(page_title="SMR Reactor Cost Optimization", layout="wide")
 
 st.title("SMR Fuel Rod Optimizer")
 
-# Cost scenario dropdown
+
+# -------------------------
+# COST SCENARIO
+# -------------------------
+
 # Displays Low / Mean / High, but passes low / mean / high into model.py
 scenario = st.selectbox(
     "Cost Scenario",
@@ -83,7 +242,17 @@ scenario = st.selectbox(
     format_func=lambda x: x.title(),
 )
 
+
+# -------------------------
+# INPUT COLUMNS
+# -------------------------
+
 left, right = st.columns(2)
+
+
+# -------------------------
+# LEFT COLUMN: DESIGN INPUTS
+# -------------------------
 
 with left:
 
@@ -151,6 +320,10 @@ with left:
     )
 
 
+# -------------------------
+# CREATE BASE DESIGN
+# -------------------------
+
 design = RodDesign(
     length_m=length,
     outer_diameter_m=outer_d,
@@ -165,6 +338,10 @@ design = RodDesign(
     smr_type=smr_type,
 )
 
+
+# -------------------------
+# RIGHT COLUMN: OPERATION, OPTIMIZATION, RESULTS
+# -------------------------
 
 with right:
 
@@ -221,7 +398,7 @@ with right:
             st.stop()
 
     # -------------------------
-    # RESULTS
+    # RESULTS CALCULATION
     # -------------------------
 
     if run_optimizer:
@@ -254,6 +431,10 @@ with right:
             power_mode=power_mode,
             core_power_MWt=core_power,
         )
+
+    # -------------------------
+    # RESULTS DISPLAY
+    # -------------------------
 
     st.markdown("### Results (Estimated)")
 
@@ -297,67 +478,57 @@ with right:
             f"${results['normalized']['procurement_$per_MWh_e']:.2f}",
         )
 
-# Make a table of the different fuel components and how they affect cost
+
+# -------------------------
+# FUEL TYPE COMPARISON TABLE
+# -------------------------
+
 st.markdown("### Fuel Type Comparison")
 
-#We need to run through the different fuel types, keeping all other parameter the same
-#We need to collect the results in a dataframe, then make a table for lifecycle $/MWh, procurement, and maintenance
-
-fuel_rows = []
-
-for fuel in ["UO2", "MOX", "TRISO"]:
-
-  
-
-    #Make the design first
-    compare_design = RodDesign(
-    length_m=length,
-    outer_diameter_m=outer_d,
-    pellet_diameter_m=pellet_d,
-    clad_thickness_m=clad_t,
-    num_rods=rods,
-    pellet_material=fuel,
-    cladding_material=clad,
-    guide_tube_material=guide,
-    spacer_material=spacer,
-    nozzle_material=nozzle,
+fuel_df = build_fuel_comparison_df(
+    metrics=metrics,
+    length=length,
+    outer_d=outer_d,
+    pellet_d=pellet_d,
+    clad_t=clad_t,
+    rods=rods,
+    clad=clad,
+    guide=guide,
+    spacer=spacer,
+    nozzle=nozzle,
     smr_type=smr_type,
+    scenario=scenario,
+    capacity_factor=capacity_factor,
+    power_mode=power_mode,
+    core_power=core_power,
 )
-    
-    #Then get the results
 
-    compare_results = estimate_costs_and_interval(
-        compare_design,
+show_fuel_comparison_table(fuel_df)
+
+
+# -------------------------
+# OPTIMIZATION COMPARISON TABLE
+# -------------------------
+
+if run_optimizer:
+
+    st.markdown("### Optimization Comparison")
+
+    optimization_df = build_optimization_comparison_df(
+        metrics=metrics,
+        design=design,
+        best_design=best_design,
         scenario=scenario,
         capacity_factor=capacity_factor,
         power_mode=power_mode,
-        core_power_MWt=core_power,
+        core_power=core_power,
     )
 
-    fuel_rows.append(
-        {
-            "Fuel": fuel,
-            "Lifecycle $/MWh (thermal)": compare_results["normalized"]["lifecycle_$per_MWh_th"],
-            "Lifecycle $/MWh (electric)": compare_results["normalized"]["lifecycle_$per_MWh_e"],
-            "Fuel procurement $/MWh": compare_results["normalized"]["procurement_$per_MWh_e"],
-            "Rod change interval (yrs)": compare_results["rod_change_interval_years"],
-            "Core procurement cost": compare_results["installation_cost"],
-            "Operational cost / year": compare_results["operational_cost_per_year"],
-            "Maintenance cost / year": compare_results["maintenance_cost_per_year"],
-        }
-    )
-
-fuel_df = pd.DataFrame(fuel_rows)
-    
-st.dataframe(fuel_df.style.format({
-        "Lifecycle $/MWh (thermal)": "${:,.2f}",
-        "Lifecycle $/MWh (electric)": "${:,.2f}",
-        "Fuel procurement $/MWh": "${:,.2f}",
-        "Core procurement cost": "${:,.2f}",
-        "Operational cost / year": "${:,.2f}",
-        "Maintenance cost / year": "${:,.2f}",
-    }))
+    show_optimization_comparison_table(optimization_df)
 
 
-# Make a graph of sensitivity analysis 
+# -------------------------
+# SENSITIVITY ANALYSIS GRAPH
+# -------------------------
 
+# Make a graph of sensitivity analysis
