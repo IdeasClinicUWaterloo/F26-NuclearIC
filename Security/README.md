@@ -1,73 +1,81 @@
 # Security
 
-## Challenge Description
+## Overview
 
-Small Modular Reactors (SMRs) require robust security measures to protect facilities, prevent unauthorized access, and detect cyber threats. This subproblem focuses on security design for SMR facilities.
+Small Modular Reactors (SMRs) require robust security systems to protect facilities and prevent unauthorized access. In this challenge, you'll design a **Physical Protection System (PPS)** for a fictional SMR facility, drawing from real nuclear security principles used by the NRC and IAEA.
 
-Teams will work on security challenges that span two key areas: designing physical access control systems that balance operational efficiency with security, and analyzing network event logs to identify and classify cyber attacks. The goal is to understand how to implement security design principles while maintaining operational viability.
+Your goal is to balance security with operational efficiency. You'll need to think critically about who needs access where, under what conditions, and how to handle emergencies.
 
-## Potential Solutions
+## What You'll Do
 
-Teams may approach the challenge in several ways:
+### 1. Review the Facility
 
-### Physical Security - SMR Plant Security Policy Game
-- Design a digital floor map of an SMR facility with multiple security zones
-- Define access levels and control mechanisms (biometrics, access cards, passwords)
-- Create zone-based access restrictions tailored to different security requirements
-- Evaluate the tradeoffs between operational efficiency and security constraints
-- Implement both digital and physical models of the security design
-- Develop web-based visualization tools for zone planning and access management
+You'll receive:
+- A **facility map** showing security zones (reactor building, control room, maintenance areas, administrative offices, perimeter, etc.)
+- **Personnel role descriptions** (reactor operator, security officer, maintenance technician, contractor, visitor, emergency responder)
+- A brief introduction to **defense-in-depth** security and access control concepts
 
-### Cybersecurity - Network Attack Detection and Analysis
-- Analyze simulated network event logs from an SMR facility to identify attacks
-- Classify detected attacks by type and severity
-- Propose security rules and access control policies to mitigate vulnerabilities
-- Develop anomaly detection scripts based on identified attack patterns
-- Evaluate detection coverage and response time
-- Create visualizations of network anomalies and threat patterns
+### 2. Design Your Access Control Policy
 
-## Recommended Roadmap
+Using a digital interface, you'll:
+- Assign access levels for each personnel role to each security zone (e.g., "Permitted", "Restricted", "Denied")
+- Add conditions to your access rules, such as:
+  - Time-of-day restrictions (e.g., "only during business hours")
+  - Escort requirements (e.g., "contractors must have a security officer present")
+  - Zone dependencies (e.g., "you must have cleared Zone 2 before accessing Zone 3")
+- Define how your access rules change during an emergency/alert state (e.g., fast-path protocols for critical personnel, lockdowns for sensitive areas)
+- Justify your decisions based on security principles
 
-### Milestone 1: Understand Security Requirements and Baseline Design
+### 3. Answer Edge Case Scenarios
 
-Goal: Learn the fundamental security challenges in SMR facilities and establish baseline designs.
+During the challenge, you'll be presented with real-world scenarios that test your policy logic. Examples:
+- An access card is lost at 2am
+- An emergency is declared and an on-call operator is currently in an administrative area
+- A contractor's escort unexpectedly leaves a restricted area
 
-Suggested outcomes:
+You'll answer based on your own policy rule. There's no right answer, but your response must be consistent with what you designed.
 
-- Research physical security principles and cybersecurity basics for nuclear facilities
-- Understand access control models and network security concepts
-- Create an initial facility layout with basic access zones
-- Analyze a sample network event log to familiarize with attack signatures
-- Identify key security vulnerabilities in baseline designs
+### 4. Test Against Bad Actors
 
-Good demo: The team can explain the security requirements for a typical SMR facility and identify at least one major vulnerability.
+After submitting your policy, the system will automatically test it against different attacker patterns:
 
-### Milestone 2: Design and Validate Security Zones
+| Attacker | Strategy | What They Test |
+|----------|----------|-----------------|
+| **Impersonator** | Poses as a contractor with legitimate-looking credentials | Whether you restricted contractor access tightly enough and required escorts/verification |
+| **Insider** | A maintenance technician gone rogue, already with low-level access | Whether you applied least-privilege principles and blocked unauthorized zone escalation |
+| **Social Engineer** | Doesn't have credentials but exploits gaps, like piggy-backing during a shift change | Whether you addressed ambiguous zone boundaries and transition protocols |
+| **Emergency Exploiter** | Triggers a simulated emergency alert and attempts access during the chaos | Whether your emergency/alert state rules are clear or full of exploitable holes |
 
-Goal: Design effective security zones using a provided facility map and test the design against adversarial scenarios.
+### 5. Get Your Results
 
-Suggested outcomes:
+You'll receive a security audit report showing:
+- Which attackers succeeded and which were stopped
+- Where each attack failed or got through and why
 
-- Use the provided digital floor map of the SMR facility
-- Outline security zones with appropriate access levels and control mechanisms (biometrics, access cards, passwords)
-- Define access rules for different personnel roles and security clearances
-- Test the zone design against malicious actors (NPC simulations) attempting to infiltrate restricted areas
-- Iterate on zone layout to block attack paths while maintaining operational efficiency
-- Document security decisions and the vulnerabilities they address
+### 6. Revise and Resubmit
 
-Good demo: The team can demonstrate their zone design and explain how their security system prevents NPC actors from reaching critical areas, while still allowing authorized personnel efficient access to their work areas.
+Based on your results, you can revise your policy and resubmit for re-evaluation. Iterating security design is a critical part of real-world security design.
 
-### Milestone 3: Implement Cybersecurity Detection
+## How You'll Be Judged
 
-Goal: Build a system to detect and classify cyber attacks in network logs.
+Your submission will be evaluated on:
 
-Suggested outcomes:
+- **Policy Completeness**: Does your policy cover all personnel roles and zones? Are alert-state rules defined?
+- **Security Effectiveness**: How many bad actors did you stop? Where did the ones that got through exploit gaps?
+- **Scenario Responses**: Are your edge case answers consistent with your policy? Do they make sense operationally?
+- **Justified Reasoning**: Can you explain *why* you made each major decision?
+- **Feasibility**: Does your policy balance security with realistic facility operations?
 
-- Analyze provided network event logs to identify attack patterns
-- Classify attacks by type (e.g. unauthorized access, data exfiltration, DoS)
-- Develop detection rules or scripts to identify anomalies
-- Propose security policies to prevent identified attacks
-- Test detection accuracy and false positive rates
-- Document attack classifications and remediation strategies
+## Key Concepts
 
-Good demo: The team can run their detection system on a test dataset and identify all planted attacks with minimal false alarms.
+Some concepts you can consider when design zones and policies:
+
+**Defense-in-Depth:** Multiple layers of security so a single breach doesn't compromise the entire facility.
+
+**Least Privilege:** Users get the minimum access required to do their job, nothing more.
+
+**Zone Gradient:** Security increases as you move toward more critical areas; higher-security areas have stricter entry requirements.
+
+**Two-Person Rule:** Critical decisions or access require authorization from two independent people.
+
+**Emergency/Alert Protocols:** Clear rules for how access changes during security events—typically some fast-paths for essential personnel, lockdowns for sensitive areas.
