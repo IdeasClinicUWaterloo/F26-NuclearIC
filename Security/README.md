@@ -54,7 +54,7 @@ You'll receive a security audit report showing:
 
 ### 6. Revise and Resubmit
 
-Based on your results, you can revise your policy and resubmit for re-evaluation. Iterating security design is a critical part of real-world security design.
+Based on your results, you can revise your policy and resubmit for re-evaluation. Iteration is a critical part of real-world security design.
 
 ## How You'll Be Judged
 
