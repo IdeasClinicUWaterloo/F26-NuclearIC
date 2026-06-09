@@ -37,22 +37,9 @@ You'll answer based on your own policy rule. There's no right answer, but your r
 
 ### 4. Test Against Bad Actors
 
-After submitting your policy, the system will automatically test it against different attacker patterns:
+After submitting your policy, the system will automatically test it against different attacker patterns that can commonly be encountered in real world security scenarios.
 
-| Attacker | Strategy | What They Test |
-|----------|----------|-----------------|
-| **Impersonator** | Poses as a contractor with legitimate-looking credentials | Whether you restricted contractor access tightly enough and required escorts/verification |
-| **Insider** | A maintenance technician gone rogue, already with low-level access | Whether you applied least-privilege principles and blocked unauthorized zone escalation |
-| **Social Engineer** | Doesn't have credentials but exploits gaps, like piggy-backing during a shift change | Whether you addressed ambiguous zone boundaries and transition protocols |
-| **Emergency Exploiter** | Triggers a simulated emergency alert and attempts access during the chaos | Whether your emergency/alert state rules are clear or full of exploitable holes |
-
-### 5. Get Your Results
-
-You'll receive a security audit report showing:
-- Which attackers succeeded and which were stopped
-- Where each attack failed or got through and why
-
-### 6. Revise and Resubmit
+### 5. Revise and Resubmit
 
 Based on your results, you can revise your policy and resubmit for re-evaluation. Iteration is a critical part of real-world security design.
 
