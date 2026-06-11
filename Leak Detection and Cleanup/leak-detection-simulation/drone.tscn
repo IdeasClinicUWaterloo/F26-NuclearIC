@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dh8b0a85x4itv"]
+
+[ext_resource type="PackedScene" uid="uid://ddm60dy8bxjjy" path="res://drone_3d.glb" id="1_uvgqj"]
+
+[node name="Sketchfab_Scene" unique_id=1519915895 instance=ExtResource("1_uvgqj")]
+
+[node name="Sketchfab_model" parent="." index="0" unique_id=420259668]
+transform = Transform3D(0.0013062614, -3.559696e-19, -0.0005695223, 1.5040588e-19, 0.0014250174, -8.141146e-19, 0.0005695223, 7.0205114e-19, 0.0013062614, 0.0032020807, 0, -0.55584973)
+
+[node name="final_STL_cleaner_materialmerger_gles" parent="Sketchfab_model" index="0" unique_id=847769127]
+transform = Transform3D(1, -1.323489e-23, -5.9604645e-08, -1.5881868e-22, 0.9999999, 2.646978e-23, 5.9604645e-08, 0, 1, 153.85239, 0.69910157, 367.11533)
+
+[node name="Object_2" parent="Sketchfab_model/final_STL_cleaner_materialmerger_gles" index="0" unique_id=815953622]
+transform = Transform3D(1, 1.323489e-23, 0, -1.323489e-22, 1, -2.646978e-23, 0, 0, 1, -408.1227, 0, -375.01587)
+
+[node name="Object_3" parent="Sketchfab_model/final_STL_cleaner_materialmerger_gles" index="1" unique_id=908018339]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -408.123, 0, -375.016)
