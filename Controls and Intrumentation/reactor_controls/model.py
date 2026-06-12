@@ -115,4 +115,3 @@ plt.ylabel('Neutron density (normalized)')
 plt.title('Point Kinetics — Step Reactivity Response')
 plt.grid(True)
 plt.show()
-
