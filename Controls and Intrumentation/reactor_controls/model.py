@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
-
+#test
 class ReactorModel:
     # Fraction of neutrons that are delayed
     BETA_I = np.array([0.000215, 0.001424,
