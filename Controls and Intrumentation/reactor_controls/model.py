@@ -19,24 +19,63 @@ class ReactorModel:
     # Prompt neutron generation time, seconds
     LAMBDA = 5e-5
 
+    P_rated    = 100e6        # 100 MW thermal power [W]
+
+    # Heat capacities
+    mCp_fuel   = 4.0e6        # fuel thermal mass [J/K]
+    mCp_cool   = 1.0e6        # coolant thermal mass per node [J/K]
+
+    # Time constants
+    tau_fuel   = 6.0          # fuel-to-coolant transfer [s]
+    tau_cool   = 3.0          # coolant heat transfer [s]
+    tau_flow   = 4.0          # coolant transit time [s]
+
+    # Reference temperature
+    T_inlet     = 560.0       # [K]
+
+    # Reactivity feedback coefficients
+    alpha_fuel    = -2.5e-5   # [dk/k per K]
+    alpha_cool    = -8.0e-5   # [dk/k per K]
+
     def __init__(self):
         # Initial steady state values
         self.n0 = 1.0
 
         self.C0 = (self.BETA_I / (self.LAMBDA * self.LAMBDA_I)) * self.n0
 
-        # x = [n, C1, C2, C3, C4, C5, C6]
-        self.x0 = np.concatenate(([self.n0], self.C0))
+        self.T_fuel0, self.T_c1_0, self.T_c2_0 = self.calculate_steady_state_temps()
 
-    def rho_func(self, t):
+        self.T_fref = self.T_fuel0
+        self.T_cref = (self.T_c1_0 + self.T_c2_0) / 2
+        
+
+        # x = [n, C1, C2, C3, C4, C5, C6, T_fuel, T_c1, T_c2]
+
+        self.x0 = np.concatenate(([self.n0], self.C0, self.T_fuel0, self.T_c1_0, self.T_c2_0))
+
+
+    def rho_external(self, t):
+        #from the rod
         return 0.0001 if t >= 10 else 0.0
+    
+    def rho_feedback(self, t):
+        #reactivity feedback from temperature changes
+        return self.alpha_f*(self.x0[7] - self.T_fref) + self.alpha_c*(self.x0[8] - self.T_cref))
 
-    def point_kinetics(self, t, x):
+    def rho_total(self, t):
+        # Total reactivity is sum of external and feedback
+        return self.rho_external(t) + self.rho_feedback(t)
+    
+    def calculate_steady_state_temps(self):
+        #Set dT/dt = 0 and solve for T_fuel, T_c1, T_c2
+        
+
+    def neutron_equations(self, t, x):
         # Neutron population, corresponds to reactor power
         n = x[0]
 
         # Precursor concentrations
-        C = x[1:]
+        C = x[1:7]
 
         rho = self.rho_func(t)
 
@@ -45,6 +84,11 @@ class ReactorModel:
         dCdt = (self.BETA_I / self.LAMBDA) * n - self.LAMBDA_I * C
 
         return np.concatenate(([dndt], dCdt))
+    
+    def thermal_equations():
+        #Mann's thermal model for point reactor
+
+        
 
     def solve(self):
         sol = solve_ivp(
@@ -71,4 +115,3 @@ plt.ylabel('Neutron density (normalized)')
 plt.title('Point Kinetics — Step Reactivity Response')
 plt.grid(True)
 plt.show()
-
