@@ -59,34 +59,27 @@ class ReactorModel:
         ))
 
     def calculate_steady_state_temps(self):
-        """
-        Compute steady-state temperatures bottom-up.
-
-        This version makes the thermal equations consistent with the initial state.
-        """
         P0 = self.P_rated * self.n0
 
-        # At steady state, the fuel transfers P0 to the coolant.
-        # Split heat equally into the two coolant nodes.
-        heat_to_each_coolant_node = 0.5 * P0
+        # From fuel steady state:
+        # T_fuel - T_c_avg = P0 * tau_fuel / mCp_fuel
+        fuel_to_coolant_delta = P0 * self.tau_fuel / self.mCp_fuel
 
-        # Coolant node 1 receives inlet flow.
-        T_c1_0 = self.T_inlet + heat_to_each_coolant_node * self.tau_flow / self.mCp_cool
+        # From coolant node 2 steady state:
+        # T_c1 = T_c2
+        T_c1_0 = self.T_inlet + (
+            self.tau_flow / self.tau_cool
+        ) * fuel_to_coolant_delta
 
-        # Coolant node 2 receives flow from coolant node 1.
-        T_c2_0 = T_c1_0 + heat_to_each_coolant_node * self.tau_flow / self.mCp_cool
+        T_c2_0 = T_c1_0
 
-        T_c_avg = 0.5 * (T_c1_0 + T_c2_0)
-
-        # From dT_fuel/dt = 0:
-        # 0 = P0/mCp_fuel - (T_fuel - T_c_avg)/tau_fuel
-        T_fuel0 = T_c_avg + (P0 * self.tau_fuel) / self.mCp_fuel
+        T_fuel0 = T_c1_0 + fuel_to_coolant_delta
 
         return T_fuel0, T_c1_0, T_c2_0
     
     def rho_external(self, t):
         #from the rod
-        return 0.001 if t >= 10 else 0.0
+        return 0.00 if t >= 10 else 0.0
     
     def rho_feedback(self, T_fuel, T_c_avg):
         #reactivity feedback from temperature changes
@@ -109,9 +102,6 @@ class ReactorModel:
     def thermal_equations(self, n, T_fuel, T_c1, T_c2):
 
         # Mann's thermal model for point reactor
-        P = self.P_rated * n
-        T_c_avg = 0.5 * (T_c1 + T_c2)
-
         P = self.P_rated * n
         T_c_avg = 0.5 * (T_c1 + T_c2)
 
@@ -171,6 +161,18 @@ print(f"T_fuel0 = {model.T_fuel0:.2f} K")
 print(f"T_c1_0  = {model.T_c1_0:.2f} K")
 print(f"T_c2_0  = {model.T_c2_0:.2f} K")
 print(f"T_cref  = {model.T_cref:.2f} K")
+
+# Run simulation with rho_external = 0.0 for all time
+# Print values at t=0 and t=200
+# Every state should be identical
+
+print(f"n:      {sol.y[0,0]:.6f}  →  {sol.y[0,-1]:.6f}")
+print(f"T_fuel: {sol.y[7,0]:.2f}  →  {sol.y[7,-1]:.2f}")
+print(f"T_c1:   {sol.y[8,0]:.2f}  →  {sol.y[8,-1]:.2f}")
+print(f"T_c2:   {sol.y[9,0]:.2f}  →  {sol.y[9,-1]:.2f}")
+
+# If anything drifts — your steady state derivation is wrong
+# Fix this before anything else
 
 t = sol.t        # time values from solve_ivp
 n = sol.y[0]     # neutron population over time
