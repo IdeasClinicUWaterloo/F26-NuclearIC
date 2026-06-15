@@ -59,13 +59,18 @@ class BlueprintLoader:
         return role_data.get("required_rooms", [])
 
 # --- Quick Local Test Execution ---
+# --- Quick Local Test Execution ---
 if __name__ == "__main__":
-    # Assuming execution from project root with a mock file present
     try:
-        # Generate temporary mock file if testing standalone
-        os.makedirs("data", exist_ok=True)
+        # 1. Get the absolute path of the directory where THIS script lives (e.g., /your/project/src)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         
-        loader = BlueprintLoader("data/facility_blueprint.json")
+        # 2. Go up one level to the project root, then down into the data folder
+        project_root = os.path.dirname(current_dir)
+        blueprint_path = os.path.join(project_root, "data", "facility_blueprint.json")
+        
+        # 3. Feed the bulletproof path to the loader
+        loader = BlueprintLoader(blueprint_path)
         print(f"Successfully loaded: {loader.facility_name}")
         print(f"Total Rooms Discovered: {len(loader.get_all_rooms())}")
         print(f"Rooms connected to 'operations_airlock': {loader.get_connected_rooms('operations_airlock')}")

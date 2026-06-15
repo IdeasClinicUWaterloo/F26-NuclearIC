@@ -1,0 +1,32 @@
+{
+  "author_name": "Systems_Engineering_Group_A",
+  "room_to_zone": {
+    "perimeter_gate":       "Zone_1",
+    "parking_lot":          "Zone_1",
+    "admin_reception":      "Zone_1",
+    "office_hallway":       "Zone_2",
+    "staff_lounge":         "Zone_2",
+    "operations_airlock":   "Zone_3",
+    "maintenance_bay":      "Zone_3",
+    "control_room_entry":   "Zone_4",
+    "main_control_room":    "Zone_5",
+    "reactor_containment":  "Zone_5"
+  },
+  "zone_policies": {
+    "Zone_1": {
+      "reactor_operator":       {"access": "Permitted", "requires_escort": false},
+      "maintenance_technician": {"access": "Permitted", "requires_escort": false},
+      "security_officer":       {"access": "Permitted", "requires_escort": false}
+    },
+    "Zone_3": {
+      "reactor_operator":       {"access": "Permitted", "requires_escort": false},
+      "maintenance_technician": {"access": "Permitted", "requires_escort": false},
+      "security_officer":       {"access": "Permitted", "requires_escort": false}
+    },
+    "Zone_5": {
+      "reactor_operator":       {"access": "Permitted", "requires_escort": false},
+      "maintenance_technician": {"access": "Restricted", "requires_escort": true},
+      "security_officer":       {"access": "Permitted", "requires_escort": false}
+    }
+  }
+}
