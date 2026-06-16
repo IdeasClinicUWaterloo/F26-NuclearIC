@@ -40,7 +40,15 @@ Learn More: [Leak Detection and Cleanup Subproblem](/Leak%20Detection%20and%20Cl
 
 ## Reactor Design Optimization
 
+SMRs are a relatively new technology that have some advantages over traditional nuclear reactors, but also some disadvantages. A major part of designing SMRs is optimizing their design to minimize their disadvantages and maximize their advantages. There are many parts of a reactor that can affect efficiency, cost, and feasibility of the design.
+
+This challenge invites students to use physics and engineering principles to model a reactor that is efficient, economical, and practical for deployment. Solutions should explore trade-offs among fuel design, reactor performance, lifecycle cost, and operational constraints.
+
 **Potential Solutions:**
+
+- Use the provided SMR Reactor Design Optimization Tool to set parameters and check the effects on the costs and efficiency of the reactor
+- Develop an automated controller that reads the live state of a simulated reactor and adjusts control values to maximize efficiency
+- Research SMR design concepts and draft a proposal for a particular design
 
 Learn More: [Reactor Design Optimization Subproblem](/Reactor%20Design%20Optimation/)
 
