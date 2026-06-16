@@ -24,9 +24,57 @@ Teams may approach the challenge in several ways, depending on their background 
 - Visualization dashboards for power, temperature, reactivity, rod position, estimated states, and safety state
 - Performance tuning to improve tracking, reduce overshoot, avoid unnecessary SCRAM events, and recover from disturbances
 
+### Physical Analogue Solutions
+
+Teams may also build a small physical control system that represents the same core ideas as the reactor simulation: feedback control, noisy sensors, actuator limits, disturbances, safety limits, and fault handling.
+
+Physical systems do not need to resemble a reactor directly. They can act as analogues for a system where a controller must regulate an output while respecting physical constraints.
+
+Possible physical analogue projects include:
+
+- **Temperature control system**  
+  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface or enclosed space near a target temperature.  
+  Analogy: reactor power creates heat, coolant/fan removes heat, and the controller must avoid overheating.
+
+- **Fan speed or motor speed controller**  
+  Control the speed of a DC motor or fan using PWM and a tachometer, encoder, or optical sensor.  
+  Analogy: power tracking with actuator limits, lag, noise, and overshoot.
+
+- **Water tank level control**  
+  Use a small pump, reservoir, and level sensor to maintain a target water height.  
+  Analogy: maintaining a safe operating level while handling disturbances such as leaks or inflow changes.
+
+- **Light intensity control system**  
+  Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.  
+  Analogy: sensor noise, disturbance rejection, and feedback control.
+
+- **Ball-and-beam or balance platform**  
+  Use a servo and distance sensor/camera to control the position of a ball or object.  
+  Analogy: unstable or nonlinear dynamics requiring careful controller tuning.
+
+- **Servo-controlled airflow or damper system**  
+  Use a servo-controlled flap, fan, and sensor to regulate airflow or temperature.  
+  Analogy: control rod position changes system behavior indirectly through a physical actuator.
+
+- **Thermal fault-detection demo**  
+  Build a temperature-control setup and introduce faults such as blocked airflow, biased sensors, delayed fan response, or reduced cooling.  
+  Analogy: coolant disturbance, sensor bias, actuator fault, and safety shutdown behavior.
+
+Physical projects should include at least some of the following:
+
+- A measured process variable, such as temperature, speed, level, position, or brightness
+- A control input, such as fan speed, motor voltage, pump speed, servo angle, or heater power
+- A target setpoint that changes over time
+- Sensor noise, delay, or disturbance effects
+- Actuator limits or rate limits
+- Safety thresholds and shutdown behavior
+- Plots, logs, or a dashboard showing system response
+
+For safety, physical builds should use low-voltage components only and avoid unsafe heating, exposed wiring, pressurized systems, mains electricity, open flames, boiling water, or hazardous materials. The goal is to demonstrate instrumentation and control concepts, not to build a high-power device.
+
 ## Recommended Roadmap
 
-Teams are encouraged to take the project in any direction. These milestones are not requirements or a scoring checklist; they are meant to give less experienced teams a practical path from "the simulation runs" to "we built a reliable reactor control strategy." Advanced teams can skip, combine, or replace them with their own plan.
+Teams are encouraged to take the project in any direction. These milestones are not requirements or a scoring checklist; they are simply guides and pathways to help teams in building their solutions.
 
 ### Milestone 1: Run the Reactor Simulation
 
