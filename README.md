@@ -28,7 +28,15 @@ Learn More: [Controls and Instrumentation Subproblem](/Controls%20and%20Intrumen
 
 ## Leak Detection and Cleanup
 
+A big concern in any nuclear facility is quickly detecting leaks. SMRs face additional concerns compared to traditional reactors because of their different geometry and narrow form factor. 
+
+This challenge invites students to develop a system capable of autonomously detecting, localizing, and reporting radiation leaks in SMR facilities. Solutions may also include methods for monitoring contamination spread and supporting cleanup operations.
+
 **Potential Solutions:**
+
+- Train an AI model to detect leaks from sensor data
+- Use a simple containment structure with simulated vibrations (as a model for leaks) to localize their locations
+- Create a digital mock-up of a nuclear facility and simulate a drone/robot patrolling the facility
 
 Learn More: [Leak Detection and Cleanup Subproblem](/Leak%20Detection%20and%20Cleanup/)
 
@@ -40,7 +48,16 @@ Learn More: [Reactor Design Optimization Subproblem](/Reactor%20Design%20Optimat
 
 ## Security
 
+Nuclear facilities are highly critical locations that require extremely strict security measures to prevent sabotage. Nuclear facilities integrate multi-layered security protocols and policies to protect the premises from bad actors. SMR facilities may need to diverge from the traditional reactor structure, which may introduce new security concerns.
+
+This challenge invites students to develop a security plan or system for the SMR facility. Participants may explore multiple security concepts, including Security Policy, Zone Access, Cybersecurity, Intruder Detection, etc.
+
 **Potential Solutions:**
+
+- Use the provided security simulation dashboard to set zones and policies for a fictional SMR facility and test against various attackers
+- Develop a computer vision system to detect intruders
+- Integrate RFID or NFC based access restrictions
+- Design a layout for an SMR facility that would be more effective than the one provided at repelling attackers
 
 Learn More: [Security Subproblem](/Security/)
 
