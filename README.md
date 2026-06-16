@@ -6,23 +6,21 @@ Created By: Engineering IDEAs Clinic Co-op Students
 
 # Your Mission
 
-_Theme: Nuclear Engineering for Small Modular Reactors (SMRs)_ <br>
-As the technology advances to embrace Artificial Intelligence (AI), data centers have become massive energy consumption sinks. To provide the energy output demanded by data centers, alternative energy production frontiers need to be considered. Small Modular Reactors (SMRs) are at the forefront of this conversations, with multiple being developed to address these energy needs. The Darlington New Nuclear project is a SMR project currently in development in Ontario that is moving from design to contruction. Your role will be to understand the various needs for the Darlington New Nuclear Project and apply nuclear engineering principles to address them.
+_Theme: Small Modular Reactors (SMRs)_ <br>
+
+![alt text](assets/Darlington.png)
+
+As the technology advances to embrace Artificial Intelligence (AI), data centers have become massive energy consumption sinks. To provide the energy output demanded by data centers, alternative energy production frontiers need to be considered. Small Modular Reactors (SMRs) are at the forefront of this conversations, with multiple being developed to address these energy needs. The Darlington New Nuclear project is a SMR project currently in development in Ontario, marking the first SMR in the Western world. It began construction in May 2025, and is expected to finish in 2029. 
+
+The Darlington project uses the GE Vernova Hitachi BWRX-300 boiling water reactor (BWR). The BWR uses nuclear fission to turn water into steam, which goes directly to a turbine to create electricity. The project is expected to create more than 18 000 jobs, add $38.5 Billion to Canada's GDP, and provide 1.2 Gigawatts of energy between the four planned units, supplying power to over a million homes. 
+
+To find out more: [BWRX-300 SMR](https://www.gevernova.com/nuclear/carbon-free-power/bwrx-300-small-modular-reactor)
+
 
 # Subproblems
 
 ## Controls and Instrumentation
 
-Modern manufacturing depends on hundreds of highly reliable machines working together to sustain efficiency and productivity. However, despite advanced equipment, unexpected machine downtime remains a significant issue. It costs industries millions of dollars each year through lost output, operational delays, and higher maintenance expenses.
-
-This challenge invites students to design and develop intelligent systems aimed at minimizing such disruptions. Participants are encouraged to explore a wide range of solutions, including Machine Learning models, sensor-based monitoring systems, or integrated robotic and sensor arrays that can continuously track machine performance.  
-
-**Potential Solutions:**
-
-- Train an AI model using robot telemetry data to detect failure
-- Create a dashboard to monitor machine states
-- Install basic sensors on machines to assess their status
-- Design/Program testing procedures that check machine health
 
 Learn More: [Controls and Instrumentation Subproblem](/Controls%20and%20Intrumentation/)
 
