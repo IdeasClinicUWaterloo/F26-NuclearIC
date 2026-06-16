@@ -32,17 +32,17 @@ Physical systems do not need to resemble a reactor directly. They can act as ana
 
 Possible physical analogue projects include:
 
-- **Temperature control system**  
-  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface or enclosed space near a target temperature.  
-  Analogy: reactor power creates heat, coolant/fan removes heat, and the controller must avoid overheating.
+* **Temperature control system**
+  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface, pad, or small enclosure near a target temperature. Teams can also add simple fault cases such as blocked airflow, delayed fan response, or reduced cooling.
+  Analogy: reactor power creates heat, coolant or airflow removes heat, and the controller must avoid overheating or trigger a safe shutdown.
 
-- **Fan speed or motor speed controller**  
-  Control the speed of a DC motor or fan using PWM and a tachometer, encoder, or optical sensor.  
-  Analogy: power tracking with actuator limits, lag, noise, and overshoot.
+* **Closed-loop peristaltic pump flow controller**
+  Build a PID-controlled peristaltic pump that regulates water flow through a transparent tube in a closed-loop system. Teams can adjust pump speed to maintain a target flow rate and may add a simple servo-controlled valve or flap to change the flow resistance.
+  Analogy: coolant-flow control, disturbance rejection, sensor noise, actuator delay, blocked tubing, bubbles, leaks, or reduced pump performance.
 
-- **Water tank level control**  
-  Use a small pump, reservoir, and level sensor to maintain a target water height.  
-  Analogy: maintaining a safe operating level while handling disturbances such as leaks or inflow changes.
+  - **Syringe pump dosing controller**  
+  Build a PID-controlled syringe pump that dispenses a requested volume of liquid, such as a target number of millilitres over a set time. The actuator could be a stepper motor or servo-driven syringe plunger, and feedback could come from plunger position, flow measurement, or collected mass/volume.  
+  Analogy: precise setpoint tracking, actuator limits, calibration error, overshoot prevention, and safe shutdown if the pump jams or exceeds limits.
 
 - **Light intensity control system**  
   Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.  
@@ -51,14 +51,6 @@ Possible physical analogue projects include:
 - **Ball-and-beam or balance platform**  
   Use a servo and distance sensor/camera to control the position of a ball or object.  
   Analogy: unstable or nonlinear dynamics requiring careful controller tuning.
-
-- **Servo-controlled airflow or damper system**  
-  Use a servo-controlled flap, fan, and sensor to regulate airflow or temperature.  
-  Analogy: control rod position changes system behavior indirectly through a physical actuator.
-
-- **Thermal fault-detection demo**  
-  Build a temperature-control setup and introduce faults such as blocked airflow, biased sensors, delayed fan response, or reduced cooling.  
-  Analogy: coolant disturbance, sensor bias, actuator fault, and safety shutdown behavior.
 
 Physical projects should include at least some of the following:
 
