@@ -2,43 +2,85 @@
 
 ## Overview
 
-Small Modular Reactors (SMRs) require robust security systems to protect facilities and prevent unauthorized access. In this challenge, you'll design a **Physical Protection System (PPS)** for a fictional SMR facility, drawing from real nuclear security principles used by the NRC and IAEA.
+Small Modular Reactors (SMRs) represent the next generation of nuclear energy, featuring compact designs, factory fabrication, and passive safety systems. However, their smaller physical footprints and potential deployment in remote or distributed locations introduce unique security challenges. A robust **Physical Protection System (PPS)** must safeguard the facility against radiological sabotage and the theft of sensitive materials while remaining operationally viable.
 
-Your goal is to balance security with operational efficiency. You'll need to think critically about who needs access where, under what conditions, and how to handle emergencies.
+In this challenge, you will act as a Lead Systems Security Engineer. Your objective is to design an access control policy and zone topography for a fictional SMR facility. This challenge draws from real-world nuclear security frameworks established by the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**.
 
-## What You'll Do
+Your goal is to achieve an balance between security and operational efficiency. A system that stops every threat but paralyzes daily operations is an engineering failure; conversely, a system that prioritizes convenience at the expense of security is a risk.
 
-### 1. Review the Facility
+---
 
-You'll receive:
-- A facility map showing security zones (reactor building, control room, maintenance areas, administrative offices, perimeter, etc.)
-- Personnel role descriptions (reactor operator, security officer, maintenance technician, contractor, visitor, emergency responder)
-- A brief introduction to **defense-in-depth** security and access control concepts
+## Challenge Objectives
 
-### 2. Design Your Access Control Policy
+To complete the challenge, you must configure the facility's security settings to accomplish the following:
 
-You will:
-- Assign access levels for each personnel role to each security zone (e.g., "Permitted", "Restricted", "Denied")
-- Add conditions to your access rules
-- Define how your access rules change during an emergency/alert state
-- Justify your decisions based on security principles
+* **Establish Security Zones:** Group the physical rooms of the facility into distinct, logical security perimeters.
+* **Define Access Permissions:** Assign explicit clearance levels for every personnel role across each security zone.
+* **Implement Conditional Controls:** Apply secondary security requirements where vulnerabilities exist.
+* **Configure State-Dependent Logic:** Program how access permissions dynamically modify when the facility transitions from Normal Operations to an Emergency/Alert State.
+* **Provide Engineering Justification:** Defend your architectural decisions based on established nuclear security principles.
 
-### 3. Answer Edge Case Scenarios
+---
 
-During the challenge, you'll be presented with real-world scenarios that test your policy logic. You'll answer based on your own policy rule. There's no right answer, but your response must be consistent with what you designed.
+## Workflow
 
-### 4. Test Against Bad Actors
+1. **Design Phase:** Use the dashboard to map rooms to zones and assign role clearances. The interface will save your progress directly to your local workspace files.
+2. **Dynamic Scenario Phase:** The system will present real-world operational edge cases. You must evaluate how your programmed rules respond to these scenario injects.
+3. **Simulation Phase:** Once finalized, run the simulation tool to subject your access policy to automated adversary testing profiles.
+4. **Iterative Optimization:** Review the generated performance logs, identify vulnerabilities, adjust your configuration in the interface, and resubmit for evaluation.
 
-After submitting your policy, the system will automatically test it against different attacker patterns that can commonly be encountered in real world security scenarios.
+---
 
-### 5. Revise and Resubmit
+## Environment & Materials
 
-Based on your results, you can revise your policy and resubmit for re-evaluation. Iteration is a critical part of real-world security design.
+### Workspace File Structure
 
-## How You'll Be Judged
+Your project directory contains the following configuration and documentation files:
 
-Your submission will be evaluated on:
+```text
+smr_challenge/
+├── data/
+│   └── facility_blueprint.json   # Read-only physical layout and role requirements
+├── policies/
+│   └── policy_config.json        # Output file managed and updated by the interface
+└── docs/
+    └── justification.md          # Engineering design report template
 
-- **Security Effectiveness**: How many bad actors did you stop? Did you consider multiple scenarios of attack?
-- **Scenario Responses**: Are your edge case answers consistent with your policy? Do they make sense operationally?
-- **Feasibility**: Does your policy balance security with realistic facility operations?
+```
+
+### What is Provided
+
+* **Facility Blueprint Data:** A layout mapping the physical rooms, structural doors, and directional connections of the SMR facility.
+* **Personnel Profiles:** Operational definitions for six core facility roles (Reactor Operator, Security Officer, Maintenance Technician, Contractor, Visitor, and Emergency Responder).
+* **Core Mission Requirements:** The baseline rooms each personnel role must be capable of reaching to execute their mandatory daily duties.
+
+### What Needs to Be Submitted
+
+1. **`policy_config.json`:** The finalized permission matrix and zone topography exported via the graphical interface.
+2. **`justification.md`:** A completed engineering report defending your design choices, zone boundaries, and state-dependent logic.
+
+---
+
+## Evaluation Criteria
+
+Your submission will be automatically evaluated across three core engineering metrics:
+
+| Metric | Evaluation Focus |
+| --- | --- |
+| **Security Effectiveness** | The defensive capability of your policy when evaluated against automated adversary simulation profiles. |
+| **Operational Feasibility** | The structural viability of your layout. Personnel must be able to perform required duties without systemic deadlock. |
+| **Architectural Rigor** | The technical validity and depth of your engineering justifications in the submitted design documentation. |
+
+---
+
+## Recommended Research Concepts
+
+To maximize the effectiveness of your design, it is highly recommended to research the following nuclear industry security concepts before beginning construction:
+
+* **Defense-in-Depth (Physical Application)**
+* **Design Basis Threat (DBT)**
+* **Vital Area Identification (VAI)**
+* **The Principle of Least Privilege**
+* **The Detection, Delay, and Response Triad**
+* **Two-Person Rule (M-of-N Authentication)**
+* **Access Control List (ACL) Fail-Secure Mechanics**
