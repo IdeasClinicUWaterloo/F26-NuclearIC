@@ -14,15 +14,16 @@ Teams are invited to design control, estimation, fault detection, and visualizat
 
 Teams may approach the challenge in several ways, depending on their background and level of experience:
 
-- PID control for reactor power tracking
-- Sensor filtering for noisy instrumentation readings
-- Safety logic for warning, limiting, SCRAM, and shutdown states
-- State estimation using observers, Kalman filters, EKF, or UKF methods
-- LQR or MPC control for improved closed-loop performance
-- Fault detection for sensor bias, actuator faults, or abnormal thermal behavior
-- Scenario testing for load changes, coolant disturbances, noisy measurements, and stuck control rods
-- Visualization dashboards for power, temperature, reactivity, rod position, estimated states, and safety state
-- Performance tuning to improve tracking, reduce overshoot, avoid unnecessary SCRAM events, and recover from disturbances
+- Build a PID controller to help reactor power follow a target value
+- Filter noisy sensor readings so the controller receives cleaner data
+- Add safety rules for warnings, limits, SCRAM, and shutdown
+- Estimate hidden system values such as temperature, reactivity, or sensor bias
+- Try advanced controllers such as LQR or MPC
+- Detect problems such as biased sensors, stuck actuators, or unusual temperature behavior
+- Test the controller on different scenarios such as power changes, coolant disturbances, sensor noise, and stuck rods
+- Build plots or dashboards to show power, temperature, reactivity, rod position, estimates, and safety state
+- Tune the system to reduce overshoot, improve tracking, avoid unnecessary shutdowns, and recover from disturbances
+
 
 ### Physical Analogue Solutions
 
@@ -134,7 +135,7 @@ Suggested outcomes:
 
 Good demo: the controller can recover from at least one nontrivial disturbance without unsafe temperature or power excursions.
 
-### Milestone 6: Build Your Differentiator
+### Milestone 6: Make Your Solution Unique
 
 Goal: turn the starter system into your team's own solution.
 
@@ -149,9 +150,93 @@ Possible directions:
 
 Good demo: the project has a clear idea beyond the starter code and shows why that idea improves reactor control, safety, estimation, or interpretability.
 
+## Physical Analogue Roadmap
+
+Teams building a physical analogue system can follow this general roadmap. These milestones apply to systems such as temperature control, syringe pumps, peristaltic pumps, motor control, water-level control, or light-intensity control.
+
+### Milestone 1: Build and Test the Physical Setup
+
+Goal: confirm that the hardware works and the system can be measured.
+
+Suggested outcomes:
+
+* Connect the sensor, actuator, and microcontroller
+* Read the main measured value, such as temperature, flow rate, volume, speed, level, or brightness
+* Send simple actuator commands, such as changing pump speed, fan speed, heater power, or motor position
+* Log data over time
+
+Good demo: the team can show the sensor reading changing when the actuator is turned on or adjusted.
+
+### Milestone 2: Add Basic Feedback Control
+
+Goal: make the system follow a target value.
+
+Suggested outcomes:
+
+* Define a target setpoint
+* Compare the measured value to the target
+* Use a PID or rule-based controller to adjust the actuator
+* Add basic actuator limits so the system does not command unsafe or impossible values
+
+Good demo: the system moves toward a target value and settles without large oscillations.
+
+### Milestone 3: Add Safety Limits
+
+Goal: prevent the physical system from operating outside safe conditions.
+
+Suggested outcomes:
+
+* Add warning limits for unsafe temperature, flow, pressure, speed, volume, or position
+* Stop or limit the actuator if the system approaches an unsafe condition
+* Add a simple shutdown state for severe faults
+* Make the safety state visible in logs, plots, LEDs, or a dashboard
+
+Good demo: when the system goes outside a safe range, the controller limits or stops the actuator.
+
+### Milestone 4: Improve Measurements
+
+Goal: make the controller work better with real sensor data.
+
+Suggested outcomes:
+
+* Filter noisy sensor readings
+* Calibrate the sensor or actuator
+* Compare raw readings with filtered readings
+* Handle sensor delay, bias, or missing readings
+
+Good demo: the controller behaves more smoothly when using filtered or calibrated measurements.
+
+### Milestone 5: Test Disturbances and Faults
+
+Goal: show that the system can handle real-world problems.
+
+Suggested outcomes:
+
+* Change the setpoint during operation
+* Add a disturbance, such as blocked airflow, pinched tubing, bubbles, load change, or ambient light change
+* Test sensor noise, sensor bias, or sensor dropout
+* Test actuator issues such as a delayed pump, stuck motor, or reduced fan speed
+* Add fallback behavior when something goes wrong
+
+Good demo: the system detects or recovers from at least one disturbance without unsafe behavior.
+
+### Milestone 6: Build a Clear Demo
+
+Goal: show what the team built and why it works.
+
+Suggested outcomes:
+
+* Plot target value vs. measured value
+* Plot actuator command over time
+* Show safety state or fault state over time
+* Explain how the controller reacts to disturbances
+* Explain how the physical system connects to reactor-control ideas such as feedback, cooling, sensors, actuator limits, and safety logic
+
+Good demo: the team can clearly show the system tracking a target, responding to a disturbance, and staying within safe limits.
+
 ## Starter Package Overview
 
-This folder contains starter material for the student hackathon. It is intended as a base package that teams can extend during the event, not as a polished production system or a real reactor safety model.
+This folder contains starter material for the reactor solution. It is intended as a base package that teams can extend during the event, not as a polished production system or a real reactor safety model.
 
 ### Included Components
 
@@ -222,79 +307,6 @@ python dashboard.py
 ```
 
 Exact commands may change as the starter package evolves.
-
-## Suggested Workflow
-
-### 1. Understand the Model
-
-Start by reading `reactor_model.py` and identifying:
-
-- State variables
-- Control inputs
-- Sensor outputs
-- Disturbances
-- Safety limits
-- Integration timestep
-
-Teams do not need deep nuclear engineering background to begin. Treat the reactor as a nonlinear dynamic system with energy generation, thermal lag, feedback, and constraints.
-
-### 2. Implement a Simple Controller
-
-Start with the simplest solution that works:
-
-- Compute power tracking error
-- Move control rods or adjust reactivity based on that error
-- Clamp control commands to safe actuator limits
-- Avoid excessive oscillation or aggressive rod motion
-
-A basic PID controller is a reasonable first solution.
-
-### 3. Add Safety Supervision
-
-After the basic controller works, add logic that checks whether the system is approaching unsafe conditions.
-
-The safety supervisor should be able to override the controller if needed. For example, if fuel temperature or reactor power exceeds a threshold, the supervisor may force rod insertion or trigger a SCRAM state.
-
-### 4. Improve Measurements and Estimation
-
-Raw sensor readings may be noisy, biased, delayed, or incomplete. Teams can improve their controller by estimating internal reactor states instead of relying only on raw measurements.
-
-Possible estimation approaches:
-
-- Moving average or low-pass filtering
-- Simple model-based observer
-- Kalman filter
-- Extended Kalman filter
-- Unscented Kalman filter
-
-### 5. Test Across Scenarios
-
-Do not tune only for one scenario. A good solution should perform reasonably across multiple disturbances and operating conditions.
-
-Recommended tests:
-
-- Power setpoint step
-- Power demand ramp
-- Coolant disturbance
-- Measurement noise increase
-- Sensor bias
-- Stuck control rod
-- Loss of heat removal
-- Reactivity disturbance
-
-### 6. Build a Clear Demo
-
-A strong final demo should show both performance and reasoning.
-
-Useful demo outputs:
-
-- Requested power vs. actual power
-- True state vs. estimated state
-- Fuel and coolant temperature margins
-- Control rod command over time
-- Safety state over time
-- Scenario score breakdown
-- Explanation of how the controller reacts to disturbances
 
 ## Scoring Ideas
 
