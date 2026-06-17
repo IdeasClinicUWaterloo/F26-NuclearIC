@@ -34,23 +34,28 @@ Physical systems do not need to resemble a reactor directly. They can act as ana
 Possible physical analogue projects include:
 
 * **Temperature control system**
-  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface, pad, or small enclosure near a target temperature. Teams can also add simple fault cases such as blocked airflow, delayed fan response, or reduced cooling.
+  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface, pad, or small enclosure near a target temperature. Teams can also add simple fault cases such as blocked airflow, delayed fan response,     or reduced cooling.
+  
   Analogy: reactor power creates heat, coolant or airflow removes heat, and the controller must avoid overheating or trigger a safe shutdown.
 
 * **Closed-loop peristaltic pump flow controller**
-  Build a PID-controlled peristaltic pump that regulates water flow through a transparent tube in a closed-loop system. Teams can adjust pump speed to maintain a target flow rate and may add a simple servo-controlled valve or flap to change the flow resistance.
+  Build a PID-controlled peristaltic pump that regulates water flow through a transparent tube in a closed-loop system. Teams can adjust pump speed to maintain a target flow rate and may add a simple servo-controlled valve or flap to     change the flow resistance.
+  
   Analogy: coolant-flow control, disturbance rejection, sensor noise, actuator delay, blocked tubing, bubbles, leaks, or reduced pump performance.
 
-  - **Syringe pump dosing controller**  
-  Build a PID-controlled syringe pump that dispenses a requested volume of liquid, such as a target number of millilitres over a set time. The actuator could be a stepper motor or servo-driven syringe plunger, and feedback could come from plunger position, flow measurement, or collected mass/volume.  
+* **Syringe pump dosing controller**  
+  Build a PID-controlled syringe pump that dispenses a requested volume of liquid, such as a target number of millilitres over a set time. The actuator could be a stepper motor or servo-driven syringe plunger, and feedback could come     from plunger position, flow measurement, or collected mass/volume.
+  
   Analogy: precise setpoint tracking, actuator limits, calibration error, overshoot prevention, and safe shutdown if the pump jams or exceeds limits.
 
-- **Light intensity control system**  
-  Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.  
+* **Light intensity control system**  
+  Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.
+    
   Analogy: sensor noise, disturbance rejection, and feedback control.
 
-- **Ball-and-beam or balance platform**  
-  Use a servo and distance sensor/camera to control the position of a ball or object.  
+* **Ball-and-beam or balance platform**  
+  Use a servo and distance sensor/camera to control the position of a ball or object.
+    
   Analogy: unstable or nonlinear dynamics requiring careful controller tuning.
 
 Physical projects should include at least some of the following:
