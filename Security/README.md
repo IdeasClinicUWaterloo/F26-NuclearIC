@@ -4,7 +4,7 @@
 
 Small Modular Reactors (SMRs) represent the next generation of nuclear energy, featuring compact designs, factory fabrication, and passive safety systems. However, their smaller physical footprints and potential deployment in remote or distributed locations introduce unique security challenges. A robust **Physical Protection System (PPS)** must safeguard the facility against radiological sabotage and the theft of sensitive materials while remaining operationally viable.
 
-In this challenge, you will act as a Lead Systems Security Engineer. Your objective is to design an access control policy and zone topography for a fictional SMR facility. This challenge draws from real-world nuclear security frameworks established by the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**.
+In this challenge, you will act as a member of the Systems Security Team. Your objective is to design an access control policy and zone topography for a fictional SMR facility. This challenge draws from real-world nuclear security frameworks established by the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**.
 
 Your goal is to achieve an balance between security and operational efficiency. A system that stops every threat but paralyzes daily operations is an engineering failure; conversely, a system that prioritizes convenience at the expense of security is a risk.
 
