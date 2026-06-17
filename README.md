@@ -81,7 +81,7 @@ This challenge invites students to develop a security plan or system for the SMR
 
 - Use the provided security simulation dashboard to set zones and policies for a fictional SMR facility and test against various attackers
 - Develop a computer vision system to detect intruders
-- Integrate RFID or NFC based access restrictions
+- Integrate Radio Frequency Identification (RFID) or Near Field Communication (NFC) based access restrictions
 - Design a layout for an SMR facility that would be more effective than the one provided at repelling attackers
 
 Learn More: [Security Subproblem](/Security/)
