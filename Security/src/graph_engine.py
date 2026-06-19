@@ -9,106 +9,80 @@ class GraphEngine:
         self.policy = policy_manager
 
     def verify_path(self, start_room, end_room, role, context=None):
-        """
-        Uses Breadth-First Search (BFS) to discover and validate a path through the facility.
-        Cross-references security rules at every physical node transition.
-        
-        Returns:
-            dict: {
-                "path_found": bool,
-                "path": list of room IDs,
-                "audit_trail": list of logging strings detailing the evaluation
-            }
-        """
-        # Establish default system context for future-proofing directives
+        """Uses BFS to calculate physical trajectories, verifying advanced rules on every transition."""
         if context is None:
-            context = {"system_state": "Normal", "active_escorts": []}
+            context = {"system_state": "Normal", "time_of_day": 12, "active_escorts": []}
 
         audit_trail = []
-        audit_trail.append(f"[*] Initializing navigation validation for Role: '{role}'")
-        audit_trail.append(f"    -> Departure: '{start_room}'")
-        audit_trail.append(f"    -> Destination: '{end_room}'")
+        audit_trail.append(f"[*] Simulating Transit: Role='{role}' | State='{context['system_state']}' | Time={context['time_of_day']}:00")
 
         all_rooms = self.blueprint.get_all_rooms()
         if start_room not in all_rooms or end_room not in all_rooms:
-            audit_trail.append("[!] Evaluation Aborted: Invalid start or end room provided.")
+            return {"path_found": False, "path": [], "audit_trail": ["[!] Target node mismatch."]}
+
+        # Check origin clearance
+        if not self.policy.is_transition_authorized(start_room, role, context, audit_trail):
             return {"path_found": False, "path": [], "audit_trail": audit_trail}
 
-        # Principle of Least Privilege: Validate baseline entry to the origin point
-        initial_rules = self.policy.get_room_rules_for_role(start_room, role)
-        if initial_rules["access"] == "Denied":
-            audit_trail.append(f"[X] Access Denied: Role '{role}' lacks clearance to occupy origin point '{start_room}'.")
-            return {"path_found": False, "path": [], "audit_trail": audit_trail}
-
-        # Queue tracking format: (current_room_id, [ordered_path_history])
         queue = deque([(start_room, [start_room])])
         visited = set([start_room])
 
         while queue:
             current_room, current_path = queue.popleft()
 
-            # Target Destination Reached Successfully
             if current_room == end_room:
-                audit_trail.append(f"[+] Route Verified: {' -> '.join(current_path)}")
+                audit_trail.append(f"[+] Routing Confirmed: {' -> '.join(current_path)}")
                 return {"path_found": True, "path": current_path, "audit_trail": audit_trail}
 
-            # Evaluate outward physical transitions
-            connected_rooms = self.blueprint.get_connected_rooms(current_room)
-            for next_room in connected_rooms:
+            for next_room in self.blueprint.get_connected_rooms(current_room):
                 if next_room in visited:
                     continue
 
-                # Gatekeeper Pattern Hook: Query policy engine regarding the target room
-                rules = self.policy.get_room_rules_for_role(next_room, role)
-                
-                # Check 1: Explicit Access Blocks
-                if rules["access"] == "Denied":
-                    audit_trail.append(f"[-] Barrier Hit: '{role}' blocked from transitioning into '{next_room}' (Access: Denied).")
+                if not self.policy.is_transition_authorized(next_room, role, context, audit_trail):
                     continue
-                
-                # Check 2: Escort Constraints (Future Directive Hook)
-                if rules.get("requires_escort", False):
-                    audit_trail.append(f"[*] Escort Flagged: Entering '{next_room}' requires active escort supervision.")
-                    # Note: Future challenge iterations will check if an escort role is present in context
 
-                # Node is valid and authorized; proceed to register transit
                 visited.add(next_room)
                 queue.append((next_room, current_path + [next_room]))
 
-        audit_trail.append(f"[X] Isolation Verified: No authorized routes exist for '{role}' to navigate to '{end_room}'.")
+        audit_trail.append(f"[X] No viable paths found from '{start_room}' to '{end_room}'.")
         return {"path_found": False, "path": [], "audit_trail": audit_trail}
 
-
-# --- Local Orchestration & Test Execution ---
 if __name__ == "__main__":
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.dirname(current_dir)
-        
-        blueprint_path = os.path.join(project_root, "data", "facility_blueprint.json")
-        policy_path = os.path.join(project_root, "data", "policy_config.json")
-        
-        # Dependency Injection Chain
-        loader = BlueprintLoader(blueprint_path)
-        pm = PolicyManager(policy_path, loader)
-        engine = GraphEngine(loader, pm)
-        
-        print("==================================================")
-        print("        GRAPH ENGINE INTERCONNECTIVITY TEST       ")
-        print("==================================================\n")
-        
-        # Test Case A: Valid Path Verification (Operator tracking to Control Room)
-        result_a = engine.verify_path("perimeter_gate", "main_control_room", "reactor_operator")
-        for log in result_a["audit_trail"]:
-            print(log)
-            
-        print("\n--------------------------------------------------\n")
-        
-        # Test Case B: Blocked Path/Fail-Secure Verification 
-        # (Operator tries to enter Zone 2 / Office Hallway, which was deliberately left out of config)
-        result_b = engine.verify_path("perimeter_gate", "staff_lounge", "reactor_operator")
-        for log in result_b["audit_trail"]:
-            print(log)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
+    
+    loader = BlueprintLoader(os.path.join(project_root, "data", "facility_blueprint.json"))
+    pm = PolicyManager(os.path.join(project_root, "data", "policy_config.json"), loader)
+    engine = GraphEngine(loader, pm)
 
-    except Exception as e:
-        print(f"Graph Engine System Fault: {e}")
+    print("==================================================")
+    print("      ADVANCED POLICY MATRIX COMPLIANCE TEST      ")
+    print("==================================================\n")
+
+    # TEST CASE 1: Normal Operations, Unescorted Contractor/Technician
+    # Expectation: Fails at Zone 5 entry due to lack of a Security Officer escort.
+    ctx_1 = {"system_state": "Normal", "time_of_day": 10, "active_escorts": []}
+    print("[RUN 1: Technician Day Shift - Unescorted]")
+    res_1 = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_1)
+    print(f"Outcome: {'SUCCESS' if res_1['path_found'] else 'FAILED'}")
+    print(f"Log Trace: {res_1['audit_trail'][-2]}\n")
+
+    print("--------------------------------------------------\n")
+
+    # TEST CASE 2: Normal Operations, Escort Authorized
+    # Expectation: Path clear. The technician is granted entry because an escort is present.
+    ctx_2 = {"system_state": "Normal", "time_of_day": 10, "active_escorts": ["security_officer"]}
+    print("[RUN 2: Technician Day Shift - Escorted by Security Officer]")
+    res_2 = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_2)
+    print(f"Outcome: {'SUCCESS' if res_2['path_found'] else 'FAILED'}")
+    print(f"Log Trace: {res_2['audit_trail'][-1]}\n")
+
+    print("--------------------------------------------------\n")
+
+    # TEST CASE 3: Crisis / Emergency State Fast-Path vs Lockdown Execution
+    # Expectation: Even with an escort, the technician is strictly denied access due to lockdown.
+    ctx_3 = {"system_state": "Emergency", "time_of_day": 10, "active_escorts": ["security_officer"]}
+    print("[RUN 3: Crisis Mode Injected - Escorted Technician Attempts Entry]")
+    res_3 = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_3)
+    print(f"Outcome: {'SUCCESS' if res_3['path_found'] else 'FAILED'}")
+    print(f"Log Trace: {res_3['audit_trail'][-2]}\n")
