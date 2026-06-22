@@ -4,9 +4,9 @@
 
 Small Modular Reactors (SMRs) are being developed as a new generation of nuclear power plants that can be built in smaller modules, integrated with modern electrical grids, and deployed with advanced safety and monitoring systems. In Canada, SMR development is especially relevant because projects such as the Darlington New Nuclear Project are moving from design and licensing toward construction.
 
-This subchallenge focuses on the instrumentation and controls layer of an SMR-inspired system. Teams will work with a simplified reactor simulation where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time.
+This subchallenge focuses on the instrumentation and controls layer of an SMR-inspired system. Teams can work with a simplified reactor simulation where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time, or approach the challenge in an open-ended, hands-on way.
 
-The goal is not to build a production-grade nuclear model. The goal is to build and improve a controller for a nonlinear dynamical system with noisy sensors, hidden internal states, physical constraints, and safety-critical operating limits.
+The goal is not to build a production-grade nuclear mode;, but to build and improve a controller for a nonlinear dynamical system with noisy sensors, potential hidden states, physical constraints, and safety-critical operating limits.
 
 Teams are invited to design control, estimation, fault detection, and visualization features that help the simulated reactor track a requested power output while avoiding unsafe operation.
 
@@ -14,11 +14,11 @@ Teams are invited to design control, estimation, fault detection, and visualizat
 
 Teams may approach the challenge in several ways, depending on their background and level of experience:
 
-- Build a PID controller to help reactor power follow a target value
+- Build a [PID](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb?srsltid=AfmBOop2VQJangbc5Sx5kFwntYKSpLKkyMPZg2kbVIUl3h992GPeW9hO) (Proportional, Integral, Derivative) controller to help reactor power follow a target value
 - Filter noisy sensor readings so the controller receives cleaner data
 - Add safety rules for warnings, limits, SCRAM, and shutdown
 - Estimate hidden system values such as temperature, reactivity, or sensor bias
-- Try advanced controllers such as LQR or MPC
+- Try advanced controllers such as LQR (Linear-Quadratic Regulator) or MPC (Model Predictive Control)
 - Detect problems such as biased sensors, stuck actuators, or unusual temperature behavior
 - Test the controller on different scenarios such as power changes, coolant disturbances, sensor noise, and stuck rods
 - Build plots or dashboards to show power, temperature, reactivity, rod position, estimates, and safety state
@@ -34,23 +34,28 @@ Physical systems do not need to resemble a reactor directly. They can act as ana
 Possible physical analogue projects include:
 
 * **Temperature control system**
-  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface, pad, or small enclosure near a target temperature. Teams can also add simple fault cases such as blocked airflow, delayed fan response, or reduced cooling.
+  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface, pad, or small enclosure near a target temperature. Teams can also add simple fault cases such as blocked airflow, delayed fan response,     or reduced cooling.
+  
   Analogy: reactor power creates heat, coolant or airflow removes heat, and the controller must avoid overheating or trigger a safe shutdown.
 
 * **Closed-loop peristaltic pump flow controller**
-  Build a PID-controlled peristaltic pump that regulates water flow through a transparent tube in a closed-loop system. Teams can adjust pump speed to maintain a target flow rate and may add a simple servo-controlled valve or flap to change the flow resistance.
+  Build a PID-controlled peristaltic pump that regulates water flow through a transparent tube in a closed-loop system. Teams can adjust pump speed to maintain a target flow rate and may add a simple servo-controlled valve or flap to     change the flow resistance.
+  
   Analogy: coolant-flow control, disturbance rejection, sensor noise, actuator delay, blocked tubing, bubbles, leaks, or reduced pump performance.
 
-  - **Syringe pump dosing controller**  
-  Build a PID-controlled syringe pump that dispenses a requested volume of liquid, such as a target number of millilitres over a set time. The actuator could be a stepper motor or servo-driven syringe plunger, and feedback could come from plunger position, flow measurement, or collected mass/volume.  
+* **Syringe pump dosing controller**  
+  Build a PID-controlled syringe pump that dispenses a requested volume of liquid, such as a target number of millilitres over a set time. The actuator could be a stepper motor or servo-driven syringe plunger, and feedback could come     from plunger position, flow measurement, or collected mass/volume.
+  
   Analogy: precise setpoint tracking, actuator limits, calibration error, overshoot prevention, and safe shutdown if the pump jams or exceeds limits.
 
-- **Light intensity control system**  
-  Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.  
+* **Light intensity control system**  
+  Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.
+    
   Analogy: sensor noise, disturbance rejection, and feedback control.
 
-- **Ball-and-beam or balance platform**  
-  Use a servo and distance sensor/camera to control the position of a ball or object.  
+* **Ball-and-beam or balance platform**  
+  Use a servo and distance sensor/camera to control the position of a ball or object.
+    
   Analogy: unstable or nonlinear dynamics requiring careful controller tuning.
 
 Physical projects should include at least some of the following:
@@ -103,7 +108,7 @@ Suggested outcomes:
 
 - Add warning thresholds for fuel temperature, coolant temperature, and reactor power
 - Add limiting behavior that overrides aggressive control actions
-- Add SCRAM or shutdown behavior for severe violations
+- Add SCRAM (essentially, an emergency shutdown procedure) for severe violations
 - Make safety state visible in logs or the dashboard
 
 Good demo: when a disturbance pushes the reactor toward an unsafe condition, the safety supervisor overrides the controller and moves the system toward a safer state.
@@ -116,7 +121,7 @@ Suggested outcomes:
 
 - Filter noisy sensor readings
 - Estimate hidden states such as fuel temperature, precursor concentration, or reactivity bias
-- Implement an observer, Kalman filter, EKF, or UKF
+- Implement an observer, Kalman filter, or Extended Kalman Filtwer
 - Compare true states, measured values, and estimated states in the dashboard
 
 Good demo: the controller performs better when using estimated state information instead of raw noisy measurements alone.
@@ -142,7 +147,7 @@ Goal: turn the starter system into your team's own solution.
 Possible directions:
 
 - Better control: PID tuning, gain scheduling, LQR, or MPC
-- Better estimation: EKF, UKF, sensor-fusion, or bias estimation
+- Better estimation: EKF, sensor-fusion, or bias estimation
 - Better safety: more robust SCRAM logic, state-machine design, or safety margins
 - Better diagnostics: fault detection, fault isolation, alerts, or anomaly scoring
 - Better visualization: live plots, scenario replay, controller comparison, or judge-friendly dashboards

@@ -21,6 +21,20 @@ To find out more: [BWRX-300 SMR](https://www.gevernova.com/nuclear/carbon-free-p
 
 ## Controls and Instrumentation
 
+Modern energy systems rely on sensors, controllers, and safety systems to operate reliably. In nuclear power plants, instrumentation and control systems help monitor reactor power, temperature, coolant conditions, and control rod movement to keep the system stable and safe.
+
+This challenge invites students to design a controller for a simplified SMR-inspired reactor simulation. Teams will try to make the reactor follow a requested power output while handling noisy sensors, disturbances, physical limits, and safety rules.
+
+Students may also build a safe physical analogue system, such as a temperature controller, syringe pump, or water-flow controller, to demonstrate the same feedback control ideas in hardware.
+
+### Potential Solutions:
+
+* Build a PID controller to track a target power level
+* Filter noisy sensor readings
+* Add safety logic for warnings, limits, SCRAM, or shutdown
+* Detect faults such as bad sensors, stuck actuators, or cooling problems
+* Create a dashboard to show power, temperature, control input, and safety state
+* Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller
 
 Learn More: [Controls and Instrumentation Subproblem](/Controls%20and%20Intrumentation/)
 
@@ -40,14 +54,19 @@ Learn More: [Leak Detection and Cleanup Subproblem](/Leak%20Detection%20and%20Cl
 
 ## Reactor Design Optimization
 
-SMRs are a relatively new technology that have some advantages over traditional nuclear reactors, but also some disadvantages. A major part of designing SMRs is optimizing their design to minimize their disadvantages and maximize their advantages. There are many parts of a reactor that can affect efficiency, cost, and feasibility of the design.
+SMRs are a relatively new technology that have some advantages over traditional nuclear reactors, but also some disadvantages. A major part of designing SMRs is optimizing their design to minimize their disadvantages and maximize their advantages. There are many parts of a reactor that can affect efficiency, cost, and feasibility of the design. Reactor performance depends on design choices such as fuel rod geometry and material selection, and operating choices such as control rod movement, coolant flow, steam flow, and startup strategy.
 
-This challenge invites students to use physics and engineering principles to model a reactor that is efficient, economical, and practical for deployment. Solutions should explore trade-offs among fuel design, reactor performance, lifecycle cost, and operational constraints.
+This challenge invites students to use physics and engineering principles to model a reactor that is efficient, economical, and practical for deployment. Solutions should explore trade-offs among fuel design, reactor performance, lifecycle cost, and operational constraints. Teams may focus on reactor design optimization, reactor operation optimization, or a combination of both. The goal is to improve performance while considering safety limits, power output, fuel lifetime, cost, and overall system efficiency.
+
+Participants are encouraged to build tools, simulations, dashboards, or algorithms that compare design choices, tune operating strategies, or automatically search for better solutions.
 
 **Potential Solutions:**
 
 - Use the provided SMR Reactor Design Optimization Tool to set parameters and check the effects on the costs and efficiency of the reactor
 - Develop an automated controller that reads the live state of a simulated reactor and adjusts control values to maximize efficiency
+- Use optimization methods to improve startup, tracking, recovery, or design performance
+- Create dashboards to compare reactor designs, simulator runs, costs, and performance metrics
+- Log reactor data and analyze which design or control parameters affect performance most
 - Research SMR design concepts and draft a proposal for a particular design
 
 Learn More: [Reactor Design Optimization Subproblem](/Reactor%20Design%20Optimation/)
@@ -62,7 +81,7 @@ This challenge invites students to develop a security plan or system for the SMR
 
 - Use the provided security simulation dashboard to set zones and policies for a fictional SMR facility and test against various attackers
 - Develop a computer vision system to detect intruders
-- Integrate RFID or NFC based access restrictions
+- Integrate Radio Frequency Identification (RFID) or Near Field Communication (NFC) based access restrictions
 - Design a layout for an SMR facility that would be more effective than the one provided at repelling attackers
 
 Learn More: [Security Subproblem](/Security/)
