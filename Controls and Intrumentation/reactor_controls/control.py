@@ -6,12 +6,19 @@ class Controller:
         self.ki = ki
         self.kd = kd
 
-    def update(self, setpoint, pv, dt):
-        error = setpoint - pv
+    def update(self, desired_n, current_n, dt):
+        error = desired_n - current_n
         self.integral += error*dt
         derivative = (error - self.previous_error)/dt
-        control = self.kp*error + self.ki*self.integral + self.kd*derivative
+
+        #we are controlling reactivty by manipulating control rod position
+
+        rho_rod = self.kp * error + self.ki * self.integral + self.kd * derivative
+
+        if rho_rod > 0.1:
+            print("Warning: Control rod reactivity limit exceeded. Clamping to 0.1.")
+            rho_rod = 0.1
 
         self.previous_error = error
 
-        return control
+        return rho_rod

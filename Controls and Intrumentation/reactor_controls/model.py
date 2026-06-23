@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.integrate import solve_ivp
+from control import Controller
 import matplotlib.pyplot as plt
 
 
@@ -58,6 +59,8 @@ class ReactorModel:
             [self.T_fuel0, self.T_c1_0, self.T_c2_0]
         ))
 
+        self.rho_rod = 0.0  # Control rod reactivity, to be updated by the controller
+
     def calculate_steady_state_temps(self):
         P0 = self.P_rated * self.n0
 
@@ -77,10 +80,6 @@ class ReactorModel:
 
         return T_fuel0, T_c1_0, T_c2_0
     
-    def rho_external(self, t):
-        #from the rod
-        return 0.00 if t >= 10 else 0.0
-    
     def rho_feedback(self, T_fuel, T_c_avg):
         #reactivity feedback from temperature changes
         return (
@@ -90,7 +89,7 @@ class ReactorModel:
 
     def rho_total(self, t, T_fuel, T_c_avg):
         # Total reactivity is sum of external and feedback
-        return self.rho_external(t) + self.rho_feedback(T_fuel, T_c_avg)
+        return self.rho_rod + self.rho_feedback(T_fuel, T_c_avg)
 
     def neutron_equations(self, n, C, rho):
 
@@ -141,46 +140,70 @@ class ReactorModel:
 
         return np.concatenate(([dndt], dCdt, dTdt))
 
-    def solve(self):
-        sol = solve_ivp(
-            fun=self.dynamics,
-            t_span=(0, 200),
-            y0=self.x0,
-            method="RK45",
-            max_step=0.1,
-            dense_output=True
-        )
+class Simulation:
+    def __init__(self):
+        self.model = ReactorModel()
+        self.dt = 0.1  # Time step for simulation
+        self.desired_n = 1.0  # Desired neutron population
+        self.current_n = 0
 
-        return sol
+        self.time_steps = []
+        self.control_values = []
+        self.n_current_values = []
+        self.n_desired_values = []
+
+    #Solve the model, discretely sample the solution, and return the time and state arrays
+
+    def simulate(self, controller):
+        for i in range(200):
+            t = i * self.dt
+            self.time_steps.append(t)
+
+            # Get current neutron population from the model
+            self.current_n = self.model.x0[0]
+
+            # Update the control rod reactivity using the PID controller
+            rho_rod = controller.update(self.desired_n, self.current_n, self.dt)
+            self.control_values.append(rho_rod)
+
+            # Define the external reactivity function for the model
+            self.model.rho_external = rho_rod
+
+            # Solve the model for the next time step
+            sol = solve_ivp(
+                fun=self.model.dynamics,
+                t_span=(t, t + self.dt),
+                y0=self.model.x0,
+                method='RK45'
+            )
+
+            # Update the model's state for the next iteration
+            self.model.x0 = sol.y[:, -1]
+            self.n_current_values.append(self.n_current)
+            self.n_desired_values.append(self.n_desired)
+
+    def plot(self):
+        plt.figure(figsize=(12, 6))
+        plt.subplot(2, 1, 1)
+        plt.plot(self.time_steps, self.n_current_values, label='Current Neutron Population')
+        plt.plot(self.time_steps, self.n_desired_values, label='Desired Neutron Population', linestyle='--')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Neutron Population')
+        plt.title('Neutron Population Over Time')
+        plt.legend()
+        plt.grid()
+
+        plt.subplot(2, 1, 2)
+        plt.plot(self.time_steps, self.control_values, label='Control Rod Reactivity (rho_rod)', color='orange')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Control Rod Reactivity')
+        plt.title('Control Rod Reactivity Over Time')
+        plt.legend()
+        plt.grid()
+
+        plt.tight_layout()
+        plt.show()
     
-model=ReactorModel()
-sol = model.solve()
-
-print("Initial temperatures:")
-print(f"T_fuel0 = {model.T_fuel0:.2f} K")
-print(f"T_c1_0  = {model.T_c1_0:.2f} K")
-print(f"T_c2_0  = {model.T_c2_0:.2f} K")
-print(f"T_cref  = {model.T_cref:.2f} K")
-
-# Run simulation with rho_external = 0.0 for all time
-# Print values at t=0 and t=200
-# Every state should be identical
-
-print(f"n:      {sol.y[0,0]:.6f}  →  {sol.y[0,-1]:.6f}")
-print(f"T_fuel: {sol.y[7,0]:.2f}  →  {sol.y[7,-1]:.2f}")
-print(f"T_c1:   {sol.y[8,0]:.2f}  →  {sol.y[8,-1]:.2f}")
-print(f"T_c2:   {sol.y[9,0]:.2f}  →  {sol.y[9,-1]:.2f}")
-
-# If anything drifts — your steady state derivation is wrong
-# Fix this before anything else
-
-t = sol.t        # time values from solve_ivp
-n = sol.y[0]     # neutron population over time
-
-plt.figure(figsize=(10, 4))
-plt.plot(t, n)
-plt.xlabel('Time (s)')
-plt.ylabel('Neutron density (normalized)')
-plt.title('Point Kinetics: Reactivity Response')
-plt.grid(True)
-plt.show()
+simulator = Simulation()
+sol = simulator.simulate(Controller(kp=0.5, ki=0.1, kd=0.05))
+simulator.plot()
