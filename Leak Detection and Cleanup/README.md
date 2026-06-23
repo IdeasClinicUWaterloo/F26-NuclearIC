@@ -8,82 +8,87 @@ This subchallenge invites students to develop autonomous systems capable of dete
 
 The goal is not to build a production-grade radiological monitoring system, but to explore how modern sensor technology, AI, robotics, and simulation can be integrated to address real-world nuclear facility challenges.
 
-## Potential Solutions
+## Ways to Approach This Challenge
 
-Teams may approach this challenge in several ways, depending on their background and interests:
+This challenge is designed to accommodate diverse technical backgrounds. Teams may select one of the following paths or integrate elements from both approaches.
 
-- **Train a machine learning model** to classify normal operations versus leak events using multivariate sensor time-series data
-- **Develop a sensor localization algorithm** to triangulate or estimate the spatial origin of a detected leak using multiple sensor readings
-- **Build or extend the 3D simulation environment** to model drone or robot patrol paths that optimize coverage and response time
-- **Create a data acquisition and preprocessing pipeline** to clean sensor data, extract features, and prepare training datasets for ML models
-- **Design a real-time decision system** that triggers alerts, coordinates robotic response, and guides cleanup teams
-- **Perform sensitivity analysis** on sensor placement and model hyperparameters to optimize leak detection accuracy and false alarm rates
-- **Build a dashboard or monitoring interface** that displays sensor health, leak probability, localization estimates, and facility status
+### Science Path
+Focus on understanding the physics of radiation detection and developing methods to find where leaks come from.
 
-## Proposed Solution Components
+Possible directions:
+- Study how radiation travels through a facility and how sensors detect it
+- Develop algorithms to pinpoint leak locations using multiple sensor readings (triangulation and source identification)
+- Analyze sensor data to understand normal facility operations versus leak scenarios
+- Research how different sensor types respond to radiation and what makes them accurate or unreliable
+- Create a proposal for the best sensor placement strategy in a facility
+- Explore how to reduce false alarms while catching real leaks
 
-This challenge is supported by three integrated subsystems:
+### Software Path
+Focus on building tools, dashboards, and automated systems that help detect and respond to leaks.
 
-### 1. Leak Detection Simulation (3D Environment)
-Located in `leak-detection-simulation/`, a Godot-based 3D environment models a nuclear facility with:
-- Spatial layout and containment structures
-- Simulated drone or mobile robot for facility inspection
-- Fog volume rendering to represent contamination spread
-- Real-time sensor visualization and navigation
+Possible directions:
+- Build machine learning models that learn to recognize leak patterns from historical data
+- Create a user-friendly dashboard that displays real-time sensor information and leak alerts
+- Develop algorithms that help robots or drones navigate a facility efficiently to search for leaks
+- Design a system that automatically flags suspicious sensor readings and alerts operators
+- Build data processing pipelines that clean messy sensor data and prepare it for analysis
+- Create visualization tools that show where a leak might be located based on sensor readings
+- Automate the comparison and ranking of different detection strategies
 
-**Key features:**
-- Autonomous pathfinding and patrol logic
-- Dynamic environmental effects (fog, particles)
-- Integration with external sensor data sources
+## Available Resources
 
-**Next steps:**
-- Extend robot behavior with leak detection and response heuristics
-- Add realistic environmental models and sensor simulation
-- Create scenario-based testing with injected leak events
+This challenge provides three integrated tools and datasets:
 
-### 2. Machine Learning Leak Detection (Data Analysis)
-Located in `machine_learning/`, a Jupyter notebook framework for training and evaluating leak detection models:
-- Data preprocessing and windowing for time-series classification
-- Feature extraction from multi-channel sensor data
-- Neural network model design and training
-- Performance evaluation using confusion matrices and classification reports
+### 1. 3D Simulation Environment
+Located in `leak-detection-simulation/`, a Godot-based virtual facility that enables:
+- Spatial modeling of facility layout and containment structures
+- Autonomous robotic agent control and navigation
+- Real-time sensor visualization and contamination spread simulation
+- Scenario-based testing with configurable leak events
 
-**Supported data types:**
-- Normal operations, transient accidents (non-leak), and leak events (LOCA, SGATR scenarios)
-- Time-stamped multivariate sensor readings
+**Potential applications:**
+- Validate detection and localization algorithms against simulated scenarios
+- Evaluate robot patrol strategies and coverage efficiency
+- Test system behavior across different facility geometries
+- Integrate external detection models with robotic navigation
 
-**Next steps:**
-- Tune model hyperparameters and architecture
-- Compare against baseline classifiers
-- Test generalization on new facility configurations
-- Deploy model inference in real-time systems
+### 2. Machine Learning Framework
+Located in `machine_learning/`, a Jupyter notebook environment with preprocessed datasets:
+- Time-series sensor data from normal operations and known leak events
+- Data preprocessing and feature extraction pipelines
+- Baseline neural network models and evaluation metrics
+- Classification framework for distinguishing operational states
 
-### 3. Sensor Localization (Source Identification)
-Located in `sensor_localization/`, algorithms for determining leak origin:
-- **read_sensors/**: Raw sensor data collection and streaming
-- **sensor_location/**: Localization algorithms and calibration data
-  - Multiple calibration profiles (0%, 20%, 40%, 60%, 80%, 100%) for system response curves
-  - Python-based triangulation or source-tracking methods
+**Potential applications:**
+- Develop and tune leak detection classifiers
+- Perform comparative analysis across model architectures
+- Evaluate generalization performance on held-out data
+- Integrate trained models into real-time detection systems
 
-**Key features:**
-- Multi-sensor fusion for spatial estimation
-- Calibration-based accuracy improvement
-- Extensible to new sensor types and facility geometries
+### 3. Sensor Localization Tools
+Located in `sensor_localization/`, algorithms and calibration data for source identification:
+- Multi-point sensor measurements from various facility locations
+- Calibration profiles at multiple intensity levels (0-100%)
+- Triangulation and signal fusion methods for source estimation
+- Reference validation datasets with known leak locations
 
-**Next steps:**
-- Validate localization accuracy against ground-truth leak locations
-- Optimize algorithm for latency and computational cost
-- Integrate with robotic navigation to prioritize inspection areas
+**Potential applications:**
+- Enhance localization accuracy through algorithmic improvements
+- Optimize sensor placement for maximum spatial coverage
+- Validate source identification against ground-truth locations
+- Extend methods to new facility configurations and sensor types
 
 ## Recommended Workflow
 
-1. **Understand the Data**: Review the machine learning notebook and sensor localization code to understand available data formats and existing model structure.
-2. **Run Baseline Tests**: Execute the ML notebook to train a baseline leak detection model and evaluate performance.
-3. **Improve Detection**: Experiment with feature engineering, model architecture, or ensemble methods to improve accuracy.
-4. **Develop Localization**: Refine the sensor localization algorithm using calibration data and multi-sensor fusion techniques.
-5. **Integrate with Simulation**: Connect your detection and localization pipeline to the 3D environment for end-to-end testing.
-6. **Optimize Response**: Design robot patrol paths, alert thresholds, and cleanup prioritization based on simulation results.
-7. **Document and Validate**: Create performance reports, test against adversarial scenarios, and justify design choices.
+The following sequence provides a structured approach to solution development:
+
+1. **Data familiarization**: Review the machine learning notebook to understand sensor data characteristics and distinguishing features between normal and leak states.
+2. **Baseline implementation**: Execute the provided notebook to establish a baseline detection model and quantify initial performance metrics.
+3. **Model refinement**: Explore alternative feature engineering, model architectures, and hyperparameters to improve classification performance.
+4. **Localization development**: Implement or improve localization algorithms using calibration data and multi-sensor fusion techniques.
+5. **System integration**: Connect detection and localization components to the 3D simulation environment for end-to-end validation.
+6. **Optimization and testing**: Refine robot navigation strategies, alert thresholds, and response prioritization based on simulation results.
+7. **Documentation and analysis**: Prepare comprehensive technical documentation including methodology, results, limitations, and recommendations for future work.
 
 ## Environment & Materials
 
@@ -119,18 +124,25 @@ Leak Detection and Cleanup/
 
 ## Getting Started
 
-1. **Review the Challenge**: Read this README and the project mission in the main workspace README.
-2. **Explore the Simulation**: Open the Godot project and familiarize yourself with the 3D environment and scenes.
-3. **Examine the ML Notebook**: Review the LeakDetection.ipynb to understand the data pipeline and model structure.
-4. **Understand the Sensors**: Study the sensor_localization code to learn how localization is performed.
-5. **Start Building**: Choose a focus area—detection, localization, robotics, or integration—and begin prototyping.
+1. **Review project scope**: Examine this README and the main workspace README to understand the challenge objectives and available resources.
+2. **Familiarize with simulation**: Launch the Godot project and observe facility geometry, environmental effects, and robot capabilities.
+3. **Examine sensor data**: Review the machine learning notebook to understand data formats, operational signatures, and leak event characteristics.
+4. **Understand localization methods**: Study the sensor localization code and calibration data to learn source identification techniques.
+5. **Select a focus area**: Determine whether to prioritize the Science Path (radiation physics and localization algorithms) or the Software Path (tools and automation systems), or pursue an integrated approach.
+6. **Begin implementation**: Start with a focused technical area and progressively integrate components into a cohesive solution.
 
 ## Evaluation Criteria
 
-Strong solutions will demonstrate:
-- **Detection Accuracy**: High sensitivity and specificity in classifying leaks from sensor data
-- **Localization Precision**: Ability to accurately pinpoint leak sources using multi-sensor fusion
-- **Real-time Performance**: Timely detection and response without excessive computational cost
-- **System Integration**: Seamless collaboration between detection, localization, and robotic response components
-- **Robustness**: Graceful handling of sensor noise, model uncertainty, and edge cases
-- **Documentation**: Clear explanation of design choices, trade-offs, and validation results
+Your solution will be assessed on the following dimensions:
+
+- **Detection Performance**: Report quantitative performance metrics (sensitivity, specificity, false positive rate) on test data.
+
+- **Localization Accuracy**: Validate spatial accuracy against known leak positions and report error bounds.
+
+- **Computational Efficiency**: Document system latency and computational resource requirements.
+
+- **System Integration**: Demonstrate coherent data flow and effective decision-making between detection, localization, and response components.
+
+- **Robustness and Error Handling**: Show that the system maintains functionality when sensors malfunction or provide incomplete data.
+
+- **Technical Documentation**: Provide clear explanation of methods, design choices, implementation details, and results.
