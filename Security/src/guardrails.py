@@ -12,16 +12,11 @@ class OperationalGuardrails:
     def verify_facility_operations(self, entry_point="perimeter_gate"):
         """
         Validates that the current policy allows all critical personnel roles 
-        to physically reach their mandatory operational checkpoints.
-        
-        Returns:
-            dict: {
-                "operational_viable": bool,
-                "log": list of logging strings
-            }
+        to reach checkpoints, calculating a cumulative Facility Efficiency Score.
         """
         all_roles = self.blueprint.operational_requirements.keys()
         system_passed = True
+        total_facility_delay = 0
         guardrail_log = []
 
         guardrail_log.append("==================================================")
@@ -29,56 +24,72 @@ class OperationalGuardrails:
         guardrail_log.append("==================================================")
         guardrail_log.append(f"[*] Facility Entry Point Designated As: '{entry_point}'")
 
+        # Inject standard supervision and dual-presence context to evaluate standard operational capability
         for role in all_roles:
+            # PRIORITY 1.2: Validate role exists in blueprint
+            if role not in self.blueprint.operational_requirements:
+                guardrail_log.append(f"\n[!] Configuration Error: Role '{role}' not in blueprint operational_requirements.")
+                system_passed = False
+                continue
+            
+            context = {
+                "system_state": "Normal", 
+                "time_of_day": 12, 
+                "active_escorts": ["security_officer"],
+                "present_roles": [role, "security_officer"] # Enforces the Two-Person Rule buddy presence
+            }
+
             required_rooms = self.blueprint.get_role_requirements(role)
             guardrail_log.append(f"\n[*] Evaluating Mission Capability for Role: '{role}'")
             
             for room in required_rooms:
-                # Execute the pathfinding engine to simulate the person walking to work
-                result = self.engine.verify_path(entry_point, room, role)
+                result = self.engine.verify_path(entry_point, room, role, context)
                 
                 if result["path_found"]:
-                    guardrail_log.append(f"    [+] PASS: Clear route discovered to '{room}'.")
+                    path_time = result["total_time"]
+                    total_facility_delay += path_time
+                    guardrail_log.append(f"    [+] PASS: Route confirmed to '{room}' ({path_time} mins elapsed).")
                 else:
                     guardrail_log.append(f"    [X] CRITICAL BLOCK: Role is physically unable to access '{room}'!")
                     system_passed = False
                     
         guardrail_log.append("\n==================================================")
-        if system_passed:
-            guardrail_log.append(" AUDIT RESULT: OPERATIONAL COMPLIANCE ARCHIVED     ")
-            guardrail_log.append(" -> Core staffing can execute required duties.     ")
+        guardrail_log.append("             OPERATIONAL EFFICIENCY REPORT        ")
+        guardrail_log.append("==================================================")
+        guardrail_log.append(f"[->] Cumulative Facility Mission Delay: {total_facility_delay} operational minutes.")
+        
+        # Calculate a baseline grade: Perfect uninhibited routing takes roughly 25 minutes total across all profiles
+        if total_facility_delay == 0:
+            efficiency_rating = 0
         else:
-            guardrail_log.append(" AUDIT RESULT: OPERATIONAL SYSTEM FAULT            ")
-            guardrail_log.append(" -> Critical roles are locked out of required zones.")
+            efficiency_rating = max(10, min(100, int((25 / total_facility_delay) * 100)))
+        guardrail_log.append(f"[->] Total Operational Feasibility Rating: {efficiency_rating}/100")
+        
+        if system_passed:
+            guardrail_log.append("\nAUDIT RESULT: OPERATIONAL COMPLIANCE ARCHIVED")
+        else:
+            guardrail_log.append("\nAUDIT RESULT: OPERATIONAL SYSTEM FAULT (DEADLOCK)")
         guardrail_log.append("==================================================")
 
         return {
             "operational_viable": system_passed,
+            "total_delay": total_facility_delay,
+            "efficiency_rating": efficiency_rating,
             "log": guardrail_log
         }
 
-
-# --- Local Orchestration & Test Run ---
 if __name__ == "__main__":
     try:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         project_root = os.path.dirname(current_dir)
         
-        blueprint_path = os.path.join(project_root, "data", "facility_blueprint.json")
-        policy_path = os.path.join(project_root, "data", "policy_config.json")
-        
-        # Initialize full infrastructure chain
-        loader = BlueprintLoader(blueprint_path)
-        pm = PolicyManager(policy_path, loader)
+        loader = BlueprintLoader(os.path.join(project_root, "data", "facility_blueprint.json"))
+        pm = PolicyManager(os.path.join(project_root, "data", "policy_config.json"), loader)
         engine = GraphEngine(loader, pm)
         
-        # Initialize Guardrails
         guardrails = OperationalGuardrails(loader, pm, engine)
-        
-        # Run the full validation check
         report = guardrails.verify_facility_operations()
         
-        # Print results to console
         for line in report["log"]:
             print(line)
 

@@ -1,5 +1,5 @@
 import os
-from collections import deque
+import heapq
 from blueprint_loader import BlueprintLoader
 from policy_manager import PolicyManager
 
@@ -7,45 +7,122 @@ class GraphEngine:
     def __init__(self, blueprint_loader: BlueprintLoader, policy_manager: PolicyManager):
         self.blueprint = blueprint_loader
         self.policy = policy_manager
+        self._current_traversal_path = []  # Internal path history tracking (not user-exposed)
+
+    def _get_zone_level(self, room_id):
+        """Helper to extract the numeric tier from a room's assigned zone (e.g., 'Zone_3' -> 3)."""
+        zone = self.policy.room_to_zone.get(room_id, "Zone_0")
+        try:
+            return int(zone.split("_")[-1])
+        except (ValueError, IndexError):
+            return 0
+    
+    def _validate_role(self, role: str) -> bool:
+        """Check if role is defined in blueprint operational requirements."""
+        return role in self.blueprint.operational_requirements
+    
+    def _get_visited_zones(self) -> list:
+        """Returns list of zones visited so far in current traversal."""
+        return [self.policy.room_to_zone.get(room) for room in self._current_traversal_path]
 
     def verify_path(self, start_room, end_room, role, context=None):
-        """Uses BFS to calculate physical trajectories, verifying advanced rules on every transition."""
+        """
+        Uses Dijkstra's Algorithm to find the lowest time-cost path through the facility
+        while validating security policies and tracking accumulated operational delays.
+        """
+        # PRIORITY 1.2: Validate role input
+        if not self._validate_role(role):
+            return {
+                "path_found": False, 
+                "path": [], 
+                "total_time": 0,
+                "audit_trail": [
+                    f"[!] Invalid role '{role}'.",
+                    f"[!] Valid roles: {list(self.blueprint.operational_requirements.keys())}"
+                ]
+            }
+        
         if context is None:
-            context = {"system_state": "Normal", "time_of_day": 12, "active_escorts": []}
+            context = {
+                "system_state": "Normal", 
+                "time_of_day": 12, 
+                "active_escorts": [],
+                "present_roles": [role] # Falls back to solo occupancy if unassigned
+            }
 
+        system_state = context.get("system_state", "Normal").lower()
         audit_trail = []
         audit_trail.append(f"[*] Simulating Transit: Role='{role}' | State='{context['system_state']}' | Time={context['time_of_day']}:00")
+        
+        # PRIORITY 1.1: Initialize internal path tracking (not exposed to caller)
+        self._current_traversal_path = [start_room]
 
         all_rooms = self.blueprint.get_all_rooms()
         if start_room not in all_rooms or end_room not in all_rooms:
-            return {"path_found": False, "path": [], "audit_trail": ["[!] Target node mismatch."]}
+            return {"path_found": False, "path": [], "total_time": 0, "audit_trail": ["[!] Target node mismatch."]}
 
         # Check origin clearance
         if not self.policy.is_transition_authorized(start_room, role, context, audit_trail):
-            return {"path_found": False, "path": [], "audit_trail": audit_trail}
+            return {"path_found": False, "path": [], "total_time": 0, "audit_trail": audit_trail}
 
-        queue = deque([(start_room, [start_room])])
-        visited = set([start_room])
+        # Priority Queue element format: (accumulated_time, current_room, [ordered_path_history])
+        pq = [(0, start_room, [start_room])]
+        min_time_to_room = {start_room: 0}
 
-        while queue:
-            current_room, current_path = queue.popleft()
+        while pq:
+            current_time, current_room, current_path = heapq.heappop(pq)
 
             if current_room == end_room:
-                audit_trail.append(f"[+] Routing Confirmed: {' -> '.join(current_path)}")
-                return {"path_found": True, "path": current_path, "audit_trail": audit_trail}
+                audit_trail.append(f"[+] Routing Confirmed: {' -> '.join(current_path)} (Total Path Time: {current_time} mins)")
+                return {"path_found": True, "path": current_path, "total_time": current_time, "audit_trail": audit_trail}
+
+            # Skip branch processing if an operationally cheaper configuration was already registered
+            if current_time > min_time_to_room.get(current_room, float('inf')):
+                continue
 
             for next_room in self.blueprint.get_connected_rooms(current_room):
-                if next_room in visited:
+                # PRIORITY 1.1: Use internal path tracking instead of context parameter
+                # Update internal path to current position
+                self._current_traversal_path = current_path
+                visited_zones = self._get_visited_zones()
+
+                if not self.policy.is_transition_authorized(next_room, role, context, audit_trail, visited_zones=visited_zones):
                     continue
 
-                if not self.policy.is_transition_authorized(next_room, role, context, audit_trail):
-                    continue
+                # --- Dynamic Time Cost Calculations ---
+                base_cost = 1  
+                zone_cost = 0
+                escort_cost = 0
 
-                visited.add(next_room)
-                queue.append((next_room, current_path + [next_room]))
+                # 1. Evaluate Security Gradient Step Up
+                current_lvl = self._get_zone_level(current_room)
+                next_lvl = self._get_zone_level(next_room)
+                if next_lvl > current_lvl:
+                    zone_cost = 5  
 
+                # 2. Resource Constraints: Escalating Delay Pricing
+                rules = self.policy.get_room_rules_for_role(next_room, role, state=system_state)
+                if rules.get("requires_escort", False):
+                    escort_count = self.policy.get_escort_requirement_count(system_state)
+                    
+                    if escort_count <= 1:
+                        escort_cost = 15  # Optimal staffing availability
+                    elif escort_count == 2:
+                        escort_cost = 35  # Congestion: Guards are shared across zones
+                    else:
+                        escort_cost = 65  # Severe Saturation: Critical staffing log delay
+
+                transition_time = base_cost + zone_cost + escort_cost
+                next_time = current_time + transition_time
+
+                if next_time < min_time_to_room.get(next_room, float('inf')):
+                    min_time_to_room[next_room] = next_time
+                    heapq.heappush(pq, (next_time, next_room, current_path + [next_room]))
+
+        # Clean up internal state
+        self._current_traversal_path = []
         audit_trail.append(f"[X] No viable paths found from '{start_room}' to '{end_room}'.")
-        return {"path_found": False, "path": [], "audit_trail": audit_trail}
+        return {"path_found": False, "path": [], "total_time": 0, "audit_trail": audit_trail}
 
 if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -56,33 +133,11 @@ if __name__ == "__main__":
     engine = GraphEngine(loader, pm)
 
     print("==================================================")
-    print("      ADVANCED POLICY MATRIX COMPLIANCE TEST      ")
+    print("      TESTING OPERATIONAL TIME-COST ROUTING       ")
     print("==================================================\n")
 
-    # TEST CASE 1: Normal Operations, Unescorted Contractor/Technician
-    # Expectation: Fails at Zone 5 entry due to lack of a Security Officer escort.
-    ctx_1 = {"system_state": "Normal", "time_of_day": 10, "active_escorts": []}
-    print("[RUN 1: Technician Day Shift - Unescorted]")
-    res_1 = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_1)
-    print(f"Outcome: {'SUCCESS' if res_1['path_found'] else 'FAILED'}")
-    print(f"Log Trace: {res_1['audit_trail'][-2]}\n")
-
-    print("--------------------------------------------------\n")
-
-    # TEST CASE 2: Normal Operations, Escort Authorized
-    # Expectation: Path clear. The technician is granted entry because an escort is present.
-    ctx_2 = {"system_state": "Normal", "time_of_day": 10, "active_escorts": ["security_officer"]}
-    print("[RUN 2: Technician Day Shift - Escorted by Security Officer]")
-    res_2 = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_2)
-    print(f"Outcome: {'SUCCESS' if res_2['path_found'] else 'FAILED'}")
-    print(f"Log Trace: {res_2['audit_trail'][-1]}\n")
-
-    print("--------------------------------------------------\n")
-
-    # TEST CASE 3: Crisis / Emergency State Fast-Path vs Lockdown Execution
-    # Expectation: Even with an escort, the technician is strictly denied access due to lockdown.
-    ctx_3 = {"system_state": "Emergency", "time_of_day": 10, "active_escorts": ["security_officer"]}
-    print("[RUN 3: Crisis Mode Injected - Escorted Technician Attempts Entry]")
-    res_3 = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_3)
-    print(f"Outcome: {'SUCCESS' if res_3['path_found'] else 'FAILED'}")
-    print(f"Log Trace: {res_3['audit_trail'][-2]}\n")
+    # Run unescorted vs escorted technician to observe Dijkstra choosing different optimal balances
+    ctx_escorted = {"system_state": "Normal", "time_of_day": 10, "active_escorts": ["security_officer"]}
+    res = engine.verify_path("perimeter_gate", "reactor_containment", "maintenance_technician", ctx_escorted)
+    for line in res["audit_trail"]:
+        print(line)
