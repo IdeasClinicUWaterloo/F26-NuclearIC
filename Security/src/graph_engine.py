@@ -2,6 +2,7 @@ import os
 import heapq
 from blueprint_loader import BlueprintLoader
 from policy_manager import PolicyManager
+from context_validator import ExecutionContext
 
 class GraphEngine:
     def __init__(self, blueprint_loader: BlueprintLoader, policy_manager: PolicyManager):
@@ -42,13 +43,28 @@ class GraphEngine:
                 ]
             }
         
-        if context is None:
-            context = {
-                "system_state": "Normal", 
-                "time_of_day": 12, 
-                "active_escorts": [],
-                "present_roles": [role] # Falls back to solo occupancy if unassigned
+        # PRIORITY 2.1: Normalize and validate context input
+        try:
+            if context is None:
+                context_obj = ExecutionContext()  # Use defaults
+            else:
+                context_obj = ExecutionContext.from_dict(context)  # Validate & normalize
+        except (ValueError, TypeError) as ctx_err:
+            return {
+                "path_found": False,
+                "path": [],
+                "total_time": 0,
+                "audit_trail": [f"[!] Invalid execution context: {str(ctx_err)}"]
             }
+        
+        # Use validated context for the rest of the function
+        context = {
+            "system_state": context_obj.system_state,
+            "time_of_day": context_obj.time_of_day,
+            "active_escorts": context_obj.active_escorts,
+            "present_roles": context_obj.present_roles,
+            "guards_distracted": context_obj.guards_distracted
+        }
 
         system_state = context.get("system_state", "Normal").lower()
         audit_trail = []

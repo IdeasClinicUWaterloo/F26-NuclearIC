@@ -1,74 +1,321 @@
 {
   "author_name": "Systems_Engineering_Group_A",
   "room_to_zone": {
-    "perimeter_gate":       "Zone_1",
-    "parking_lot":          "Zone_1",
-    "admin_reception":      "Zone_1",
-    "office_hallway":       "Zone_2",
-    "staff_lounge":          "Zone_2",
-    "operations_airlock":   "Zone_3",
-    "maintenance_bay":      "Zone_3",
-    "control_room_entry":   "Zone_4",
-    "main_control_room":     "Zone_5",
-    "reactor_containment":   "Zone_5"
+    "fuel_service_corridor": "Zone_2",
+    "main_control_room": "Zone_2",
+    "nuclear_receiving": "Zone_3",
+    "office_sas_hub": "Zone_3",
+    "outer_parking": "Zone_3",
+    "protected_area_courtyard": "Zone_3",
+    "rad_waste_building": "Zone_2",
+    "reactor_containment": "Zone_3",
+    "security_gatehouse": "Zone_2",
+    "visitor_center": "Zone_3"
   },
   "zone_policies": {
     "Zone_1": {
       "normal": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "maintenance_technician": {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "escort_role": null,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       },
       "emergency": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "maintenance_technician": {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       }
     },
     "Zone_2": {
       "normal": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "maintenance_technician": {"access": "Permitted", "requires_escort": false, "time_window": [8, 17], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "escort_role": null,
+          "time_window": [
+            8,
+            17
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       },
       "emergency": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "maintenance_technician": {"access": "Denied",    "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       }
     },
     "Zone_3": {
       "normal": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": "Zone_1"},
-        "maintenance_technician": {"access": "Permitted", "requires_escort": false, "time_window": [8, 17], "zone_dependency": "Zone_1"},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": "Zone_1"}
+        "reactor_operator": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "escort_role": null,
+          "time_window": [
+            8,
+            17
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       },
       "emergency": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "maintenance_technician": {"access": "Denied",    "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       }
     },
     "Zone_4": {
       "normal": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": "Zone_2"},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": "Zone_2"}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": "Zone_2"
+        },
+        "maintenance_technician": {
+          "access": "Denied",
+          "requires_escort": false,
+          "escort_role": null,
+          "time_window": [
+            8,
+            17
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       },
       "emergency": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       }
     },
     "Zone_5": {
       "normal": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": "Zone_4"},
-        "maintenance_technician": {"access": "Restricted", "requires_escort": true, "escort_role": "security_officer", "time_window": [8, 17], "zone_dependency": "Zone_3"},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": "Zone_4"}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": "Zone_2"
+        },
+        "maintenance_technician": {
+          "access": "Restricted",
+          "requires_escort": true,
+          "escort_role": "security_officer",
+          "time_window": [
+            8,
+            17
+          ],
+          "zone_dependency": "Zone_3"
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": "Zone_4"
+        }
       },
       "emergency": {
-        "reactor_operator":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "maintenance_technician": {"access": "Denied",    "requires_escort": false, "time_window": [0, 23], "zone_dependency": null},
-        "security_officer":       {"access": "Permitted", "requires_escort": false, "time_window": [0, 23], "zone_dependency": null}
+        "reactor_operator": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "maintenance_technician": {
+          "access": "Denied",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        },
+        "security_officer": {
+          "access": "Permitted",
+          "requires_escort": false,
+          "time_window": [
+            0,
+            23
+          ],
+          "zone_dependency": null
+        }
       }
     }
   }

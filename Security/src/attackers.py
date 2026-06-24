@@ -2,6 +2,7 @@ import os
 from blueprint_loader import BlueprintLoader
 from policy_manager import PolicyManager
 from graph_engine import GraphEngine
+from context_validator import ExecutionContext
 
 class SocialEngineer:
     def __init__(self, blueprint_loader: BlueprintLoader, policy_manager: PolicyManager, graph_engine: GraphEngine):
@@ -31,8 +32,31 @@ class SocialEngineer:
             simulation_log.append(f"[!] Valid roles: {list(self.blueprint.operational_requirements.keys())}")
             return {"attack_successful": False, "log": simulation_log}
         
-        if context is None:
-            context = {"system_state": "Normal", "time_of_day": 12, "active_escorts": []}
+        # PRIORITY 2.1: Use ExecutionContext for validation
+        try:
+            if context is None:
+                context_obj = ExecutionContext(
+                    system_state="Normal",
+                    time_of_day=12,
+                    active_escorts=[]
+                )
+            else:
+                context_obj = ExecutionContext.from_dict(context)
+        except (ValueError, TypeError) as ctx_err:
+            simulation_log = []
+            simulation_log.append("==================================================")
+            simulation_log.append("      ADVERSARY SIMULATION: THE SOCIAL ENGINEER   ")
+            simulation_log.append("==================================================")
+            simulation_log.append(f"[!] Invalid execution context: {str(ctx_err)}")
+            return {"attack_successful": False, "log": simulation_log}
+        
+        context = {
+            "system_state": context_obj.system_state,
+            "time_of_day": context_obj.time_of_day,
+            "active_escorts": context_obj.active_escorts,
+            "present_roles": context_obj.present_roles,
+            "guards_distracted": context_obj.guards_distracted
+        }
 
         simulation_log = []
         simulation_log.append("==================================================")
@@ -102,14 +126,34 @@ class Impersonator:
         escort_count = self.policy.get_escort_requirement_count("normal")
         guards_distracted = escort_count >= 2  # Threat Trigger Boundary
 
-        if context is None:
-            context = {
-                "system_state": "Normal", 
-                "time_of_day": 12, 
-                "active_escorts": [],
-                "guards_distracted": guards_distracted,
-                "present_roles": ["contractor"] # Attacker is executing a solo breach
-            }
+        # PRIORITY 2.1: Use ExecutionContext for validation
+        try:
+            if context is None:
+                context_obj = ExecutionContext(
+                    system_state="Normal",
+                    time_of_day=12,
+                    active_escorts=[],
+                    guards_distracted=guards_distracted,
+                    present_roles=["contractor"]
+                )
+            else:
+                context_obj = ExecutionContext.from_dict(context)
+                context_obj.guards_distracted = guards_distracted
+        except (ValueError, TypeError) as ctx_err:
+            simulation_log = []
+            simulation_log.append("==================================================")
+            simulation_log.append("        ADVERSARY SIMULATION: THE IMPERSONATOR    ")
+            simulation_log.append("==================================================")
+            simulation_log.append(f"[!] Invalid execution context: {str(ctx_err)}")
+            return {"attack_successful": False, "log": simulation_log}
+        
+        context = {
+            "system_state": context_obj.system_state,
+            "time_of_day": context_obj.time_of_day,
+            "active_escorts": context_obj.active_escorts,
+            "guards_distracted": context_obj.guards_distracted,
+            "present_roles": context_obj.present_roles
+        }
 
         simulation_log = []
         simulation_log.append("==================================================")
@@ -171,13 +215,33 @@ class Insider:
         
         if unauthorized_targets is None:
             unauthorized_targets = ["main_control_room"]
-        if context is None:
-            context = {
-                "system_state": "Normal", 
-                "time_of_day": 12, 
-                "active_escorts": [],
-                "present_roles": [rogue_role] # Rogue employee moving unaccompanied
-            }
+        
+        # PRIORITY 2.1: Use ExecutionContext for validation
+        try:
+            if context is None:
+                context_obj = ExecutionContext(
+                    system_state="Normal",
+                    time_of_day=12,
+                    active_escorts=[],
+                    present_roles=[rogue_role]
+                )
+            else:
+                context_obj = ExecutionContext.from_dict(context)
+        except (ValueError, TypeError) as ctx_err:
+            simulation_log = []
+            simulation_log.append("==================================================")
+            simulation_log.append("          ADVERSARY SIMULATION: THE INSIDER       ")
+            simulation_log.append("==================================================")
+            simulation_log.append(f"[!] Invalid execution context: {str(ctx_err)}")
+            return {"attack_successful": False, "log": simulation_log}
+        
+        context = {
+            "system_state": context_obj.system_state,
+            "time_of_day": context_obj.time_of_day,
+            "active_escorts": context_obj.active_escorts,
+            "present_roles": context_obj.present_roles,
+            "guards_distracted": context_obj.guards_distracted
+        }
 
         simulation_log = []
         simulation_log.append("==================================================")
@@ -242,12 +306,29 @@ class EmergencyExploiter:
         
         if target_rooms is None:
             target_rooms = ["main_control_room"]
-            
+        
+        # PRIORITY 2.1: Use ExecutionContext for validation
+        try:
+            context_obj = ExecutionContext(
+                system_state="Emergency",
+                time_of_day=12,
+                active_escorts=[],
+                present_roles=["security_officer", "reactor_operator"]
+            )
+        except (ValueError, TypeError) as ctx_err:
+            simulation_log = []
+            simulation_log.append("==================================================")
+            simulation_log.append("      ADVERSARY SIMULATION: EMERGENCY EXPLOITER   ")
+            simulation_log.append("==================================================")
+            simulation_log.append(f"[!] Invalid execution context: {str(ctx_err)}")
+            return {"attack_successful": False, "log": simulation_log}
+        
         context = {
-            "system_state": "Emergency", 
-            "time_of_day": 12, 
-            "active_escorts": [],
-            "present_roles": ["security_officer", "reactor_operator"] # Team deployment
+            "system_state": context_obj.system_state,
+            "time_of_day": context_obj.time_of_day,
+            "active_escorts": context_obj.active_escorts,
+            "present_roles": context_obj.present_roles,
+            "guards_distracted": context_obj.guards_distracted
         }
 
         simulation_log = []
