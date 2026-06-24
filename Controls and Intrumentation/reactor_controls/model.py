@@ -57,16 +57,21 @@ class ReactorModel:
         return self.rho_rod
 
     def rho_disturbance(self, t):
-        """Optional uncommanded reactivity insertion; zero for the baseline case."""
-        return 0.001 if 50 <= t < 60 else 0.0
+        """Optional external reactivity added as disturbance."""
+        return 0.0001 if 50 <= t < 60 else 0.0
 
     def rho_feedback(self, T_fuel, T_c_avg):
+        """Reactivity from the thermal components of the reactor.
+        Balances out the reactivity if no disturbance."""
+
         return (
             self.alpha_fuel * (T_fuel - self.T_fref)
             + self.alpha_cool * (T_c_avg - self.T_cref)
         )
 
     def rho_total(self, t, T_fuel, T_c_avg):
+        """Combination of the total reactivity."""
+
         return (
             self.rho_external(t)
             + self.rho_disturbance(t)
@@ -74,6 +79,8 @@ class ReactorModel:
         )
 
     def neutron_equations(self, n, C, rho):
+        """Equations that model the neutron population of the SMR."""
+
         dndt = ((rho - self.BETA) / self.LAMBDA) * n + np.dot(self.LAMBDA_I, C)
         dCdt = (self.BETA_I / self.LAMBDA) * n - self.LAMBDA_I * C
         return dndt, dCdt
@@ -116,6 +123,18 @@ class Simulation:
         self.n_desired_values = []
 
     def simulate(self, controller):
+        """
+        Simulates the reactor's neutron population.
+        First, takes the current n from the state vector,
+        places current and desired inside arrays, and then
+        simulates for a number of steps.
+
+        Takes rho from control and gives it to the model,
+        and appends control values, then solves the ODEs.
+
+        Appends the current n values so plot() can use them.
+        """
+
         current_state = self.model.x0.copy()
         number_of_steps = int(self.duration / self.dt)
 
