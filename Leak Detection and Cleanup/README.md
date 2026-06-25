@@ -37,20 +37,20 @@ Possible directions:
 
 ## Available Resources
 
-This challenge provides three integrated tools and datasets:
+There are some available solution paths in this subproblem for you to build on or test based on your preference:
 
-### 1. 3D Simulation Environment
-Located in `leak-detection-simulation/`, a Godot-based virtual facility that enables:
-- Spatial modeling of facility layout and containment structures
-- Autonomous robotic agent control and navigation
-- Real-time sensor visualization and contamination spread simulation
-- Scenario-based testing with configurable leak events
+### 1. Sensor Localization Tools
+Located in `sensor_localization/`, algorithms and calibration data for source identification on a physical system:
+- Multi-point sensor measurements from various facility locations
+- Calibration profiles at multiple intensity levels (0-100%)
+- Triangulation and signal fusion methods for source estimation
+- Reference validation datasets with known leak locations
 
 **Potential applications:**
-- Validate detection and localization algorithms against simulated scenarios
-- Evaluate robot patrol strategies and coverage efficiency
-- Test system behavior across different facility geometries
-- Integrate external detection models with robotic navigation
+- Enhance localization accuracy through algorithmic improvements
+- Optimize sensor placement for maximum spatial coverage
+- Validate source identification against ground-truth locations
+- Extend methods to new facility configurations and sensor types
 
 ### 2. Machine Learning Framework
 Located in `machine_learning/`, a Jupyter notebook environment with preprocessed datasets:
@@ -65,18 +65,18 @@ Located in `machine_learning/`, a Jupyter notebook environment with preprocessed
 - Evaluate generalization performance on held-out data
 - Integrate trained models into real-time detection systems
 
-### 3. Sensor Localization Tools
-Located in `sensor_localization/`, algorithms and calibration data for source identification:
-- Multi-point sensor measurements from various facility locations
-- Calibration profiles at multiple intensity levels (0-100%)
-- Triangulation and signal fusion methods for source estimation
-- Reference validation datasets with known leak locations
+### 3. 3D Simulation Environment
+Located in `leak-detection-simulation/`, a Godot-based virtual facility that enables:
+- Spatial modeling of facility layout and containment structures
+- Autonomous robotic agent control and navigation
+- Real-time sensor visualization and contamination spread simulation
+- Scenario-based testing with configurable leak events
 
 **Potential applications:**
-- Enhance localization accuracy through algorithmic improvements
-- Optimize sensor placement for maximum spatial coverage
-- Validate source identification against ground-truth locations
-- Extend methods to new facility configurations and sensor types
+- Validate detection and localization algorithms against simulated scenarios
+- Evaluate robot patrol strategies and coverage efficiency
+- Test system behavior across different facility geometries
+- Integrate external detection models with robotic navigation
 
 ## Recommended Workflow
 
