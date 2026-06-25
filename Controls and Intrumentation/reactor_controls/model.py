@@ -44,6 +44,9 @@ class ReactorModel:
         )
 
     def calculate_steady_state_temps(self):
+        """Calculates the steady state temperatures of
+         the fuel and coolant, given the rated power. """
+        
         P0 = self.P_rated * self.n0
         fuel_to_coolant_delta = P0 * self.tau_fuel / self.mCp_fuel
 
@@ -53,16 +56,19 @@ class ReactorModel:
         return T_fuel0, T_c1_0, T_c2_0
 
     def rho_external(self, t):
-        """Control-rod reactivity held constant during one simulation timestep."""
+        """Control-rod reactivity that is constant during one simulation timestep.
+        The value of rho_rod is updated by the controller at each step."""
+
         return self.rho_rod
 
     def rho_disturbance(self, t):
         """Optional external reactivity added as disturbance."""
+
         return 0.0001 if 50 <= t < 60 else 0.0
 
     def rho_feedback(self, T_fuel, T_c_avg):
         """Reactivity from the thermal components of the reactor.
-        Balances out the reactivity if no disturbance."""
+        Forms an internal feedback loop that stabilizes the reactor's power output."""
 
         return (
             self.alpha_fuel * (T_fuel - self.T_fref)
@@ -86,6 +92,8 @@ class ReactorModel:
         return dndt, dCdt
 
     def thermal_equations(self, n, T_fuel, T_c1, T_c2):
+        """Equations that model the thermal dynamics of the SMR."""
+
         P = self.P_rated * n
         T_c_avg = 0.5 * (T_c1 + T_c2)
 
@@ -98,6 +106,8 @@ class ReactorModel:
         return np.array([dT_fuel_dt, dT_c1_dt, dT_c2_dt])
 
     def dynamics(self, t, x):
+        """Combines the neutron and thermal equations into a single system of ODEs."""
+
         n = x[0]
         C = x[1:7]
         T_fuel, T_c1, T_c2 = x[7:10]
@@ -116,11 +126,11 @@ class Simulation:
         self.dt = dt
         self.desired_n = desired_n
 
-        self.time_steps = []
-        self.control_times = []
-        self.control_values = []
-        self.n_current_values = []
-        self.n_desired_values = []
+        self.time_steps = [] # Times at which the state is recorded
+        self.control_times = [] # Times at which control actions are taken
+        self.control_values = [] # Control-rod reactivity values at each control time
+        self.n_current_values = [] # Current neutron population values at each time step
+        self.n_desired_values = [] # Desired neutron population values at each time step
 
     def simulate(self, controller):
         """
