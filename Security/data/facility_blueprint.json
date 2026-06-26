@@ -1,37 +1,45 @@
 {
-  "facility_name": "SMR Alpha Prototype",
+  "facility_name": "Multi-Module SMR Alpha Plant - Advanced",
   "rooms": [
-    "perimeter_gate",
-    "parking_lot",
-    "admin_reception",
-    "office_hallway",
-    "staff_lounge",
-    "operations_airlock",
-    "maintenance_bay",
-    "control_room_entry",
+    "visitor_center",
+    "outer_parking",
+    "security_gatehouse",
+    "protected_area_courtyard",
+    "rad_waste_building",
+    "auxiliary_generator_bldg",
+    "nuclear_receiving",
+    "logistics_change_room",
+    "office_sas_hub",
+    "fuel_service_corridor",
     "main_control_room",
-    "reactor_containment"
+    "reactor_containment",
+    "maintenance_bypass_tunnel"
   ],
   "adjacencies": [
-    {"from": "perimeter_gate", "to": "parking_lot", "bidirectional": true},
-    {"from": "parking_lot", "to": "admin_reception", "bidirectional": true},
-    {"from": "admin_reception", "to": "office_hallway", "bidirectional": true},
-    {"from": "office_hallway", "to": "staff_lounge", "bidirectional": true},
-    {"from": "office_hallway", "to": "operations_airlock", "bidirectional": true},
-    {"from": "operations_airlock", "to": "maintenance_bay", "bidirectional": true},
-    {"from": "operations_airlock", "to": "control_room_entry", "bidirectional": true},
-    {"from": "maintenance_bay", "to": "reactor_containment", "bidirectional": true},
-    {"from": "control_room_entry", "to": "main_control_room", "bidirectional": true}
+    {"from": "visitor_center", "to": "outer_parking", "bidirectional": true},
+    {"from": "outer_parking", "to": "security_gatehouse", "bidirectional": true},
+    {"from": "outer_parking", "to": "maintenance_bypass_tunnel", "bidirectional": true},
+    {"from": "security_gatehouse", "to": "protected_area_courtyard", "bidirectional": true},
+    {"from": "protected_area_courtyard", "to": "rad_waste_building", "bidirectional": true},
+    {"from": "protected_area_courtyard", "to": "auxiliary_generator_bldg", "bidirectional": true},
+    {"from": "protected_area_courtyard", "to": "nuclear_receiving", "bidirectional": true},
+    {"from": "protected_area_courtyard", "to": "office_sas_hub", "bidirectional": true},
+    {"from": "nuclear_receiving", "to": "logistics_change_room", "bidirectional": true},
+    {"from": "logistics_change_room", "to": "fuel_service_corridor", "bidirectional": true},
+    {"from": "office_sas_hub", "to": "fuel_service_corridor", "bidirectional": true},
+    {"from": "fuel_service_corridor", "to": "main_control_room", "bidirectional": true},
+    {"from": "fuel_service_corridor", "to": "reactor_containment", "bidirectional": true},
+    {"from": "maintenance_bypass_tunnel", "to": "fuel_service_corridor", "bidirectional": true}
   ],
   "operational_requirements": {
     "reactor_operator": {
       "required_rooms": ["main_control_room"]
     },
     "maintenance_technician": {
-      "required_rooms": ["maintenance_bay", "reactor_containment"]
+      "required_rooms": ["fuel_service_corridor", "reactor_containment", "auxiliary_generator_bldg"]
     },
     "security_officer": {
-      "required_rooms": ["main_control_room", "reactor_containment", "admin_reception"]
+      "required_rooms": ["security_gatehouse", "office_sas_hub", "main_control_room"]
     }
   }
 }
