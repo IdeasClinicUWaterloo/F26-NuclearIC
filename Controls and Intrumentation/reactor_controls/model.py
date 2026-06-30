@@ -3,6 +3,7 @@ from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
 from control import Controller
+from sensors import Sensor, SensorSuite
 
 
 class ReactorModel:
@@ -64,7 +65,7 @@ class ReactorModel:
     def rho_disturbance(self, t):
         """Optional external reactivity added as disturbance."""
 
-        return 0.0001 if 50 <= t < 60 else 0.0
+        return 0.0001 if 50 <= t < 100 else 0.0
 
     def rho_feedback(self, T_fuel, T_c_avg):
         """Reactivity from the thermal components of the reactor.
@@ -126,13 +127,15 @@ class Simulation:
         self.dt = dt
         self.desired_n = desired_n
 
+        self.feedback_rho_values = [] # Thermal reactivity values at each time step
+
         self.time_steps = [] # Times at which the state is recorded
         self.control_times = [] # Times at which control actions are taken
         self.control_values = [] # Control-rod reactivity values at each control time
         self.n_current_values = [] # Current neutron population values at each time step
         self.n_desired_values = [] # Desired neutron population values at each time step
 
-    def simulate(self, controller):
+    def simulate(self, controller, sensor_suite):
         """
         Simulates the reactor's neutron population.
         First, takes the current n from the state vector,
@@ -156,10 +159,16 @@ class Simulation:
 
         for i in range(number_of_steps):
             t = i * self.dt
-            current_n = current_state[0]
+
+            sensor_suite.step(self.dt)
+            readings = sensor_suite.read_all(current_state, self.model.rho_rod)
+
+            # current_n = current_state[0]
+            current_n = readings["power"]
 
             self.model.rho_rod = controller.update(self.desired_n, current_n, self.dt)
             self.control_times.append(t)
+
             self.control_values.append(self.model.rho_rod)
 
             sol = solve_ivp(
@@ -177,12 +186,15 @@ class Simulation:
             self.n_current_values.append(current_state[0])
             self.n_desired_values.append(self.desired_n)
 
+            self.feedback_rho_values.append(self.model.rho_feedback(current_state[7], 
+                    0.5 * (current_state[8] + current_state[9])))
+
         return current_state
 
     def plot(self):
         plt.figure(figsize=(12, 6))
 
-        plt.subplot(2, 1, 1)
+        plt.subplot(3, 1, 1)
         plt.plot(self.time_steps, self.n_current_values, label="Current neutron population")
         plt.plot(
             self.time_steps,
@@ -196,7 +208,7 @@ class Simulation:
         plt.legend()
         plt.grid()
 
-        plt.subplot(2, 1, 2)
+        plt.subplot(3, 1, 2)
         plt.plot(
             self.control_times,
             self.control_values,
@@ -209,14 +221,28 @@ class Simulation:
         plt.legend()
         plt.grid()
 
+        plt.subplot(3, 1, 3)
+        plt.plot(
+            self.time_steps[1:],
+            self.feedback_rho_values,
+            label="Thermal reactivity",
+            color="green",
+        )
+        plt.xlabel("Time (s)")
+        plt.ylabel("Reactivity, rho (dk/k)")
+        plt.title("Thermal Reactivity Feedback")
+        plt.legend()
+        plt.grid()
+
         plt.tight_layout()
         plt.show()
 
 
 if __name__ == "__main__":
-    controller = Controller(kp=1e-4, ki=1e-5, kd=1e-5)
+    controller = Controller(kp=4e-3, ki=2.67e-6, kd=0)
     simulator = Simulation(duration=200.0, dt=0.1, desired_n=1.0)
-    final_state = simulator.simulate(controller)
+    sensor_suite = SensorSuite()
+    final_state = simulator.simulate(controller, sensor_suite)
 
     print("Initial temperatures:")
     print(f"T_fuel0 = {simulator.model.T_fuel0:.2f} K")
