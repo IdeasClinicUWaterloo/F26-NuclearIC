@@ -10,6 +10,10 @@ The goal is not to build a production-grade nuclear mode;, but to build and impr
 
 Teams are invited to design control, estimation, fault detection, and visualization features that help the simulated reactor track a requested power output while avoiding unsafe operation.
 
+Below is a chart descrbing how SMRs work:
+
+![alt text](assets/smr-chart.png)
+
 ## Potential Solutions
 
 Teams may approach the challenge in several ways, depending on their background and level of experience:
