@@ -239,7 +239,7 @@ class Simulation:
 
 
 if __name__ == "__main__":
-    controller = Controller(kp=4e-3, ki=2.67e-6, kd=0)
+    controller = Controller(kp=1e-4, ki=0, kd=0)
     simulator = Simulation(duration=200.0, dt=0.1, desired_n=1.0)
     sensor_suite = SensorSuite()
     final_state = simulator.simulate(controller, sensor_suite)
