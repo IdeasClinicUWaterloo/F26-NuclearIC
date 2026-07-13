@@ -16,8 +16,8 @@ sensor = Sensor(sigma = 0.1, seed = 42)
 
 F = np.array([[1.0, dt],
      [0, 1.0]])
-B = np.zeros((2, 1))  # no control input for now -- leave this as-is
-H = np.array([[1.0, 0.0]])  # TODO: 1x2, picks out position only
+B = np.zeros((2, 1))  # no control input for now
+H = np.array([[1.0, 0.0]])  # 1x2, picks out position only
 Q = np.eye(2) * 0.01
 R = np.array([[0.2]])
 
@@ -45,7 +45,7 @@ for i in range(steps):
 
     kf.update(z)
 
-    # TODO: append t, true position, true velocity, measurement, kf estimated position, kf estimated velocity
+    # append t, true position, true velocity, measurement, kf estimated position, kf estimated velocity
     t_hist.append(t)
     true_pos_hist.append(true_x[0, 0])
     true_vel_hist.append(true_x[1, 0])
