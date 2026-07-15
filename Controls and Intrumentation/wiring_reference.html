@@ -1,0 +1,430 @@
+<title>Reactor Control Systems — Wiring Reference</title>
+<style>
+  :root{
+    --ink:#1B2430;
+    --paper:#EDEFEE;
+    --paper-raised:#FAFBFA;
+    --schem-ink:#2F4858;
+    --schem-grid:#c3ccd1;
+    --muted:#6B7480;
+    --rule:#c7ccce;
+    --dye:#A93A67;
+    --dye-soft:#f2dfe8;
+    --heat:#A6591C;
+    --heat-soft:#f3e2cf;
+    --cool:#1E7A7C;
+    --cool-soft:#dcefee;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#E7E9EC;
+      --paper:#12161C;
+      --paper-raised:#181E26;
+      --schem-ink:#8FB2C9;
+      --schem-grid:#2b3844;
+      --muted:#96A0AC;
+      --rule:#2b333c;
+      --dye:#E58AAE;
+      --dye-soft:#3a2430;
+      --heat:#E29A55;
+      --heat-soft:#3a2c1a;
+      --cool:#5AC7C4;
+      --cool-soft:#173231;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E7E9EC; --paper:#12161C; --paper-raised:#181E26; --schem-ink:#8FB2C9;
+    --schem-grid:#2b3844; --muted:#96A0AC; --rule:#2b333c;
+    --dye:#E58AAE; --dye-soft:#3a2430; --heat:#E29A55; --heat-soft:#3a2c1a;
+    --cool:#5AC7C4; --cool-soft:#173231;
+  }
+  :root[data-theme="light"]{
+    --ink:#1B2430; --paper:#EDEFEE; --paper-raised:#FAFBFA; --schem-ink:#2F4858;
+    --schem-grid:#c3ccd1; --muted:#6B7480; --rule:#c7ccce;
+    --dye:#A93A67; --dye-soft:#f2dfe8; --heat:#A6591C; --heat-soft:#f3e2cf;
+    --cool:#1E7A7C; --cool-soft:#dcefee;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--serif); line-height:1.55;
+  }
+  .page{ max-width:1000px; margin:0 auto; padding:3rem 1.5rem 5rem; }
+
+  .masthead{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:1rem; border-bottom:2px solid var(--ink); padding-bottom:1rem; margin-bottom:1.25rem;
+    flex-wrap:wrap;
+  }
+  .masthead h1{
+    font-family:var(--mono); font-size:1.5rem; font-weight:700; letter-spacing:0.01em;
+    margin:0; text-wrap:balance;
+  }
+  .masthead .sub{ font-family:var(--serif); font-style:italic; color:var(--muted); margin-top:0.35rem; }
+  .masthead .meta{
+    font-family:var(--mono); font-size:0.72rem; color:var(--muted); text-align:right;
+    line-height:1.6; text-transform:uppercase; letter-spacing:0.06em;
+  }
+
+  .banner{
+    background:var(--paper-raised); border:1.5px solid var(--ink); padding:0.85rem 1.1rem;
+    margin-bottom:2.5rem; font-size:0.92rem;
+  }
+  .banner strong{ font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:0.3rem; }
+
+  .toc{ display:flex; gap:1.5rem; margin-bottom:3rem; font-family:var(--mono); font-size:0.78rem; }
+  .toc a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--rule); padding-bottom:2px; }
+  .toc a:hover{ border-color:currentColor; }
+  .toc a:focus-visible{ outline:2px solid var(--schem-ink); outline-offset:3px; }
+
+  .sheet{ margin-bottom:4.5rem; }
+  .sheet-head{ display:flex; align-items:baseline; gap:0.85rem; margin-bottom:0.35rem; }
+  .sheet-tag{
+    font-family:var(--mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase;
+    padding:0.15rem 0.5rem; border-radius:2px; white-space:nowrap;
+  }
+  .sheet.dye .sheet-tag{ background:var(--dye-soft); color:var(--dye); }
+  .sheet.heat .sheet-tag{ background:var(--heat-soft); color:var(--heat); }
+  .sheet h2{ font-family:var(--mono); font-size:1.15rem; margin:0; }
+  .sheet .dek{ color:var(--muted); margin:0.2rem 0 1.5rem; max-width:62ch; }
+
+  .schem-frame{
+    position:relative; border:1.5px solid var(--ink); background:var(--paper-raised);
+    padding:0.75rem; margin-bottom:1.75rem;
+  }
+  .schem-frame svg{ display:block; width:100%; height:auto; }
+  .schem-frame::before{
+    content:attr(data-sheetno);
+    position:absolute; bottom:0.75rem; right:0.75rem;
+    font-family:var(--mono); font-size:0.65rem; color:var(--muted);
+    background:var(--paper-raised); padding:0.15rem 0.4rem; border:1px solid var(--rule);
+    letter-spacing:0.04em;
+  }
+  .schem text{ font-family:var(--mono); fill:var(--ink); }
+  .schem .lbl{ font-size:11px; }
+  .schem .lbl-muted{ font-size:10px; fill:var(--muted); }
+  .schem .wire{ stroke:var(--schem-ink); stroke-width:1.6; fill:none; }
+  .schem .wire-i2c{ stroke:var(--schem-ink); stroke-width:1.6; fill:none; stroke-dasharray:4 3; }
+  .schem .wire-pwm{ stroke:var(--schem-ink); stroke-width:1.6; fill:none; stroke-dasharray:1.5 3; }
+  .schem .box{ fill:var(--paper-raised); stroke:var(--ink); stroke-width:1.5; }
+  .schem .box-accent-dye{ fill:var(--dye-soft); stroke:var(--dye); stroke-width:1.5; }
+  .schem .box-accent-heat{ fill:var(--heat-soft); stroke:var(--heat); stroke-width:1.5; }
+  .schem .box-accent-cool{ fill:var(--cool-soft); stroke:var(--cool); stroke-width:1.5; }
+  .schem .node{ fill:var(--schem-ink); }
+  .schem .grid-dot{ fill:var(--schem-grid); }
+
+  .two-col{ display:grid; grid-template-columns:1.1fr 1.4fr; gap:2.25rem; align-items:start; }
+  @media (max-width:760px){ .two-col{ grid-template-columns:1fr; } }
+
+  .block-title{
+    font-family:var(--mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--muted); margin:0 0 0.6rem;
+  }
+
+  table{ border-collapse:collapse; width:100%; font-size:0.85rem; }
+  caption{ text-align:left; }
+  th,td{ text-align:left; padding:0.4rem 0.6rem; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th{ font-family:var(--mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:600; }
+  td{ font-family:var(--serif); }
+  td.mono, th.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  .tablewrap{ overflow-x:auto; margin-bottom:1.5rem; }
+
+  ol.steps{ margin:0; padding-left:1.3rem; }
+  ol.steps li{ margin-bottom:0.85rem; padding-left:0.2rem; }
+  ol.steps li::marker{ font-family:var(--mono); color:var(--muted); font-size:0.85rem; }
+  ol.steps code, p code, li code{
+    font-family:var(--mono); font-size:0.85em; background:var(--paper); border:1px solid var(--rule);
+    padding:0.05rem 0.3rem; border-radius:2px;
+  }
+
+  .callout{
+    border-left:3px solid var(--ink); padding:0.7rem 1rem; margin:1.5rem 0 0;
+    background:var(--paper-raised); font-size:0.9rem;
+  }
+  .callout .k{ font-family:var(--mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:0.3rem; }
+  .sheet.dye .callout{ border-color:var(--dye); }
+  .sheet.dye .callout .k{ color:var(--dye); }
+  .sheet.heat .callout{ border-color:var(--heat); }
+  .sheet.heat .callout .k{ color:var(--heat); }
+
+  .filepath{
+    font-family:var(--mono); font-size:0.78rem; word-break:break-all; color:var(--muted);
+    background:var(--paper-raised); border:1px solid var(--rule); padding:0.5rem 0.7rem; margin-top:0.5rem;
+  }
+
+  footer{
+    margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--rule);
+    font-family:var(--mono); font-size:0.75rem; color:var(--muted); line-height:1.8;
+  }
+</style>
+
+<div class="page">
+
+  <div class="masthead">
+    <div>
+      <h1>Physical Reactor Control — Wiring Reference</h1>
+      <div class="sub">Dye concentration loop &amp; primary/secondary temperature loop</div>
+    </div>
+    <div class="meta">Rev B · 2026-07-15<br/>Arduino Uno · 2 subsystems</div>
+  </div>
+
+  <div class="banner">
+    <strong>No soldering, anywhere</strong>
+    Every actuator is driven through a pre-assembled screw-terminal driver module — jumper wires and a screwdriver are all you need. Buy sensor breakout boards with headers already soldered on by the manufacturer (standard for Adafruit-style boards) and you won't pick up a soldering iron for this build at all.
+  </div>
+
+  <div class="toc">
+    <a href="#dye">01 — Dye concentration control</a>
+    <a href="#heat">02 — Temperature control</a>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SYSTEM 1 — DYE CONCENTRATION                                   -->
+  <!-- ============================================================ -->
+  <section class="sheet dye" id="dye">
+    <div class="sheet-head">
+      <span class="sheet-tag">System 01</span>
+      <h2>Dye concentration control</h2>
+    </div>
+    <p class="dek">PID on measured dye concentration drives a dye pump and a water (diluent) pump; a drain pump runs feed-forward off their combined flow to prevent tank overflow. Each pump gets its own solderless driver module on a direct PWM pin — no motor shield, no I2C addressing to configure.</p>
+
+    <div class="schem-frame" data-sheetno="SHEET 1/2 · SYS-DYE">
+      <svg class="schem" viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 24 V8 H24 M836 8 H852 V24 M852 396 V412 H836 M24 412 H8 V396" stroke="var(--schem-ink)" stroke-width="1" fill="none" opacity="0.6"/>
+
+        <!-- Arduino -->
+        <rect class="box" x="40" y="150" width="130" height="120" rx="2"/>
+        <text class="lbl" x="105" y="188" text-anchor="middle">ARDUINO</text>
+        <text class="lbl-muted" x="105" y="204" text-anchor="middle">UNO</text>
+        <text class="lbl-muted" x="105" y="222" text-anchor="middle">D3 · D5 · D6</text>
+        <text class="lbl-muted" x="105" y="236" text-anchor="middle">A4 · A5 · GND</text>
+
+        <!-- Sensor, I2C -->
+        <path class="wire-i2c" d="M170 165 H600 V80 H600"/>
+        <text class="lbl-muted" x="330" y="76">I2C (A4 SDA / A5 SCL)</text>
+        <rect class="box-accent-dye" x="540" y="45" width="140" height="55" rx="2"/>
+        <text class="lbl" x="610" y="67" text-anchor="middle">TCS34725</text>
+        <text class="lbl-muted" x="610" y="83" text-anchor="middle">colour sensor, I2C</text>
+        <text class="lbl-muted" x="610" y="95" text-anchor="middle">(pre-soldered headers)</text>
+
+        <!-- Dye pump module -->
+        <path class="wire-pwm" d="M170 185 H260"/>
+        <text class="lbl-muted" x="176" y="180">D5</text>
+        <rect class="box-accent-dye" x="260" y="160" width="140" height="55" rx="2"/>
+        <text class="lbl" x="330" y="182" text-anchor="middle">DRIVER MODULE</text>
+        <text class="lbl-muted" x="330" y="198" text-anchor="middle">screw terminals, no solder</text>
+        <path class="wire" d="M400 187 H440"/>
+        <circle class="box-accent-dye" cx="480" cy="187" r="24"/>
+        <circle cx="480" cy="187" r="9" fill="none" stroke="var(--dye)" stroke-width="1.5"/>
+        <text class="lbl" x="480" y="225" text-anchor="middle">DYE PUMP</text>
+
+        <!-- Water pump module -->
+        <path class="wire-pwm" d="M170 215 H260"/>
+        <text class="lbl-muted" x="176" y="253">D6</text>
+        <rect class="box" x="260" y="235" width="140" height="55" rx="2"/>
+        <text class="lbl" x="330" y="257" text-anchor="middle">DRIVER MODULE</text>
+        <text class="lbl-muted" x="330" y="273" text-anchor="middle">screw terminals, no solder</text>
+        <path class="wire" d="M400 262 H440"/>
+        <circle class="box" cx="480" cy="262" r="24"/>
+        <circle cx="480" cy="262" r="9" fill="none" stroke="var(--schem-ink)" stroke-width="1.5"/>
+        <text class="lbl" x="480" y="300" text-anchor="middle">WATER PUMP</text>
+
+        <!-- Drain pump module -->
+        <path class="wire-pwm" d="M170 245 H210 V335 H260"/>
+        <text class="lbl-muted" x="176" y="330">D3</text>
+        <rect class="box" x="260" y="310" width="140" height="50" rx="2"/>
+        <text class="lbl" x="330" y="331" text-anchor="middle">DRIVER MODULE</text>
+        <text class="lbl-muted" x="330" y="346" text-anchor="middle">screw terminals, no solder</text>
+        <path class="wire" d="M400 335 H440"/>
+        <circle class="box" cx="475" cy="335" r="20"/>
+        <text class="lbl" x="475" y="368" text-anchor="middle">DRAIN PUMP</text>
+
+        <!-- Mixing tank -->
+        <rect class="box-accent-dye" x="560" y="150" width="150" height="180" rx="4"/>
+        <text class="lbl" x="635" y="175" text-anchor="middle">MIXING TANK</text>
+        <path class="wire" d="M504 187 H560" marker-end="url(#arrow)"/>
+        <path class="wire" d="M504 262 H560" marker-end="url(#arrow)"/>
+        <path class="wire" d="M560 335 H495" marker-end="url(#arrow)"/>
+        <path class="wire" d="M635 330 V335 H495"/>
+        <path class="wire-i2c" d="M610 100 V150"/>
+
+        <!-- Overflow -->
+        <path class="wire" d="M710 170 H770" marker-end="url(#arrow)"/>
+        <text class="lbl-muted" x="716" y="163">overflow (safety)</text>
+
+        <!-- 3V supply for all three pumps -->
+        <rect class="box" x="260" y="140" width="0" height="0"/>
+        <text class="lbl-muted" x="330" y="378">All 3 pump-side screw terminals share one 3V supply rail (not Arduino 5V)</text>
+
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--schem-ink)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <p class="block-title">Pin &amp; component map</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Signal</th><th class="mono">Pin</th><th>To</th></tr></thead>
+            <tbody>
+              <tr><td>I2C data</td><td class="mono">A4 (SDA)</td><td>TCS34725</td></tr>
+              <tr><td>I2C clock</td><td class="mono">A5 (SCL)</td><td>TCS34725</td></tr>
+              <tr><td>Dye pump</td><td class="mono">D5 (PWM)</td><td>Driver module → 3V pump</td></tr>
+              <tr><td>Water pump</td><td class="mono">D6 (PWM)</td><td>Driver module → 3V pump</td></tr>
+              <tr><td>Drain pump</td><td class="mono">D3 (PWM)</td><td>Driver module → 3V pump</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="block-title">Power domains</p>
+        <div class="tablewrap">
+          <table>
+            <tbody>
+              <tr><td>Logic</td><td class="mono">5V</td><td>Arduino USB / barrel jack</td></tr>
+              <tr><td>Pumps</td><td class="mono">3V</td><td>shared supply into each module's screw terminal — do not feed pumps from Arduino 5V</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <p class="block-title">Wiring steps</p>
+        <ol class="steps">
+          <li>Wire <code>TCS34725</code>: <code>VIN</code>→5V, <code>GND</code>→GND, <code>SDA</code>→A4, <code>SCL</code>→A5. Buy a version with the pin header already soldered on (standard for Adafruit boards) so there's nothing to solder yourself.</li>
+          <li>For each of the 3 pumps, take one driver module: <code>SIG</code>→ its Arduino pin (D5 dye, D6 water, D3 drain), <code>VCC</code>→5V, <code>GND</code>→GND.</li>
+          <li>Screw the dye pump's two leads into that module's load terminals; repeat for water and drain pumps on their own modules.</li>
+          <li>Screw all three modules' supply-side terminals into the shared 3V pump supply (and its ground into the common ground) — <strong>not</strong> the Arduino's 5V rail.</li>
+          <li>Position the TCS34725 so it reads through the mixing tank wall (or via a dip tube) where liquid color is representative of the mixed contents, not right at an inlet stream.</li>
+          <li>Flash <code>dye_concentration_controller.ino</code>, open Serial Monitor at 9600 baud, and confirm sensor + PID debug lines are printing before connecting pump tubing.</li>
+        </ol>
+        <div class="callout">
+          <span class="k">Calibrate before trusting it</span>
+          Flow curves for all three pumps, the sensor's clear-water reference reading, and the concentration-vs-reading curve are placeholders in code — see the calibration notes at the bottom of the sketch.
+        </div>
+      </div>
+    </div>
+
+    <div class="filepath">Code: Controls and Intrumentation/dye concentration control/dye_concentration_controller/dye_concentration_controller.ino</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SYSTEM 2 — TEMPERATURE CONTROL                                 -->
+  <!-- ============================================================ -->
+  <section class="sheet heat" id="heat">
+    <div class="sheet-head">
+      <span class="sheet-tag">System 02</span>
+      <h2>Temperature control</h2>
+    </div>
+    <p class="dek">The heater is <strong>not</strong> wired to the Arduino at all — it runs at constant power off its own 12V supply through a fuse, like a fixed heat source. PID only controls the coolant pump's flow through the copper coil. One actuator, one solderless driver module, and the trickiest high-current circuit in the whole project is gone.</p>
+
+    <div class="schem-frame" data-sheetno="SHEET 2/2 · SYS-TEMP">
+      <svg class="schem" viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 24 V8 H24 M836 8 H852 V24 M852 296 V312 H836 M24 312 H8 V296" stroke="var(--schem-ink)" stroke-width="1" fill="none" opacity="0.6"/>
+
+        <!-- Arduino -->
+        <rect class="box" x="40" y="110" width="120" height="90" rx="2"/>
+        <text class="lbl" x="100" y="145" text-anchor="middle">ARDUINO</text>
+        <text class="lbl-muted" x="100" y="161" text-anchor="middle">UNO</text>
+        <text class="lbl-muted" x="100" y="180" text-anchor="middle">D2 · D9 · GND</text>
+
+        <!-- DS18B20 branch -->
+        <path class="wire" d="M100 110 V60 H260"/>
+        <text class="lbl-muted" x="112" y="56">D2 (+4.7kΩ pull-up to 5V)</text>
+        <rect class="box-accent-cool" x="260" y="35" width="130" height="50" rx="2"/>
+        <text class="lbl" x="325" y="56" text-anchor="middle">DS18B20</text>
+        <text class="lbl-muted" x="325" y="72" text-anchor="middle">OneWire probe</text>
+
+        <!-- pump branch -->
+        <path class="wire-pwm" d="M160 145 H260"/>
+        <text class="lbl-muted" x="168" y="140">D9</text>
+        <rect class="box" x="260" y="120" width="150" height="55" rx="2"/>
+        <text class="lbl" x="335" y="142" text-anchor="middle">DRIVER MODULE</text>
+        <text class="lbl-muted" x="335" y="158" text-anchor="middle">screw terminals, no solder</text>
+        <path class="wire" d="M410 147 H450"/>
+        <circle class="box-accent-cool" cx="495" cy="147" r="28"/>
+        <circle cx="495" cy="147" r="11" fill="none" stroke="var(--cool)" stroke-width="1.5"/>
+        <text class="lbl" x="495" y="192" text-anchor="middle">COOLANT PUMP</text>
+        <text class="lbl-muted" x="495" y="206" text-anchor="middle">3V · ~100mA</text>
+        <path class="wire" d="M523 147 H560 V180"/>
+        <text class="lbl-muted" x="566" y="176">3V supply</text>
+
+        <!-- Heater block, unconnected to Arduino -->
+        <rect class="box-accent-heat" x="640" y="100" width="160" height="90" rx="3"/>
+        <text class="lbl" x="720" y="128" text-anchor="middle">IMMERSION HEATER</text>
+        <text class="lbl-muted" x="720" y="144" text-anchor="middle">12V · 120–140W · ~11A</text>
+        <text class="lbl-muted" x="720" y="160" text-anchor="middle">runs continuously —</text>
+        <text class="lbl-muted" x="720" y="174" text-anchor="middle">no Arduino connection</text>
+        <path class="wire" d="M720 100 V70"/>
+        <rect class="box" x="695" y="50" width="50" height="20"/>
+        <text class="lbl-muted" x="720" y="45" text-anchor="middle">FUSE 15A</text>
+        <text class="lbl-muted" x="720" y="35" text-anchor="middle">12V+ supply</text>
+
+        <!-- gap indicator -->
+        <path d="M400 240 L440 240" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="2 4"/>
+        <path d="M420 232 L420 248 M425 232 L425 248" stroke="var(--muted)" stroke-width="1.5"/>
+        <text class="lbl-muted" x="420" y="262" text-anchor="middle">no wire here</text>
+
+        <!-- common ground rail (Arduino side only) -->
+        <path class="wire" d="M55 200 V230 H560"/>
+        <text class="lbl-muted" x="60" y="244">common GND — Arduino, driver module, sensor, 3V supply</text>
+      </svg>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <p class="block-title">Pin &amp; component map</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Signal</th><th class="mono">Pin</th><th>To</th></tr></thead>
+            <tbody>
+              <tr><td>Sensor data</td><td class="mono">D2</td><td>DS18B20 (+ 4.7kΩ pull-up to 5V)</td></tr>
+              <tr><td>Pump control</td><td class="mono">D9 (PWM)</td><td>Driver module → 3V coolant pump</td></tr>
+              <tr><td>Heater</td><td class="mono">—</td><td><strong>Not connected to Arduino</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="block-title">Power domains</p>
+        <div class="tablewrap">
+          <table>
+            <tbody>
+              <tr><td>Logic</td><td class="mono">5V</td><td>Arduino USB / barrel jack</td></tr>
+              <tr><td>Heater</td><td class="mono">12V</td><td>direct to supply through a 15A fuse — always on when powered</td></tr>
+              <tr><td>Coolant pump</td><td class="mono">3V</td><td>into driver module's screw terminal</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <p class="block-title">Wiring steps</p>
+        <ol class="steps">
+          <li>Wire <code>DS18B20</code>: <code>VDD</code>→5V, <code>GND</code>→GND, <code>DATA</code>→D2, plus a 4.7kΩ resistor bridging <code>DATA</code> to 5V. A waterproof probe version with pre-attached wires needs no board handling at all.</li>
+          <li>Take one solderless driver module for the coolant pump: <code>SIG</code>→D9, <code>VCC</code>→5V, <code>GND</code>→GND. Screw the pump's leads into its load terminal, and the 3V supply into its power terminal.</li>
+          <li><strong>Heater — wire this one completely separately from the Arduino:</strong> 12V+ supply → inline 15A fuse → heater(+); heater(−) → 12V supply ground. Add a simple manual switch inline if you want an easy way to turn it off by hand. No MOSFET, no driver module, no Arduino pin.</li>
+          <li>Tie Arduino GND, the pump driver module's GND, the DS18B20's GND, and the 3V supply's ground to one common point. The heater's 12V circuit does <strong>not</strong> need to share this ground.</li>
+          <li><strong>Before trusting this design, bench-test cooling capacity:</strong> run the heater at full power with the pump at max speed and confirm temperature plateaus well below a safe limit rather than climbing indefinitely. If it doesn't plateau, the coil/reservoir can't keep up.</li>
+          <li>Flash <code>temperature_controller.ino</code>, watch Serial Monitor at 9600 baud, and confirm sane temperature readings before turning the heater on.</li>
+        </ol>
+        <div class="callout">
+          <span class="k">Non-negotiable safety items</span>
+          15A fuse in series with the heater's 12V feed, always — it's the only thing protecting that circuit now that it isn't software-controlled. Confirm the cooling-capacity bench test above before leaving the system running unattended.
+        </div>
+      </div>
+    </div>
+
+    <div class="filepath">Code: Controls and Intrumentation/temperature control/temperature_controller/temperature_controller.ino</div>
+  </section>
+
+  <footer>
+    No Tinkercad link is included — Tinkercad circuits can only be built inside their own editor, and a guessed/unverified link would be worse than none. The schematics above carry the same wiring information; happy to walk through building the Tinkercad version live if useful.<br/>
+    Both sketches use placeholder calibration constants (flow curves, sensor references, PID gains) — tune on the bench, not from these numbers.<br/>
+    Rev B: heater removed from Arduino control (constant power, fuse only); dye system moved from Motor Shield V2 to individual solderless pump driver modules.
+  </footer>
+
+</div>

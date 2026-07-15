@@ -1,27 +1,30 @@
 // Physical dye concentration control system
-// Arduino + Adafruit Motor Shield V2 (I2C) + Adafruit TCS34725 color sensor (I2C)
-
+// Arduino + Adafruit TCS34725 color sensor (I2C) + 3x solderless MOSFET
+// driver breakout modules (one per pump, direct PWM pins -- no motor
+// shield, no I2C addressing, no soldering required to assemble)
+//
 // Loop 1 (feedback):     PID on measured concentration -> dye_pwm, water_pwm
 // Loop 2 (feed-forward): drain_pwm chosen so drain outflow ~= dye+water inflow,
 //                        using per-pump PWM->flow calibration curves.
-
+//
 // All calibration numbers below are PLACEHOLDERS. Replace after measuring
 // each pump's actual mL/min at a few PWM steps (see calibration notes at bottom).
 
 #include <Wire.h>
-#include <Adafruit_MotorShield.h>
 #include "Adafruit_TCS34725.h"
 #include <PID_v1.h>
 
-// Hardware handles 
-Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-Adafruit_DCMotor *dyePump   = AFMS.getMotor(1);
-Adafruit_DCMotor *waterPump = AFMS.getMotor(2);
-Adafruit_DCMotor *drainPump = AFMS.getMotor(3);
+// ---------------- Pins ----------------
+// Each pump gets its own solderless MOSFET driver module: Arduino PWM pin ->
+// module SIG, Arduino 5V -> module VCC, Arduino GND -> module GND. Pump +
+// its own supply connect to the module's screw terminals.
+const int DYE_PUMP_PIN   = 5;
+const int WATER_PUMP_PIN = 6;
+const int DRAIN_PUMP_PIN = 3;
 
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
-// Concentration PID
+// ---------------- Concentration PID ----------------
 double measuredConcentration = 0.0;
 double targetConcentration   = 50.0;   // placeholder units, e.g. % of max dye
 double pidOutput              = 0.0;    // -255..255 : +ve = need more dye, -ve = need more water
@@ -30,10 +33,10 @@ double pidOutput              = 0.0;    // -255..255 : +ve = need more dye, -ve 
 double Kp = 4.0, Ki = 0.5, Kd = 0.2;
 PID concPID(&measuredConcentration, &pidOutput, &targetConcentration, Kp, Ki, Kd, DIRECT);
 
-//  Reference light reading (calibrate against clear water) 
+// ---------------- Reference light reading (calibrate against clear water) ----------------
 uint16_t clearRef = 800; // placeholder: measured "clear" channel value with pure water in tank
 
-//  PWM -> flow (mL/min) calibration 
+// ---------------- PWM -> flow (mL/min) calibration ----------------
 // Placeholder LINEAR fits: flow = a * pwm + b. Replace a/b per pump after
 // measuring actual mL over a timed interval at a few PWM values (0..255).
 struct FlowCal { double a; double b; };
@@ -51,28 +54,23 @@ int flowToPwm(double flow, FlowCal cal) {
   return constrain(pwm, 0, 255);
 }
 
-//  Pump PWM state 
+// ---------------- Pump PWM state ----------------
 int dyePwm = 0, waterPwm = 0, drainPwm = 0;
 
 void setup() {
   Serial.begin(9600);
 
-  if (!AFMS.begin()) {
-    Serial.println("Motor Shield not found!");
-    while (1);
-  }
+  pinMode(DYE_PUMP_PIN, OUTPUT);
+  pinMode(WATER_PUMP_PIN, OUTPUT);
+  pinMode(DRAIN_PUMP_PIN, OUTPUT);
+  analogWrite(DYE_PUMP_PIN, 0);
+  analogWrite(WATER_PUMP_PIN, 0);
+  analogWrite(DRAIN_PUMP_PIN, 0);
 
   if (!tcs.begin()) {
     Serial.println("TCS34725 not found!");
     while (1);
   }
-
-  dyePump->run(FORWARD);
-  waterPump->run(FORWARD);
-  drainPump->run(FORWARD);
-  dyePump->setSpeed(0);
-  waterPump->setSpeed(0);
-  drainPump->setSpeed(0);
 
   concPID.SetMode(AUTOMATIC);
   concPID.SetOutputLimits(-255, 255);
@@ -105,9 +103,9 @@ void loop() {
   drainPwm = flowToPwm(qIn, drainCal);
 
   // ---- 4. Apply ----
-  dyePump->setSpeed(dyePwm);
-  waterPump->setSpeed(waterPwm);
-  drainPump->setSpeed(drainPwm);
+  analogWrite(DYE_PUMP_PIN, dyePwm);
+  analogWrite(WATER_PUMP_PIN, waterPwm);
+  analogWrite(DRAIN_PUMP_PIN, drainPwm);
 
   // ---- Debug ----
   Serial.print("conc="); Serial.print(measuredConcentration);
@@ -119,7 +117,25 @@ void loop() {
 }
 
 /*
- * CALIBRATION NOTES (do this once hardware is wired up):
+ * WIRING NOTES (fully solderless -- driver modules + jumper wires only):
+ *
+ * TCS34725 (I2C breakout, buy a version with headers pre-soldered by the
+ * manufacturer -- e.g. Adafruit's -- so no soldering is needed on your end):
+ *   VIN -> Arduino 5V
+ *   GND -> Arduino GND
+ *   SDA -> Arduino A4
+ *   SCL -> Arduino A5
+ *
+ * Each pump (via its own solderless MOSFET driver breakout module):
+ *   Module SIG <- Arduino pin (5 = dye, 6 = water, 3 = drain)
+ *   Module VCC <- Arduino 5V
+ *   Module GND <- Arduino GND
+ *   Module screw terminals: pump supply+ / pump supply- on one side,
+ *                           pump(+) / pump(-) on the other
+ *   All three pumps can share one 3V supply rail -- do not power them from
+ *   the Arduino's 5V rail.
+ *
+ * CALIBRATION / TUNING NOTES (unchanged):
  *
  * 1. Flow curves (dyeCal / waterCal / drainCal):
  *    For each pump: run at pwm = 64, 128, 192, 255 for a fixed time (e.g. 30s),
