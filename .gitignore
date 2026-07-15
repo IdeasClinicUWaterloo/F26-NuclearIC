@@ -38,3 +38,6 @@ dist/
 # Playwright/browser test artifacts
 test-results/
 playwright-report/
+
+# Reference/backup copies, not part of the actual solution
+backup_full_solution/
