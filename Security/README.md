@@ -23,7 +23,9 @@ The remainder of this README focuses on the **proposed dashboard-based solution*
 
 ## Proposed Solution: Security Policy & Access Control Design
 
-In this guided approach, you will act as a Lead Systems Security Engineer. Your objective is to design an access control policy and zone topography for a fictional SMR facility using an interactive dashboard interface. This challenge draws from real-world nuclear security frameworks established by the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**.
+In this guided approach, you will act as a Lead Systems Security Engineer. Your objective is to design an access control policy and zone topography for a fictional SMR facility using an interactive dashboard interface. This challenge draws from real-world nuclear security frameworks established by the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**. The facility you design will be a simplified version of real life nuclear facilities. See below for a model of what a real nuclear facility may look like from a security point-of-view:
+
+![alt text](assets/facility_map.png)
 
 ### Challenge Objectives
 

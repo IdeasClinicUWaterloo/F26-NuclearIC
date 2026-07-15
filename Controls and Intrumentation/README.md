@@ -2,13 +2,17 @@
 
 ## Challenge Description
 
-Small Modular Reactors (SMRs) are being developed as a new generation of nuclear power plants that can be built in smaller modules, integrated with modern electrical grids, and deployed with advanced safety and monitoring systems. In Canada, SMR development is especially relevant because projects such as the Darlington New Nuclear Project are moving from design and licensing toward construction.
+Small Modular Reactors (SMRs) are being developed as a new generation of nuclear power plants that can be built as compact devices with advanced safety and monitoring systems. In Canada, SMR development is especially relevant because projects such as the Darlington New Nuclear Project are moving from design and planning toward construction.
 
-This subchallenge focuses on the instrumentation and controls layer of an SMR-inspired system. Teams can work with a simplified reactor simulation where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time, or approach the challenge in an open-ended, hands-on way.
+This subchallenge focuses on the instrumentation and controls layer of an SMR-inspired system. Teams can work with a simplified reactor model where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time, or approach the challenge in an open-ended, hands-on way with analagous systems.
 
-The goal is not to build a production-grade nuclear mode;, but to build and improve a controller for a nonlinear dynamical system with noisy sensors, potential hidden states, physical constraints, and safety-critical operating limits.
+The goal is to build and improve a controller for a nonlinear dynamical system with noisy sensors, potential hidden states, physical constraints, and safety-critical operating limits.
 
 Teams are invited to design control, estimation, fault detection, and visualization features that help the simulated reactor track a requested power output while avoiding unsafe operation.
+
+Below is a chart descrbing how SMRs work:
+
+![alt text](assets/smr-chart.png)
 
 ## Potential Solutions
 
@@ -80,6 +84,7 @@ Goal: understand the simplified reactor model and confirm that the starter simul
 
 Suggested outcomes:
 
+- Understand the underlying [point kinetics equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/)
 - Run the baseline reactor simulation
 - Plot reactor power, fuel temperature, coolant temperature, and control rod position
 - Identify the available control inputs, sensor outputs, and hidden states

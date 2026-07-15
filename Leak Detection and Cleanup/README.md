@@ -1,5 +1,7 @@
 # Leak Detection and Cleanup
 
+![alt text](assets/leak_detection.webp)
+
 ## Challenge Description
 
 Leak detection is an important part of safe nuclear facility operation because abnormal releases can affect containment, operating conditions, and response actions. Small Modular Reactors (SMRs) present unique detection challenges due to their compact form factor, novel geometries, and distributed deployment scenarios compared to traditional large reactors.
@@ -41,7 +43,7 @@ Possible directions:
 This repository includes three example areas that students may explore when thinking about a solution. They are not meant to be exhaustive, and students are welcome to pursue other ideas that fit the challenge:
 
 ### 1. Sensor Localization Tools
-Located in [`sensor_localization/`](/Leak%20Detection%20and%20Cleanup/sensor_localization/), algorithms and calibration data for source identification on a physical system:
+Located in [sensor_localization/](/Leak%20Detection%20and%20Cleanup/sensor_localization/), algorithms and calibration data for source identification on a physical system:
 - Multi-point sensor measurements from various facility locations
 - Calibration profiles at multiple intensity levels (0-100%)
 - Triangulation and signal fusion methods for source estimation
@@ -54,7 +56,7 @@ Located in [`sensor_localization/`](/Leak%20Detection%20and%20Cleanup/sensor_loc
 - Extend methods to new facility configurations and sensor types
 
 ### 2. Machine Learning Framework
-Located in [`machine_learning/`](/Leak%20Detection%20and%20Cleanup/machine_learning/), a Jupyter notebook environment with preprocessed datasets:
+Located in [machine_learning/](/Leak%20Detection%20and%20Cleanup/machine_learning/), a Jupyter notebook environment with preprocessed datasets:
 - Time-series sensor data from normal operations and known leak events
 - Data preprocessing and feature extraction pipelines
 - Baseline neural network models and evaluation metrics
@@ -67,7 +69,7 @@ Located in [`machine_learning/`](/Leak%20Detection%20and%20Cleanup/machine_learn
 - Integrate trained models into real-time detection systems
 
 ### 3. 3D Simulation Environment
-Located in [`leak-detection-simulation/`](/Leak%20Detection%20and%20Cleanup/leak-detection-simulation/), a Godot-based virtual facility that enables:
+Located in [leak-detection-simulation/](/Leak%20Detection%20and%20Cleanup/leak-detection-simulation/), a Godot-based virtual facility that enables:
 - Spatial modeling of facility layout and containment structures
 - Autonomous robotic agent control and navigation
 - Real-time sensor visualization and contamination spread simulation

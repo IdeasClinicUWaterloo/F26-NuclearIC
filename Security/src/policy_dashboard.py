@@ -28,19 +28,19 @@ class PolicyDashboardApp:
        # Vertically Compressed Spatial Coordinates Mapping (Safer Y-bounding limits)
        # Format: (x1, y1, x2, y2)
        self.room_coordinates = {
-           "protected_area_courtyard":  (130, 30, 780, 390),
-           "rad_waste_building":         (150, 60, 260, 120),
-           "auxiliary_generator_bldg":   (550, 60, 660, 130),  
-           "nuclear_receiving":         (300, 50, 430, 110),  
-           "logistics_change_room":     (300, 110, 430, 150),
-           "office_sas_hub":            (470, 290, 610, 360),
-           "fuel_service_corridor":     (280, 150, 720, 290),
-           "main_control_room":         (310, 190, 460, 250),
-           "reactor_containment":       (520, 190, 690, 250),
-           "security_gatehouse":        (380, 355, 470, 405),
-           "outer_parking":             (220, 430, 360, 490),
-           "visitor_center":            (400, 430, 530, 490),
-           "maintenance_bypass_tunnel": (60, 150, 110, 460)  
+           "protected_area_courtyard":  (100, 30, 720, 390),
+           "rad_waste_building":         (120, 60, 230, 120),
+           "auxiliary_generator_bldg":   (520, 60, 630, 130),  
+           "nuclear_receiving":         (270, 50, 400, 110),  
+           "logistics_change_room":     (270, 110, 400, 150),
+           "office_sas_hub":            (440, 290, 580, 360),
+           "fuel_service_corridor":     (250, 150, 690, 290),
+           "main_control_room":         (280, 190, 430, 250),
+           "reactor_containment":       (490, 190, 660, 250),
+           "security_gatehouse":        (350, 355, 440, 405),
+           "outer_parking":             (190, 430, 330, 490),
+           "visitor_center":            (370, 430, 500, 490),
+           "maintenance_bypass_tunnel": (40, 150, 90, 460)  
        }
        # ACTIVATED DATA CONTRACT: Linked room junctions mapped to portal coordinates
        # Format: (x1, y1, x2, y2, room_a, room_b, portal_id)
@@ -49,13 +49,13 @@ class PolicyDashboardApp:
            (415, 400, 435, 410, "outer_parking", "security_gatehouse", "P02"),
            (415, 350, 435, 360, "security_gatehouse", "protected_area_courtyard", "P03"),
            (195, 115, 215, 125, "protected_area_courtyard", "rad_waste_building", "P04"),
-           (695, 125, 715, 135, "protected_area_courtyard", "auxiliary_generator_bldg", "P05"),
+           (500, 95, 520, 105, "protected_area_courtyard", "auxiliary_generator_bldg", "P05"),
            (350, 105, 380, 115, "nuclear_receiving", "logistics_change_room", "P06"),
            (350, 145, 380, 155, "logistics_change_room", "fuel_service_corridor", "P07"),
            (530, 285, 560, 295, "office_sas_hub", "fuel_service_corridor", "P08"),
            (370, 185, 400, 195, "fuel_service_corridor", "main_control_room", "P09"),
            (590, 185, 620, 195, "fuel_service_corridor", "reactor_containment", "P10"),
-           (105, 450, 115, 470, "outer_parking", "maintenance_bypass_tunnel", "P11"),
+           (205, 450, 215, 470, "outer_parking", "maintenance_bypass_tunnel", "P11"),
            (195, 175, 205, 185, "maintenance_bypass_tunnel", "fuel_service_corridor", "P12")
        ]
        # Priority resolution tracking order for mouse-click collisions
@@ -191,7 +191,7 @@ class PolicyDashboardApp:
            if "corridor" in display_label:
                display_label = "fuel_service\ncorridor"
            elif "tunnel" in display_label:
-               display_label = "maintenance_bypass\ntunnel (underground)"
+               display_label = "maintenance_bypass\ntunnel"
            elif "generator" in display_label:
                display_label = "auxiliary_gen\nbldg"
            mid_x = (coords[0] + coords[2]) / 2
@@ -209,8 +209,15 @@ class PolicyDashboardApp:
                    fill="#212529", justify=tk.CENTER
                )
        # 3. Render visual connecting path line tracks for the subterranean tunnel
-       self.map_canvas.create_line(110, 460, 220, 460, fill="#495057", width=2, dash=(2, 2))
-       self.map_canvas.create_line(110, 180, 200, 180, fill="#495057", width=2, dash=(2, 2))
+       tunnel_coords = self.room_coordinates["maintenance_bypass_tunnel"]
+       self.map_canvas.create_line(
+           tunnel_coords[2] - 5, tunnel_coords[3], 210, tunnel_coords[3],
+           fill="#495057", width=2, dash=(2, 2)
+       )
+       self.map_canvas.create_line(
+           tunnel_coords[2] - 5, tunnel_coords[1] + 30, 190, tunnel_coords[1] + 30,
+           fill="#495057", width=2, dash=(2, 2)
+       )
        # 4. DYNAMIC PORTAL ACCREDITATION ANALYSIS (SCADA Layer)
        active_role = self.map_role_filter.get()
        active_state = self.map_state_filter.get().lower()
