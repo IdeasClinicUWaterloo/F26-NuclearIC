@@ -118,6 +118,36 @@ class ReactorModel:
         dndt, dCdt = self.neutron_equations(n, C, rho)
         dTdt = self.thermal_equations(n, T_fuel, T_c1, T_c2)
         return np.concatenate(([dndt], dCdt, dTdt))
+    
+    def filter_dynamics(self, x, rho_rod):
+        """Returns the dynamics of the system for use in the EKF."""
+
+        n = x[0]
+        C = x[1:7]
+        T_fuel, T_c1, T_c2 = x[7:10]
+        T_c_avg = 0.5 * (T_c1 + T_c2)
+
+        rho = rho_rod + self.rho_feedback(T_fuel, T_c_avg)
+        dndt, dCdt = self.neutron_equations(n, C, rho)
+        dTdt = self.thermal_equations(n, T_fuel, T_c1, T_c2)
+
+        return np.concatenate(([dndt], dCdt, dTdt))
+    
+    def propagate(self, x, rho_rod, dt):
+        """Propagates the state vector forward in time by dt seconds,
+        using the filter dynamics and the given control-rod reactivity."""
+
+        sol = solve_ivp(
+            fun=lambda t, xx: self.filter_dynamics(xx, rho_rod),
+            t_span=(0.0, dt),
+            y0=x,
+            method="Radau",
+        )
+
+        if not sol.success:
+            raise RuntimeError(sol.message)
+        
+        return sol.y[:, -1]
 
 
 class Simulation:

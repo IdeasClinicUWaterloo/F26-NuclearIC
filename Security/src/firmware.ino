@@ -13,7 +13,6 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 void setup() {
   Serial.begin(115200);   // Matches laptop python serial speed
   while (!Serial) delay(10); 
-
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   digitalWrite(GREEN_LED, LOW);
