@@ -13,6 +13,7 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 void setup() {
   Serial.begin(115200);   // Matches laptop python serial speed
   while (!Serial) delay(10); 
+
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   digitalWrite(GREEN_LED, LOW);
@@ -22,9 +23,8 @@ void setup() {
   mfrc522.PCD_Init();     // Initialize the RC522 module
 
   // --- SPI BUS HARDWARE HANDSHAKE CHECK ---
-  // Force the Arduino to read the chip's internal identifier register
   byte version = mfrc522.PCD_ReadRegister(mfrc522.VersionReg);
-  
+
   // A disconnected, unpowered, or unsoldered chip will return 0x00 or 0xFF
   if ((version == 0x00) || (version == 0xFF)) {
     Serial.println("\n[X] HARDWARE ERROR: RC522 card reader not detected!");
