@@ -8,7 +8,7 @@ Created By: Engineering IDEAs Clinic Co-op Students
 
 _Theme: Small Modular Reactors (SMRs)_ <br>
 
-![alt text](assets/Darlington.png)
+![alt text](assets/SMR_Chart.png)
 
 As the technology advances to embrace Artificial Intelligence (AI), data centers have become massive energy consumption sinks. To provide the energy output demanded by data centers, alternative energy production frontiers need to be considered. Small Modular Reactors (SMRs) are at the forefront of this conversations, with multiple being developed to address these energy needs. The Darlington New Nuclear project is a SMR project currently in development in Ontario, marking the first SMR in the Western world. It began construction in May 2025, and is expected to finish in 2029. 
 

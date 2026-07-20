@@ -34,10 +34,10 @@ unsigned long lastUpdateMs = 0;
 
 // ---------------- Temperature PID (identical to the real sketch) ----------------
 double currentTempC = 0.0;
-double targetTempC  = 30.0; // placeholder setpoint, change as needed
+double targetTempC  = 60.0; // placeholder setpoint, change as needed
 double pumpPwm      = 0.0;
 
-double Kp = 20, Ki = 3, Kd = 0;
+double Kp = 20.0, Ki = 0.8, Kd = 4.0;
 PID tempPID(&currentTempC, &pumpPwm, &targetTempC, Kp, Ki, Kd, REVERSE);
 
 void setup() {

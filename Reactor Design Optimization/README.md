@@ -2,7 +2,7 @@
 
 ## Challenge Description
 
-Small modular reactors are an emerging nuclear technology with the potential to improve deployment flexibility, reduce construction complexity, and support cleaner energy systems. However, designing and operating an SMR involves many trade-offs. Reactor performance depends on choices such as fuel type, fuel rod geometry, material selection, thermal power, control rod behavior, coolant flow, steam flow, startup strategy, cost, fuel lifetime, and safety margins.
+Small modular nuclear reactors have the potential to improve deployment flexibility, reduce construction complexity, and support cleaner energy systems by generating electricity, industrial process heat, or both. An operating reactor draws on many disciplines to design and operate successfully, including applied physics, chemistry, fluids engineering, and a great deal of modelling. The physics and chemistry of a reactor are driven by choices such as fuel type, moderating material, coolant, and control elements, and these choices have profound implications on the physical properties of the reactor. For example, the chemistry of a coolant can matter just as much as the mechanical design. Reactor performance also depends on these choices and much more: fuel rod geometry, material selection, thermal power, control rod behavior, coolant flow, steam flow, startup strategy, cost, fuel lifetime, and safety margins. However, designing and operating an SMR involves many trade-offs.
 
 The challenge in this subproblem is to optimize some part of a reactor system. Teams may focus on reactor design optimization, reactor operation optimization, or a combination of both. A strong solution should not simply choose one input value, but should explore trade-offs between performance, cost, efficiency, safety, and feasibility.
 
@@ -18,23 +18,25 @@ Teams may choose one focused direction or combine multiple approaches. Possible 
 - Design-space exploration tool for comparing many possible reactor designs
 - Sensitivity analysis report showing which inputs most affect cost or performance
 - Improved visualization dashboard for reactor costs, fuel lifetime, and trade-offs
-- Automated reactor simulator controller for startup, demand tracking, and recovery
+- Automated reactor simulator controller: a control algorithm that operates the provided reactor simulator on its own, adjusting control rods, coolant flow, and steam flow to handle startup, demand tracking, and recovery
 - Controller tuning optimizer for improving simulator score or stability
-- Reactor simulation logging and performance analysis tool
+- Reactor simulation logging and performance analysis tool: capture simulator run data over time and analyze controller performance, tracking error, and stability across runs
 - Combined design-and-operation optimization study
+- Isotope production or process-heat feasibility study (e.g., medical/industrial isotopes, district heating, or industrial process heat) for a proposed SMR deployment
 - Final recommendation memo or pitch deck for a proposed reactor design or operating strategy
 
 ## Ways to Approach This Challenge
 
-This subproblem is intentionally open to multiple backgrounds. Teams are not expected to be nuclear engineers or controls experts. The goal is to use data, models, and reasoning to compare reactor options and make a clear recommendation.
+This subproblem is intentionally open to multiple backgrounds, reflecting the science and engineering required to design and operate a reactor. The goal is to use data, models, and reasoning to compare reactor options and make a clear recommendation.
 
 ### Science / Engineering Path
-Focus on reactor design choices and physical trade-offs.
+Focus on reactor design choices and physical trade-offs. The starter tool defaults to a BWRX-300-style light-water SMR (the reactor used in the Darlington New Nuclear Project) as a concrete reference point, but teams are encouraged to explore other SMR types as well.
 
 Possible directions:
 - Compare fuel types such as UO2, MOX, and TRISO
 - Study how fuel rod geometry affects fuel lifetime and power density
 - Research SMR types and explain which design choices fit each reactor concept
+- Explore the interplay between physics, chemistry, materials science, and fluids engineering: when you choose a physics or design parameter (fuel, moderator, coolant, cladding, and so on), what chemistry or materials-science implications follow? How do those implications limit you, and what workarounds or opportunities do they create?
 - Add or justify safety constraints such as temperature limits or operating margins
 - Create a technical proposal for a balanced reactor design
 
@@ -62,7 +64,7 @@ Possible directions:
 Focus on reactor operation over time.
 
 Possible directions:
-- Build or improve an automated reactor simulator controller
+- Build or improve an automated reactor simulator controller, a control algorithm that operates the provided reactor simulator on its own (adjusting control rods, coolant flow, and steam flow) to handle startup, demand tracking, and recovery without manual input
 - Tune startup, tracking, and recovery behavior
 - Log simulator runs and compare controller versions
 - Optimize controller parameters to improve score or stability
@@ -177,11 +179,13 @@ The starter material may support two broad solution paths:
 
 Teams may choose one path or combine both.
 
+For a broader view of the SMR design landscape beyond this starter tool, see the [OECD-NEA SMR Dashboard](https://www.oecd-nea.org/upload/docs/application/pdf/2025-09/web_-_smr_dashboard_-_third_edition.pdf) and the [IAEA ARIS SMR Catalogue](https://aris.iaea.org/Publications/SMR_catalogue_2024.pdf). Both give a sense of the variety of SMR designs being developed internationally. You can find the BWRX-300 on page 134 of the OECD Dashboard and page 17 of the IAEA Catalogue.
+
 ## Included Components
 
 ### SMR Reactor Design Optimization Tool
 
-A design-focused tool for comparing reactor design choices.
+A design-focused tool for comparing a subset of reactor design choices. The model defaults to a BWRX-300-style light-water SMR (the design planned for OPG's Darlington New Nuclear Project), so the SMR type options are currently focused around that reactor class — but it provides a useful worked example, and teams are welcome to extend it to other SMR types.
 
 This tool can be used to explore:
 
@@ -396,6 +400,8 @@ A final demo should answer:
 ## Notes for Teams
 
 This challenge is intentionally open-ended. There is not one correct answer.
+
+Teams that combine perspectives often do well here — for example, someone comfortable reasoning about reactor physics, chemistry, and materials trade-offs alongside someone focused on software, data, or controls. This isn't a requirement, just a pattern worth keeping in mind when forming a team or dividing up work.
 
 For design optimization, a good solution may involve choosing a balanced design rather than the absolute cheapest design. For example, a design with higher upfront cost may have lower lifecycle cost or longer fuel lifetime.
 

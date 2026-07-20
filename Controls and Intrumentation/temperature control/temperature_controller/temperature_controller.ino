@@ -32,7 +32,7 @@
 
 // ---------------- Pins ----------------
 const int ONE_WIRE_BUS = 2; // DS18B20 data pin (needs 4.7k pull-up to 5V)
-const int PUMP_PWM_PIN = 9; // PWM pin -> coolant pump driver module's SIG pin
+const int PUMP_PWM_PIN = 10; // PWM pin -> coolant pump driver module's IN1 (confirmed wiring)
 
 // ---------------- Safety limits ----------------
 const double MAX_SAFE_TEMP_C = 90.0; // hard backstop regardless of setpoint
@@ -119,19 +119,18 @@ void loop() {
  *   (a waterproof DS18B20 probe with pre-attached wires avoids any breakout
  *    board handling at all)
  *
- * Heater -- NOT wired to the Arduino:
+ * Heater, not wired to the Arduino:
  *   12V+ supply -> [inline 15A blade fuse] -> heater(+)
  *   heater(-)   -> 12V supply GND
  *   That's it. Runs continuously whenever the 12V supply is on. Add a simple
  *   manual switch inline if you want an easy way to turn it off by hand.
  *
- * Coolant pump (via solderless MOSFET driver breakout module):
- *   Module SIG  <- Arduino pin 9
- *   Module VCC  <- Arduino 5V (logic power; check your module's requirements)
- *   Module GND  <- Arduino GND
- *   Module screw terminals: pump supply+ / pump supply- on one side,
- *                           pump(+) / pump(-) on the other, per the module's
- *                           silkscreen labeling
+ * Coolant pump (via shield/driver module -- IN1/IN2/VM/GND style):
+ *   IN1  <- Arduino pin 10
+ *   IN2  <- Arduino GND (tied low, fixed direction)
+ *   VM   <- pump's 3V supply positive (separate from Arduino 5V)
+ *   GND  <- common ground (Arduino GND + pump supply ground)
+ *   OUT1/OUT2 -> pump's two leads
  *
  * CALIBRATION / TUNING NOTES:
  *
