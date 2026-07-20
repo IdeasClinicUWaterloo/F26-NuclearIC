@@ -1,90 +1,104 @@
-#include <Wire.h>
-#include <Adafruit_PN532.h>
-// Define I2C Pins for ESP32 standard configuration
-#define I2C_SDA 21
-#define I2C_SCL 22
-// Define Output Peripheral Pins for Tactile Feedback
-const int GREEN_LED = 12;
-const int RED_LED   = 14;
-const int BUZZER    = 13;
-// Initialize the PN532 over I2C hardware bus
-Adafruit_PN532 nfc(I2C_SDA, I2C_SCL);
-void setup(void) {
- // Initialize standard hardware USB serial connection to the laptop bridge
- Serial.begin(115200);
- while (!Serial) delay(10); // Wait for serial port to open
- // Configure hardware peripheral pins as outputs
- pinMode(GREEN_LED, OUTPUT);
- pinMode(RED_LED, OUTPUT);
- pinMode(BUZZER, OUTPUT);
- // Initialize peripheral pins to low (Off)
- digitalWrite(GREEN_LED, LOW);
- digitalWrite(RED_LED, LOW);
- digitalWrite(BUZZER, LOW);
- // Initialize the PN532 transceiver module
- nfc.begin();
- uint32_t versiondata = nfc.getFirmwareVersion();
- if (!versiondata) {
-   Serial.println("[X] HARDWARE ERROR: PN532 board not detected. Check I2C wiring and DIP switches.");
-   while (1); // Halt execution if connection is broken
- }
- // Configure PN532 to read RFID/NFC cards safely
- nfc.SAMConfig();
- // Run a quick startup confirmation flash sequence
- digitalWrite(GREEN_LED, HIGH);
- digitalWrite(RED_LED, HIGH);
- delay(300);
- digitalWrite(GREEN_LED, LOW);
- digitalWrite(RED_LED, LOW);
+#include <SPI.h>
+#include <MFRC522.h>
+
+// Relocated feedback LED pins to avoid SPI bus conflicts
+const int GREEN_LED = 7;
+const int RED_LED   = 6;
+
+#define RST_PIN         9          // Configurable reset pin
+#define SS_PIN          10         // Configurable Slave Select (SDA) pin
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
+
+void setup() {
+  Serial.begin(115200);   // Matches laptop python serial speed
+  while (!Serial) delay(10); 
+
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, LOW);
+
+  SPI.begin();            // Initialize SPI bus
+  mfrc522.PCD_Init();     // Initialize the RC522 module
+
+  // --- SPI BUS HARDWARE HANDSHAKE CHECK ---
+  byte version = mfrc522.PCD_ReadRegister(mfrc522.VersionReg);
+
+  // A disconnected, unpowered, or unsoldered chip will return 0x00 or 0xFF
+  if ((version == 0x00) || (version == 0xFF)) {
+    Serial.println("\n[X] HARDWARE ERROR: RC522 card reader not detected!");
+    Serial.println("    - Check that VCC is connected to 3.3V (NOT 5V).");
+    Serial.println("    - Verify SPI wiring: SDA(10), MOSI(11), MISO(12), SCK(13), RST(9).");
+    Serial.println("    - Note: Header pins MUST be soldered; loose friction fit will fail.");
+    
+    // Loop forever flashing the Red LED to visually indicate a hardware system failure
+    while (1) {
+      digitalWrite(RED_LED, HIGH);
+      delay(200);
+      digitalWrite(RED_LED, LOW);
+      delay(200);
+    }
+  }
+
+  // If we pass the check, flash the Green LED once to signal a successful boot sequence
+  digitalWrite(GREEN_LED, HIGH);
+  delay(500);
+  digitalWrite(GREEN_LED, LOW);
+
+  // Print confirmed diagnostic information to the Serial Monitor
+  Serial.print("[✔] Hardware Connection Established. RC522 Chip Version: 0x");
+  Serial.println(version, HEX);
+  Serial.println("System Active: Tap an NTAG215 badge to begin.");
 }
-void loop(void) {
- uint8_t success;
- uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer spatial matrix to store 7-byte NTAG215 UID
- uint8_t uidLength;                        // Data length tracking register
- // Look for passive ISO14443A cards/tags in the field continuously
- success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
- if (success) {
-   // Verify it is a standard 7-byte NTAG215 tag to maintain data alignment
-   if (uidLength == 7) {
-     // Print the raw 7-byte UID precisely formatted with colons to match Python's registry lookup
-     for (uint8_t i = 0; i < uidLength; i++) {
-       if (uid[i] < 0x10) Serial.print("0"); // Enforce zero-padding for single-digit hex values
-       Serial.print(uid[i], HEX);
-       if (i < uidLength - 1) {
-         Serial.print(":");
-       }
-     }
-     Serial.println(); // Conclude serial transmission line string packet
-     // Stand by and wait briefly for the host laptop script to compute the policy metrics
-     // Timeout guard ensures the hardware doesn't deadlock if the python bridge falls offline
-     long timeout = millis();
-     char decision = ' ';
-     while (millis() - timeout < 1500) {
-       if (Serial.available() > 0) {
-         decision = Serial.read();
-         break;
-       }
-     }
-     // Execute local peripheral actuation based on policy decisions
-     if (decision == '1') {
-       // Access Granted Sequence
-       digitalWrite(GREEN_LED, HIGH);
-       delay(1000); // Keep airlock unlatched for 1 second
-       digitalWrite(GREEN_LED, LOW);
-     }
-     else {
-       // Access Denied / Breach Sequence (Flash red and sound alarm)
-       for (int i = 0; i < 3; i++) {
-         digitalWrite(RED_LED, HIGH);
-         digitalWrite(BUZZER, HIGH);
-         delay(150);
-         digitalWrite(RED_LED, LOW);
-         digitalWrite(BUZZER, LOW);
-         delay(100);
-       }
-     }
-     // Debounce window to prevent continuous duplicate scanning while tag stays resting on reader
-     delay(1500);
-   }
- }
+
+void loop() {
+  // Look for new physical cards in range
+  if ( ! mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
+
+  // Read the card serial data
+  if ( ! mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  // Verify it is a 7-byte UID (standard NTAG215 badge)
+  if (mfrc522.uid.size == 7) {
+    // Print formatted UID to Serial: XX:XX:XX:XX:XX:XX:XX
+    for (byte i = 0; i < mfrc522.uid.size; i++) {
+      if (mfrc522.uid.uidByte[i] < 0x10) Serial.print("0");
+      Serial.print(mfrc522.uid.uidByte[i], HEX);
+      if (i < mfrc522.uid.size - 1) Serial.print(":");
+    }
+    Serial.println(); // Signal completion of transmission
+
+    // Stand by and wait for the laptop's execution decision
+    long timeout = millis();
+    char decision = ' ';
+    while (millis() - timeout < 1500) {
+      if (Serial.available() > 0) {
+        decision = Serial.read();
+        break;
+      }
+    }
+
+    // Actuate visual feedback based on policy decision
+    if (decision == '1') {
+      digitalWrite(GREEN_LED, HIGH);
+      delay(1000);
+      digitalWrite(GREEN_LED, LOW);
+    } else {
+      for (int i = 0; i < 3; i++) {
+        digitalWrite(RED_LED, HIGH);
+        delay(150);
+        digitalWrite(RED_LED, LOW);
+        delay(100);
+      }
+    }
+    
+    // Halt communication with the card so it doesn't read repeatedly
+    mfrc522.PICC_HaltA();
+    delay(1000); // Cooldown delay
+  }
 }
