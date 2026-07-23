@@ -66,7 +66,7 @@ class TransitTerminalApp:
 
         # NTAG215 Hardware Registry Mapping
         self.NFC_REGISTRY = {
-            "04:3C:4E:47:9E:61:80": "reactor_operator",
+            "04:49:CA:43:9E:61:80": "reactor_operator",
             "04:A1:7C:E2:8F:40:81": "maintenance_technician",
             "04:D2:9A:F2:3C:11:82": "security_officer"
         }

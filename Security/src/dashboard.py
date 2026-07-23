@@ -53,6 +53,8 @@ class UnifiedSMRSecurityTerminal:
             (415, 350, 435, 360, "security_gatehouse", "protected_area_courtyard"),
             (195, 115, 215, 125, "protected_area_courtyard", "rad_waste_building"),
             (695, 125, 715, 135, "protected_area_courtyard", "auxiliary_generator_bldg"),
+            (350, 45, 380, 55, "protected_area_courtyard", "nuclear_receiving"),
+            (520, 355, 560, 365, "protected_area_courtyard", "office_sas_hub"),
             (350, 105, 380, 115, "nuclear_receiving", "logistics_change_room"),
             (350, 145, 380, 155, "logistics_change_room", "fuel_service_corridor"),
             (530, 285, 560, 295, "office_sas_hub", "fuel_service_corridor"),
@@ -74,7 +76,7 @@ class UnifiedSMRSecurityTerminal:
             "04:3E:5B:A2:91:5D:80": "reactor_operator",
             "04:A1:7C:E2:8F:40:81": "maintenance_technician",
             "04:D2:9A:F2:3C:11:82": "security_officer",
-            "04:3C:4E:47:9E:61:80": "reactor_operator"
+            "04:49:CA:43:9E:61:80": "reactor_operator"
         }
 
         # Initialize Design Data State
