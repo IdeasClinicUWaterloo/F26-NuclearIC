@@ -53,8 +53,8 @@ class UnifiedSMRSecurityTerminal:
             (415, 350, 435, 360, "security_gatehouse", "protected_area_courtyard"),
             (195, 115, 215, 125, "protected_area_courtyard", "rad_waste_building"),
             (695, 125, 715, 135, "protected_area_courtyard", "auxiliary_generator_bldg"),
-            (350, 45, 380, 55, "protected_area_courtyard", "nuclear_receiving"),
-            (520, 355, 560, 365, "protected_area_courtyard", "office_sas_hub"),
+            (350, 45, 380, 55, "protected_area_courtyard", "nuclear_receiving"),     # Added
+            (520, 355, 560, 365, "protected_area_courtyard", "office_sas_hub"),        # Added
             (350, 105, 380, 115, "nuclear_receiving", "logistics_change_room"),
             (350, 145, 380, 155, "logistics_change_room", "fuel_service_corridor"),
             (530, 285, 560, 295, "office_sas_hub", "fuel_service_corridor"),
@@ -73,7 +73,7 @@ class UnifiedSMRSecurityTerminal:
 
         # NTAG215 Hardware Map
         self.NFC_REGISTRY = {
-            "04:3E:5B:A2:91:5D:80": "reactor_operator",
+            "04:3E:5B:A2:91:5D:80": "contractor",
             "04:A1:7C:E2:8F:40:81": "maintenance_technician",
             "04:D2:9A:F2:3C:11:82": "security_officer",
             "04:49:CA:43:9E:61:80": "reactor_operator"
@@ -98,6 +98,18 @@ class UnifiedSMRSecurityTerminal:
 
         # Start non-blocking serial listener
         self.root.after(100, self._poll_hardware_serial)
+
+    def _resolve_default_escort_for_role(self, role, system_state):
+        """Finds the configured escort role for a role/state pair, if any zone requires one."""
+        if not self.pm:
+            return None
+
+        state = system_state.lower()
+        for zone_cfg in self.pm.zone_policies.values():
+            role_cfg = zone_cfg.get(state, {}).get(role, {})
+            if role_cfg.get("requires_escort", False):
+                return role_cfg.get("escort_role") or "security_officer"
+        return None
 
     # ------------------------------------------------------------------
     #  HARDWARE & POLICY ENGINE MANAGEMENT
@@ -289,6 +301,9 @@ class UnifiedSMRSecurityTerminal:
             else:
                 self.editor_canvas.create_text(mid_x, mid_y, text=f"{display_label}\n({zone})", font=("Helvetica", 9, "bold" if is_vital else "normal"), fill="#212529", justify=tk.CENTER)
 
+        self.editor_canvas.create_line(110, 460, 220, 460, fill="#495057", width=2, dash=(2, 2))
+        self.editor_canvas.create_line(110, 180, 200, 180, fill="#495057", width=2, dash=(2, 2))
+
         # Portals SCADA Preview
         active_role = self.map_role_filter.get()
         active_state = self.map_state_filter.get().lower()
@@ -452,7 +467,8 @@ class UnifiedSMRSecurityTerminal:
 
         ttk.Label(hw_group, text="Select Role Token to Tap:").pack(anchor="w")
         available_roles = list(self.loader.operational_requirements.keys()) + ["contractor"]
-        self.cb_mock_role = ttk.Combobox(hw_group, values=available_roles, state="readonly")
+        unique_roles = list(dict.fromkeys(available_roles))
+        self.cb_mock_role = ttk.Combobox(hw_group, values=unique_roles, state="readonly")
         self.cb_mock_role.set("reactor_operator")
         self.cb_mock_role.pack(fill=tk.X, pady=(2, 10))
 
@@ -525,11 +541,17 @@ class UnifiedSMRSecurityTerminal:
         state = self.cb_state.get()
         hour = int(self.spin_hour.get())
 
+        escort_role = self._resolve_default_escort_for_role(role, state)
+        active_escorts = [escort_role] if escort_role else []
+        present_roles = [role]
+        if escort_role and escort_role not in present_roles:
+            present_roles.append(escort_role)
+
         context_dict = {
             "system_state": state,
             "time_of_day": hour,
-            "active_escorts": ["security_officer"] if role == "maintenance_technician" else [],
-            "present_roles": [role, "security_officer"] if role == "maintenance_technician" else [role],
+            "active_escorts": active_escorts,
+            "present_roles": present_roles,
             "guards_distracted": False
         }
 

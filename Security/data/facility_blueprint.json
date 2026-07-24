@@ -40,6 +40,9 @@
     },
     "security_officer": {
       "required_rooms": ["security_gatehouse", "office_sas_hub", "main_control_room"]
+    },
+    "contractor": {
+      "required_rooms": ["outer_parking"]
     }
   }
 }
