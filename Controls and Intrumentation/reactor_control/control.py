@@ -1,5 +1,7 @@
 import numpy as np
 
+"""Currently, this is a simple PID controller for the reactor's control rod.
+You can replace it with a more sophisticated controller such as a LQR or MPC."""
 
 class Controller:
     def __init__(self, kp, ki, kd, rho_min=-5e-4, rho_max=5e-4):
