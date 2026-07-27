@@ -65,6 +65,7 @@ You may follow these milestones to complete your project. Depending on your chos
 1. Inspect `data/facility_blueprint.json` to review room connections, vital assets (`main_control_room`, `reactor_containment`), and subterranean shortcut tunnels.
 2. Launch the unified security terminal from the Security folder:
 ```bash
+pip install pyserial
 python src/dashboard.py
 ```
 3. Explore the default layout in Tab 1 (Interactive Zone Map Editor). The interface should look like the following:
