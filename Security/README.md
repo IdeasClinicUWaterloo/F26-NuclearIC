@@ -63,11 +63,19 @@ You may follow these milestones to complete your project. Depending on your chos
 
 **Steps:**
 1. Inspect `data/facility_blueprint.json` to review room connections, vital assets (`main_control_room`, `reactor_containment`), and subterranean shortcut tunnels.
-2. Launch the unified security terminal from the Security folder:
+2. Install required dependencies:
+```bash
+pip install pyserial
+```
+   - **Note for Linux/macOS users:** You may also need to install `tkinter` separately:
+     - Ubuntu/Debian: `sudo apt-get install python3-tk`
+     - macOS: `brew install python-tk@3.x` (replace x with your Python version)
+     - Windows: `tkinter` is included by default
+3. Launch the unified security terminal from the Security folder:
 ```bash
 python src/dashboard.py
 ```
-3. Explore the default layout in Tab 1 (Interactive Zone Map Editor). The interface should look like the following:
+4. Explore the default layout in Tab 1 (Interactive Zone Map Editor). The interface should look like the following:
 
 ![alt text](assets/Tab_1.png)
 
