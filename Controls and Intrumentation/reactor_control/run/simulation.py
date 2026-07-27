@@ -4,11 +4,11 @@ state estimator, and safety supervisor together and steps them in time."""
 import numpy as np
 from scipy.integrate import solve_ivp
 
-from model import ReactorModel
-from ekf import EKF
-from control import MAX_ROD_SPEED
-from state_machine import SafetySupervisor
-from plotting import plot_simulation
+from reactor.model import ReactorModel
+from estimation.ekf import EKF
+from controller.control import MAX_ROD_SPEED
+from controller.state_machine import SafetySupervisor
+from run.plotting import plot_simulation
 
 # Measurement channels, in the order the EKF expects them.
 CHANNELS = ["power", "fuel_temp", "coolant_1_temp", "coolant_2_temp"]
@@ -300,8 +300,9 @@ class Simulation:
 
 
 if __name__ == "__main__":
-    from control import CONTROLLERS
-    from sensors import SensorSuite
+    # Run from the reactor_control folder with:  python -m run.simulation
+    from controller.control import CONTROLLERS
+    from reactor.sensors import SensorSuite
 
     controller = CONTROLLERS["pid"]()
     simulator = Simulation(duration=200.0, dt=0.1, desired_n=1.0)

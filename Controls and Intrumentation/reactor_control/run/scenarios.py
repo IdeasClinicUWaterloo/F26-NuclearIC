@@ -2,9 +2,9 @@
 and faults). Each scenario configures a fresh Simulation/Controller/
 SensorSuite and, where relevant, a sensor or actuator fault."""
 
-from simulation import Simulation
-from control import CONTROLLERS
-from sensors import SensorSuite
+from run.simulation import Simulation
+from controller.control import CONTROLLERS
+from reactor.sensors import SensorSuite
 
 SCENARIOS = {
     "nominal": {

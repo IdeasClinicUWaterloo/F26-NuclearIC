@@ -1,7 +1,7 @@
 import argparse
 
-from scenarios import build_simulation, SCENARIOS
-from control import CONTROLLERS
+from run.scenarios import build_simulation, SCENARIOS
+from controller.control import CONTROLLERS
 
 
 def main():
