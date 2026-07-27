@@ -2,20 +2,17 @@ import numpy as np
 
 
 class SafetySupervisor:
-    """Safety state machine that sits between the controller and the
-    reactor, watching raw instrumentation independently of the EKF, and
-    overriding the commanded rod reactivity when the reactor approaches an
-    unsafe condition.
+    """Sits between the controller and the reactor and overrides the rod
+    command when things head somewhere unsafe.
 
-    Deliberately independent of the estimator: a real protection system
-    doesn't share its instrumentation chain with the control system, so a
-    bug or fault in the EKF can't also disable safety.
+    It reads the raw instruments, not the EKF, on purpose: a real protection
+    system doesn't share an instrumentation chain with the control system,
+    so a bug in the estimator can't take safety down with it.
 
-    States, in increasing severity: NORMAL, WARNING, LIMITING, SCRAM,
-    SHUTDOWN. SCRAM latches -- once triggered, the supervisor stays in
-    SCRAM/SHUTDOWN for the rest of the run, matching how a real reactor
-    protection system requires a deliberate reset rather than clearing
-    itself the moment conditions look normal again.
+    States by increasing severity: NORMAL, WARNING, LIMITING, SCRAM,
+    SHUTDOWN. SCRAM latches -- once tripped it stays tripped, because a real
+    protection system needs a deliberate reset rather than clearing itself
+    the moment conditions look fine again.
     """
 
     def __init__(self, limits, rho_min, rho_max, limiting_rho_max=0.0,

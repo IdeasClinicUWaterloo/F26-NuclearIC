@@ -1,342 +1,115 @@
 # Instrumentation and Controls
 
-## Challenge Description
-
 Small Modular Reactors (SMRs) are being developed as a new generation of nuclear power plants that can be built as compact devices with advanced safety and monitoring systems. In Canada, SMR development is especially relevant because projects such as the Darlington New Nuclear Project are moving from design and planning toward construction.
 
-This subchallenge focuses on the instrumentation and controls layer of an SMR-inspired system. Teams can work with a simplified reactor model where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time, or approach the challenge in an open-ended, hands-on way with analagous systems.
+This subchallenge focuses on the instrumentation and controls layer of an SMR-inspired system: building and improving a controller for a nonlinear dynamical system with noisy sensors, potential hidden states, physical constraints, and safety-critical operating limits.
 
-The goal is to build and improve a controller for a nonlinear dynamical system with noisy sensors, potential hidden states, physical constraints, and safety-critical operating limits.
-
-Teams are invited to design control, estimation, fault detection, and visualization features that help the simulated reactor track a requested power output while avoiding unsafe operation.
-
-Below is a chart descrbing how SMRs work:
+Below is a chart describing how SMRs work:
 
 ![alt text](assets/smr-chart.png)
 
+---
+
+## Table of Contents
+
+- [Challenge](#challenge)
+- [Two Approaches](#two-approaches)
+- [Potential Solutions](#potential-solutions)
+- [Repository Layout](#repository-layout)
+- [Things to Keep in Mind](#things-to-keep-in-mind)
+- [Notes for Teams](#notes-for-teams)
+- [Resources](#resources)
+
+---
+
+## Challenge
+
+Your goal is to develop a control and instrumentation system for a simulated reactor or an analogous physical system at a requested output while keeping it safe when sensors are noisy, disturbances hit, and components fail.
+
+Successful solutions should consider:
+
+- Tracking a setpoint that changes over time, without large overshoot or oscillation
+- Staying inside safety limits, and shutting down cleanly when they are threatened
+- Behaving sensibly when a sensor is noisy, biased, or dead, and when an actuator sticks or lags
+
+Teams are encouraged to explore solutions such as:
+
+- Software applications
+- Hardware prototypes
+- Data analysis approaches
+- Optimization methods
+- Research-based solutions
+
+Solutions should consider:
+
+- Feasibility
+- Scalability
+- User impact
+- Sustainability
+- Technical implementation
+
+---
+
+## Two Approaches
+
+Teams can approach this challenge from scratch or from either (or both) of two supported directions:
+
+- **Simulated reactor track**: work with a simplified reactor model where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time. See [`reactor_control/README.md`](reactor_control/README.md) for the code, how to run it, and a roadmap.
+
+- **Physical analogue track**: build a small hands-on control system that represents the same core ideas (feedback control, noisy sensors, actuator limits, disturbances, safety limits, fault handling) without needing to resemble a reactor directly. See [`Physical Systems/README.md`](Physical%20Systems/README.md) for the existing example builds, wiring reference, and a roadmap.
+
+Both tracks are invited to design control, estimation, fault detection, and visualization features that help their system track a requested setpoint while avoiding unsafe operation.
+
+Physical systems do not need to resemble a reactor directly, they act as analogues for any system where a controller must regulate an output while respecting physical constraints. Two example builds (dye concentration control, temperature control) already exist in [`Physical Systems/`](Physical%20Systems/) as a starting point, but teams are free to build a different analogue.
+
+
+---
+
 ## Potential Solutions
 
-Teams may approach the challenge in several ways, depending on their background and level of experience:
+The ideas below are examples to help teams explore possible directions. They are not the only possible solutions.
 
-- Build a [PID](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb?srsltid=AfmBOop2VQJangbc5Sx5kFwntYKSpLKkyMPZg2kbVIUl3h992GPeW9hO) (Proportional, Integral, Derivative) controller to help reactor power follow a target value
-- Filter noisy sensor readings so the controller receives cleaner data
-- Add safety rules for warnings, limits, SCRAM, and shutdown
-- Estimate hidden system values such as temperature, reactivity, or sensor bias
-- Try advanced controllers such as LQR (Linear-Quadratic Regulator) or MPC (Model Predictive Control)
-- Detect problems such as biased sensors, stuck actuators, or unusual temperature behavior
-- Test the controller on different scenarios such as power changes, coolant disturbances, sensor noise, and stuck rods
-- Build plots or dashboards to show power, temperature, reactivity, rod position, estimates, and safety state
-- Tune the system to reduce overshoot, improve tracking, avoid unnecessary shutdowns, and recover from disturbances
+Teams are encouraged to combine ideas, explore new approaches, and develop creative solutions.
 
+| Potential Solution | Description | Resources |
+| --- | --- | --- |
+| **PID (Proportional Integral Derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. The usual first win, and the baseline everything else is measured against. | [Intro to PID](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb), [How to tune a PID controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec) |
+| **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values you cannot measure directly, such as temperature, reactivity, or sensor bias. Ranges from a moving average to a full Kalman or extended Kalman filter. | [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/) |
+| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands warnings, limiting, SCRAM, and a shutdown that latches until deliberately reset. | [Reactor protection system](https://en.wikipedia.org/wiki/Reactor_protection_system) |
+| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told — then say *which* one, and fall back safely. | [Fault detection and isolation](https://en.wikipedia.org/wiki/Fault_detection_and_isolation) |
+| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. | [LQR](https://en.wikipedia.org/wiki/Linear%E2%80%93quadratic_regulator), [MPC](https://en.wikipedia.org/wiki/Model_predictive_control) |
+| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show it holds up rather than being tuned for one happy path. | [`reactor_control/scenarios.py`](reactor_control/scenarios.py) |
+| **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares two controllers across every test case. | [Matplotlib](https://matplotlib.org/stable/index.html), [Plotly Dash](https://dash.plotly.com/) |
+| **Physical analogue build** | A temperature control system, and dye concentration system demonstrating the same feedback, noise, limits, and safety ideas in hardware. | [`Physical Systems/`](Physical%20Systems/) |
 
-### Physical Analogue Solutions
+---
 
-Teams may also build a small physical control system that represents the same core ideas as the reactor simulation: feedback control, noisy sensors, actuator limits, disturbances, safety limits, and fault handling.
+## Repository Layout
 
-Physical systems do not need to resemble a reactor directly. They can act as analogues for a system where a controller must regulate an output while respecting physical constraints.
+- [`reactor_control/`](reactor_control/) : the simulated-reactor track: reactor model, sensors, PID controller, EKF, safety state machine, named scenarios, and a CLI runner. See its README for details and the roadmap.
+- [`Physical Systems/`](Physical%20Systems/) : the physical-analogue track: Arduino sketches for a dye-concentration loop and a temperature-control loop, plus a wiring reference. See its README for details and the roadmap.
 
-Possible physical analogue projects include:
+---
 
-* **Temperature control system**
-  Use a small fan, low-voltage heater, temperature sensor, and microcontroller to keep a surface, pad, or small enclosure near a target temperature. Teams can also add simple fault cases such as blocked airflow, delayed fan response,     or reduced cooling.
-  
-  Analogy: reactor power creates heat, coolant or airflow removes heat, and the controller must avoid overheating or trigger a safe shutdown.
+## Things to Keep in Mind
 
-* **Closed-loop peristaltic pump flow controller**
-  Build a PID-controlled peristaltic pump that regulates water flow through a transparent tube in a closed-loop system. Teams can adjust pump speed to maintain a target flow rate and may add a simple servo-controlled valve or flap to     change the flow resistance.
-  
-  Analogy: coolant-flow control, disturbance rejection, sensor noise, actuator delay, blocked tubing, bubbles, leaks, or reduced pump performance.
-
-* **Syringe pump dosing controller**  
-  Build a PID-controlled syringe pump that dispenses a requested volume of liquid, such as a target number of millilitres over a set time. The actuator could be a stepper motor or servo-driven syringe plunger, and feedback could come     from plunger position, flow measurement, or collected mass/volume.
-  
-  Analogy: precise setpoint tracking, actuator limits, calibration error, overshoot prevention, and safe shutdown if the pump jams or exceeds limits.
-
-* **Light intensity control system**  
-  Use an LED, light sensor, and controller to maintain a target brightness despite ambient light changes.
-    
-  Analogy: sensor noise, disturbance rejection, and feedback control.
-
-* **Ball-and-beam or balance platform**  
-  Use a servo and distance sensor/camera to control the position of a ball or object.
-    
-  Analogy: unstable or nonlinear dynamics requiring careful controller tuning.
-
-Physical projects should include at least some of the following:
-
-- A measured process variable, such as temperature, speed, level, position, or brightness
-- A control input, such as fan speed, motor voltage, pump speed, servo angle, or heater power
-- A target setpoint that changes over time
-- Sensor noise, delay, or disturbance effects
-- Actuator limits or rate limits
-- Safety thresholds and shutdown behavior
-- Plots, logs, or a dashboard showing system response
-
-For safety, physical builds should use low-voltage components only and avoid unsafe heating, exposed wiring, pressurized systems, mains electricity, open flames, boiling water, or hazardous materials. The goal is to demonstrate instrumentation and control concepts, not to build a high-power device.
-
-## Recommended Roadmap
-
-Teams are encouraged to take the project in any direction. These milestones are not requirements or a scoring checklist; they are simply guides and pathways to help teams in building their solutions.
-
-### Milestone 1: Run the Reactor Simulation
-
-Goal: understand the simplified reactor model and confirm that the starter simulation runs end-to-end.
-
-Suggested outcomes:
-
-- Understand the underlying [point kinetics equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/)
-- Run the baseline reactor simulation
-- Plot reactor power, fuel temperature, coolant temperature, and control rod position
-- Identify the available control inputs, sensor outputs, and hidden states
-- Test at least one simple scenario, such as a power setpoint change
-
-Good demo: the team can explain how the simulated reactor responds when control rods are inserted or withdrawn.
-
-### Milestone 2: Build a Basic Power Controller
-
-Goal: regulate reactor power using a simple feedback controller.
-
-Suggested outcomes:
-
-- Implement a PID or rule-based controller
-- Track a desired power setpoint
-- Add actuator limits for rod movement or reactivity commands
-- Reduce large overshoot and oscillation during power changes
-
-Good demo: the controller can track a power setpoint change without immediately violating safety limits.
-
-### Milestone 3: Add Safety Logic
-
-Goal: prevent the controller from driving the system into unsafe conditions.
-
-Suggested outcomes:
-
-- Add warning thresholds for fuel temperature, coolant temperature, and reactor power
-- Add limiting behavior that overrides aggressive control actions
-- Add SCRAM (essentially, an emergency shutdown procedure) for severe violations
-- Make safety state visible in logs or the dashboard
-
-Good demo: when a disturbance pushes the reactor toward an unsafe condition, the safety supervisor overrides the controller and moves the system toward a safer state.
-
-### Milestone 4: Improve Instrumentation and State Estimation
-
-Goal: handle noisy and incomplete measurements.
-
-Suggested outcomes:
-
-- Filter noisy sensor readings
-- Estimate hidden states such as fuel temperature, precursor concentration, or reactivity bias
-- Implement an observer, Kalman filter, or Extended Kalman Filtwer
-- Compare true states, measured values, and estimated states in the dashboard
-
-Good demo: the controller performs better when using estimated state information instead of raw noisy measurements alone.
-
-### Milestone 5: Handle Disturbances and Faults
-
-Goal: make the solution robust across multiple operating scenarios.
-
-Suggested outcomes:
-
-- Test load-following scenarios
-- Test coolant-flow or heat-removal disturbances
-- Test sensor noise, sensor bias, or sensor dropout
-- Test actuator faults such as a stuck rod or delayed rod response
-- Add fault detection or fallback behavior
-
-Good demo: the controller can recover from at least one nontrivial disturbance without unsafe temperature or power excursions.
-
-### Milestone 6: Make Your Solution Unique
-
-Goal: turn the starter system into your team's own solution.
-
-Possible directions:
-
-- Better control: PID tuning, gain scheduling, LQR, or MPC
-- Better estimation: EKF, sensor-fusion, or bias estimation
-- Better safety: more robust SCRAM logic, state-machine design, or safety margins
-- Better diagnostics: fault detection, fault isolation, alerts, or anomaly scoring
-- Better visualization: live plots, scenario replay, controller comparison, or judge-friendly dashboards
-- Better evaluation: automated scenario sweeps, score breakdowns, and performance reports
-
-Good demo: the project has a clear idea beyond the starter code and shows why that idea improves reactor control, safety, estimation, or interpretability.
-
-## Physical Analogue Roadmap
-
-Teams building a physical analogue system can follow this general roadmap. These milestones apply to systems such as temperature control, syringe pumps, peristaltic pumps, motor control, water-level control, or light-intensity control.
-
-### Milestone 1: Build and Test the Physical Setup
-
-Goal: confirm that the hardware works and the system can be measured.
-
-Suggested outcomes:
-
-* Connect the sensor, actuator, and microcontroller
-* Read the main measured value, such as temperature, flow rate, volume, speed, level, or brightness
-* Send simple actuator commands, such as changing pump speed, fan speed, heater power, or motor position
-* Log data over time
-
-Good demo: the team can show the sensor reading changing when the actuator is turned on or adjusted.
-
-### Milestone 2: Add Basic Feedback Control
-
-Goal: make the system follow a target value.
-
-Suggested outcomes:
-
-* Define a target setpoint
-* Compare the measured value to the target
-* Use a PID or rule-based controller to adjust the actuator
-* Add basic actuator limits so the system does not command unsafe or impossible values
-
-Good demo: the system moves toward a target value and settles without large oscillations.
-
-### Milestone 3: Add Safety Limits
-
-Goal: prevent the physical system from operating outside safe conditions.
-
-Suggested outcomes:
-
-* Add warning limits for unsafe temperature, flow, pressure, speed, volume, or position
-* Stop or limit the actuator if the system approaches an unsafe condition
-* Add a simple shutdown state for severe faults
-* Make the safety state visible in logs, plots, LEDs, or a dashboard
-
-Good demo: when the system goes outside a safe range, the controller limits or stops the actuator.
-
-### Milestone 4: Improve Measurements
-
-Goal: make the controller work better with real sensor data.
-
-Suggested outcomes:
-
-* Filter noisy sensor readings
-* Calibrate the sensor or actuator
-* Compare raw readings with filtered readings
-* Handle sensor delay, bias, or missing readings
-
-Good demo: the controller behaves more smoothly when using filtered or calibrated measurements.
-
-### Milestone 5: Test Disturbances and Faults
-
-Goal: show that the system can handle real-world problems.
-
-Suggested outcomes:
-
-* Change the setpoint during operation
-* Add a disturbance, such as blocked airflow, pinched tubing, bubbles, load change, or ambient light change
-* Test sensor noise, sensor bias, or sensor dropout
-* Test actuator issues such as a delayed pump, stuck motor, or reduced fan speed
-* Add fallback behavior when something goes wrong
-
-Good demo: the system detects or recovers from at least one disturbance without unsafe behavior.
-
-### Milestone 6: Build a Clear Demo
-
-Goal: show what the team built and why it works.
-
-Suggested outcomes:
-
-* Plot target value vs. measured value
-* Plot actuator command over time
-* Show safety state or fault state over time
-* Explain how the controller reacts to disturbances
-* Explain how the physical system connects to reactor-control ideas such as feedback, cooling, sensors, actuator limits, and safety logic
-
-Good demo: the team can clearly show the system tracking a target, responding to a disturbance, and staying within safe limits.
-
-## Starter Package Overview
-
-This folder contains starter material for the reactor solution. It is intended as a base package that teams can extend during the event, not as a polished production system or a real reactor safety model.
-
-### Included Components
-
-- `reactor_model.py`  
-  Simplified point-kinetics and thermal model for the SMR-inspired reactor simulation.
-
-- `sensor_sim.py`  
-  Simulated instrumentation layer that produces noisy measurements of reactor power, temperature, rod position, and other available outputs.
-
-- `controller_base.py`  
-  Base controller interface. Teams can implement PID, rule-based logic, LQR, MPC, or their own strategy.
-
-- `ekf_base.py`  
-  Optional state-estimation scaffold for teams that want to estimate hidden reactor states from noisy measurements.
-
-- `state_machine.py`  
-  Safety supervisor scaffold with states such as NORMAL, WARNING, LIMITING, SCRAM, and SHUTDOWN.
-
-- `scenarios.py`  
-  Scenario definitions for load changes, coolant disturbances, sensor faults, actuator faults, and other test cases.
-
-- `evaluator.py`  
-  Scoring logic for power tracking, safety-limit violations, control smoothness, disturbance recovery, and unnecessary shutdowns.
-
-- `dashboard.py`  
-  Visualization tools for plotting reactor power, temperature, control inputs, estimated states, safety state, and score.
-
-- `requirements.txt`  
-  Python package dependencies for running the simulator, controller, evaluator, and dashboard.
-
-## Development Setup
-
-### Python Environment
-
-The starter code expects a local Python environment with the packages listed in `requirements.txt`.
-
-Suggested setup:
-
-1. Create a virtual environment
-2. Install the requirements
-3. Run a baseline scenario
-4. Inspect plots or dashboard output
-5. Modify the controller, estimator, or safety supervisor
-
-Example workflow:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate      # macOS / Linux
-# .venv\Scripts\activate       # Windows PowerShell
-pip install -r requirements.txt
-```
-
-### Running the Simulation
-
-Example commands may look like:
-
-```bash
-python run_scenario.py --scenario load_step
-python run_scenario.py --scenario coolant_disturbance
-python run_scenario.py --scenario sensor_bias
-```
-
-If a dashboard is provided:
-
-```bash
-python dashboard.py
-```
-
-Exact commands may change as the starter package evolves.
-
-## Scoring Ideas
-
-The evaluator may score solutions using a combination of:
-
-- Power tracking accuracy
-- Fuel and coolant temperature safety
+- Setpoint tracking accuracy
+- Safety-margin adherence (e.g. temperature, power, or flow limits)
 - Avoidance of severe safety violations
-- Smoothness of rod or reactivity commands
+- Smoothness of actuator commands
 - Recovery after disturbances
-- Robustness across hidden scenarios
+- Robustness across hidden or varied scenarios
 - Accuracy of state estimates
-- Avoidance of unnecessary SCRAM events
+- Avoidance of unnecessary shutdowns
 - Quality of visualization or interpretability
 
-A strong solution should not only track power well, but also behave safely when sensors are noisy, disturbances occur, or the model enters an abnormal state.
+A strong solution should not only track its setpoint well, but also behave safely when sensors are noisy, disturbances occur, or the system enters an abnormal state.
+
+---
 
 ## Notes for Teams
 
-- This is an educational simulation challenge, not a real nuclear reactor control system.
+- This is an educational challenge, not a real nuclear reactor control system.
 - The reactor model is intentionally simplified so teams can focus on controls, instrumentation, estimation, and safety logic.
 - The best first step is usually a stable PID controller with clear safety overrides.
 - More advanced methods such as EKF, LQR, and MPC are encouraged but not required for a working solution.
@@ -344,16 +117,35 @@ A strong solution should not only track power well, but also behave safely when 
 - Good engineering judgment matters: avoid overfitting to one scenario and test across multiple disturbances.
 - Document your assumptions, tuning choices, and failure modes so judges can understand your design.
 
-## Background References
+---
 
-Suggested background topics:
+## Resources
 
-- Canadian Small Modular Reactor Roadmap and SMR Action Plan
-- Darlington New Nuclear Project
-- GE Vernova Hitachi BWRX-300
-- Reactor point kinetics
-- PID control
-- State-space control
-- Kalman filtering and nonlinear state estimation
-- Model predictive control
-- Fault detection and isolation
+The following resources may help teams better understand the problem and develop solutions.
+
+### Background Information
+
+- [Canadian SMR Action Plan](https://smractionplan.ca/): national context for why SMRs matter in Canada.
+- [Darlington New Nuclear Project](https://www.opg.com/powering-ontario/our-generation/nuclear/darlington-new-nuclear-project/): the Ontario build moving from design into construction.
+- [GE Vernova Hitachi BWRX-300](https://www.gevernova.com/nuclear/carbon-free-power/bwrx-300-small-modular-reactor): the SMR design being deployed at Darlington.
+- [Point Kinetics Equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/): the reactor-physics model behind the simulated track.
+
+### Technical Resources
+
+- [Introduction to PID Controllers](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb): what the three terms actually do.
+- [How to Tune a PID Controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec): a practical tuning procedure to work through.
+- [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/): the clearest visual introduction to filtering and state estimation.
+- [SciPy documentation](https://docs.scipy.org/doc/scipy/): ODE integration and linear algebra used by the simulated track.
+- [Matplotlib documentation](https://matplotlib.org/stable/index.html): plotting and dashboards.
+- [Arduino reference](https://www.arduino.cc/reference/en/): for the physical analogue track.
+
+### Data Sources
+
+- No external dataset is required. The simulated track generates its own data through [`reactor_control/scenarios.py`](reactor_control/scenarios.py); the physical track produces data from your own hardware.
+
+### Additional References
+
+- [Reactor Dynamics](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/): reactivity, feedback, and transient behaviour.
+- [State-space representation](https://en.wikipedia.org/wiki/State-space_representation): the framework underneath LQR and Kalman filtering.
+- [Model Predictive Control](https://en.wikipedia.org/wiki/Model_predictive_control): planning control actions against explicit constraints.
+- [Fault detection and isolation](https://en.wikipedia.org/wiki/Fault_detection_and_isolation): detecting and diagnosing sensor and actuator faults.

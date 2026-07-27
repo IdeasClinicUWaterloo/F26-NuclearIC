@@ -3,16 +3,25 @@ and faults). Each scenario configures a fresh Simulation/Controller/
 SensorSuite and, where relevant, a sensor or actuator fault."""
 
 from simulation import Simulation
-from control import Controller
+from control import CONTROLLERS
 from sensors import SensorSuite
 
 SCENARIOS = {
     "nominal": {
+        # Genuinely undisturbed -- the reference case to compare the others
+        # against. The model defaults to a small reactivity bump at t=50-100,
+        # so this explicitly switches it off.
         "desired_n": 1.0,
+        "disturbance_magnitude": 0.0,
     },
     "load_step": {
         # Controller must track a new setpoint instead of holding steady.
-        "desired_n": 1.05,
+        #
+        # 1.5% and no higher: the rods are worth +/-5e-4 reactivity, and the
+        # thermal feedback eats 2.475e-2 of reactivity per unit of power, so
+        # fully withdrawn only sustains about n = 1.020. Ask for more than
+        # that and the rod just pins at its limit and never gets there.
+        "desired_n": 1.015,
     },
     "coolant_disturbance": {
         # Bigger and longer than the model's default disturbance -- pushes
@@ -55,12 +64,18 @@ SCENARIOS = {
 }
 
 
-def build_simulation(name, duration=200.0, dt=0.1):
+def build_simulation(name, duration=200.0, dt=0.1, controller_name="pid"):
     """Builds (simulator, controller, sensor_suite, actuator_fault) for the
     named scenario, ready to pass to Simulation.simulate()."""
 
     if name not in SCENARIOS:
         raise ValueError(f"Unknown scenario '{name}'. Options: {sorted(SCENARIOS)}")
+
+    if controller_name not in CONTROLLERS:
+        raise ValueError(
+            f"Unknown controller '{controller_name}'. Options: {sorted(CONTROLLERS)}. "
+            "Add your own to CONTROLLERS in control.py."
+        )
 
     cfg = SCENARIOS[name]
 
@@ -73,7 +88,7 @@ def build_simulation(name, duration=200.0, dt=0.1):
     if "disturbance_end" in cfg:
         simulator.model.disturbance_end = cfg["disturbance_end"]
 
-    controller = Controller(kp=1e-4, ki=0, kd=0)
+    controller = CONTROLLERS[controller_name]()
     sensor_suite = SensorSuite()
 
     if "sensor_fault" in cfg:
