@@ -1,10 +1,13 @@
 import os
+import sys
 import json
 import time
 import serial
 import serial.tools.list_ports
 import tkinter as tk
 from tkinter import ttk, messagebox
+
+sys.path.append(os.path.dirname(__file__))
 from blueprint_loader import BlueprintLoader
 from policy_manager import PolicyManager
 from graph_engine import GraphEngine

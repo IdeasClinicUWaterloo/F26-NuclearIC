@@ -1,6 +1,9 @@
 import os
+import sys
 import time
 import serial  # Requires standard 'pip install pyserial'
+
+sys.path.append(os.path.dirname(__file__))
 from blueprint_loader import BlueprintLoader
 from policy_manager import PolicyManager
 from graph_engine import GraphEngine
