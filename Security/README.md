@@ -1,56 +1,92 @@
-# SMR Security Challenge
-
-## Table of Contents
-- [Quick Links](#quick-links)
-- [Your Mission](#your-mission)
-- [Sub-Problems](#sub-problems)
-  - [Security Policy & Access Control Design](#security-policy--access-control-design)
-- [General Resources](#general-resources)
-
-## Quick Links
-> **Navigation Tip:** Use the headings in this document to quickly navigate between sections. Screen reader users can move through the document by heading level.
-
-- [Submission Instructions]
-- [Judging Rubric]
-- [Proposed Solution Walkthrough](policy_simulation/README.md)
-
-![Diagram of a real-world nuclear facility layout showing concentric security zones, checkpoints, and vital areas such as the reactor and control room.](policy_simulation/assets/facility_map.png)
-
-## Your Mission
+# Security
 
 Small Modular Reactors (SMRs) represent the next generation of nuclear energy, featuring compact designs, factory fabrication, and passive safety systems. However, their smaller physical footprints introduce unique security challenges.
 
-Your task is to design a **Physical Protection System (PPS)** that safeguards a fictional SMR facility against radiological sabotage and the theft of sensitive materials, while remaining operationally viable. Solutions must balance security effectiveness against operational feasibility: a system that stops every threat but paralyzes daily operations is an engineering failure, while a system that prioritizes convenience at the expense of security is a risk.
+Your task is to design a **Physical Protection System (PPS)** that safeguards a fictional SMR facility against radiological sabotage and the theft of sensitive materials, while remaining operationally viable. Solutions must balance security effectiveness against operational feasibility: a system that stops every threat but paralyzes daily operations is an engineering failure, while a system that prioritizes convenience at the expense of security is a major risk.
 
-This challenge draws from real-world nuclear security frameworks established by the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**. The facility you design will be a simplified version of a real nuclear facility.
+This challenge draws from real-world nuclear security frameworks established by key regulatory stakeholders, including the **Nuclear Regulatory Commission (NRC)** and the **International Atomic Energy Agency (IAEA)**.
 
-## Sub-Problems
+---
 
-### Security Policy & Access Control Design
+## Table of Contents
 
-A robust PPS can be approached in several ways, depending on your team's background and interests:
+- [Challenge](#challenge)
+- [Potential Solutions](#potential-solutions)
+- [Resources](#resources)
 
-#### Challenge A: Software-Based Policy Simulation
-Design zones and access-control policies for a fictional SMR facility using the provided security simulation dashboard, then test your policy against several simulated adversary profiles.
+---
 
-#### Challenge B: Physical Access Hardware
-Build and wire a physical NFC badge-reader circuit, flash its firmware, and verify live badge transit through the facility in real time.
+## Challenge
 
-#### Challenge C: Alternative Approaches
-If your team's interests lie elsewhere, you may instead:
-- Develop a computer vision system to detect and alert on unauthorized personnel movement or intrusion attempts.
-- Design a physical facility layout that optimizes defensibility, sightlines, and barrier placement more effectively than the provided baseline.
+Your goal is to develop solutions that address physical security policy and access control design for a modern SMR facility.
 
-Challenges A and B can be completed independently or combined into a single project. For a full step-by-step guide covering both tracks — including environment setup, the execution roadmap, and submission requirements — check out the [Proposed Solution Walkthrough](policy_simulation/README.md).
+Successful solutions should consider:
 
-## General Resources
+- Safeguarding vital facility areas against radiological sabotage and theft of sensitive nuclear materials.
+- Balancing physical security enforcement with daily operational efficiency and facility access.
+- Incorporating established nuclear security principles from regulatory frameworks like the NRC and IAEA.
 
-To maximize the effectiveness of your design, research the following nuclear industry security concepts. These apply regardless of which approach your team chooses:
+Teams are encouraged to explore solutions such as:
 
-- **Defense-in-Depth (Physical Application):** Multiple independent layers of protection so that no single point of failure compromises security.
-- **Design Basis Threat (DBT):** A formal characterization of the adversary (skills, capabilities, resources, intent) against which the facility must defend.
-- **Vital Area Identification (VAI):** Systematic identification of areas or assets whose compromise could enable radiological sabotage or theft.
-- **The Principle of Least Privilege:** Each role receives the minimum access necessary to perform its function, no more.
-- **The Detection, Delay, and Response Triad:** A defense strategy combining early detection of intrusion attempts, physical/administrative delay to slow an adversary, and response procedures.
-- **Two-Person Rule (M-of-N Authentication):** A requirement that critical actions be authorized by two or more independent personnel, reducing insider-threat risk.
-- **Access Control List (ACL) Fail-Secure Mechanics:** Ensuring that access control systems default to denial ("fail closed") rather than granting access in case of component failure or attack.
+- Software applications (e.g., policy simulation dashboards)
+- Hardware prototypes (e.g., physical access circuits and badge readers)
+- Computer vision approaches (e.g., automated perimeter and intrusion detection)
+- Facility optimization methods (e.g., spatial layout redesigns for sightlines and barrier placement)
+
+Solutions should consider:
+
+- Feasibility
+- Scalability
+- User impact (operational staff workflow and safety)
+- Sustainability
+- Technical implementation & fail-secure mechanics
+
+---
+
+## Potential Solutions
+
+The ideas below are examples to help teams explore possible directions. They are not the only possible solutions.
+
+Teams are encouraged to combine ideas, explore new approaches, and develop creative solutions.
+
+| Potential Solution | Description | Resources |
+| ------------------ | ----------- | --------- |
+| **Software Policy Simulation** | Design security zones and access-control policies within a dashboard environment and test them against simulated adversary profiles. | [Proposed Solution Walkthrough](policy_simulation/README.md) |
+| **Physical Access Hardware** | Wire a physical NFC badge-reader circuit, flash custom firmware, and verify live badge transit in real time. | [Proposed Solution Walkthrough](policy_simulation/README.md) |
+| **CV Intrusion Detection** | Develop a computer vision system to detect and alert on unauthorized personnel movement or physical facility intrusions. | [OpenCV Documentation](https://docs.opencv.org/) |
+| **Facility Layout Optimization** | Redesign the facility layout map to optimize defensibility, sightlines, and physical barrier placement. | [Sample Facility Layout Map](policy_simulation/assets/facility_map.png) |
+
+---
+
+## Resources
+
+The following resources may help teams better understand the problem and develop solutions.
+
+### Background Information
+
+- **IAEA Nuclear Security Series No. 13:** [Recommendations on Physical Protection of Nuclear Material and Facilities](https://www-pub.iaea.org/MTCD/Publications/PDF/Pub1481_web.pdf)
+- **U.S. NRC 10 CFR 73.55:** [Requirements for Physical Protection of Licensed Activities in Nuclear Power Reactors](https://www.ecfr.gov/current/title-10/chapter-I/part-73/subpart-F/section-73.55)
+- **U.S. NRC 10 CFR 73.1:** [Design Basis Threat (DBT) Framework](https://www.ecfr.gov/current/title-10/chapter-I/part-73/subpart-A/section-73.1)
+- **Defense-in-Depth (Physical Application):** Applying multiple independent layers of security so no single point of failure compromises the facility.
+- **Vital Area Identification (VAI):** Systematic identification of critical facility areas where compromise could enable sabotage.
+
+### Technical Resources
+
+- **Proposed Solution Walkthrough:** [Step-by-Step Setup & Execution Guide](policy_simulation/README.md)
+- **Submission Guidelines:** [Submission Instructions](#)
+- **Judging Criteria:** [Judging Rubric](#)
+- **NFC Hardware Integration:** [PN532 NFC Module Library & Arduino/ESP32 Guides](https://github.com/elechouse/NFC_PN532)
+- **Computer Vision Tools:** [OpenCV Computer Vision Library](https://opencv.org/)
+
+### Data Sources
+
+- **Facility Map Layout:** [Facility Layout Map Asset](policy_simulation/assets/facility_map.png)
+- **Simulation Dashboard Logs:** Available inside the [Policy Simulation Package](policy_simulation/README.md)
+
+### Additional References
+
+- **Principle of Least Privilege:** Restricting user and role access to only the minimum privileges needed to perform operational duties.
+- **The Detection, Delay, and Response Triad:** A core physical security framework combining early intrusion detection, physical delay mechanisms, and response procedures.
+- **Two-Person Rule (M-of-N Authentication):** Requiring dual authorization for high-risk or critical actions to mitigate insider threats.
+- **ACL Fail-Secure Mechanics:** Ensuring physical and software access control systems default to denial ("fail closed") upon system failure or power loss.
+- **Sandia National Laboratories:** [Physical Protection System (PPS) Engineering Principles](https://www.sandia.gov/)
