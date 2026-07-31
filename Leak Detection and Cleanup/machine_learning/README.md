@@ -28,13 +28,14 @@ Follow these steps to set up the environment and run the notebook in Google Cola
 2. Navigate to `NuclearPowerPlantAccidentData/` and open `requirements.txt`.
 3. Replace `~=` with `>=` in the first three lines.
 4. Change the fourth line to `torch`.
-5. Install the updated requirements in the terminal:
+5. Save the file (`Ctrl + S`)
+6. Install the updated requirements in the terminal:
    ```bash
    pip install -r requirements.txt
    ```
    *If installation errors occur, run:*
    ```bash
-   pip install -r requirements.txt --index-url [https://pypi.org/simple](https://pypi.org/simple) --extra-index-url [https://pytorch.org](https://pytorch.org)
+   pip install -r requirements.txt --index-url https://pypi.org/simple --extra-index-url https://pytorch.org
    ```
 
 ### Step 4: Training and Inference
@@ -73,27 +74,41 @@ This repository serves as the starting template for your solution. You are provi
 The output graphs below illustrate model performance across three primary operating scenarios:
 
 ### Normal Operation
-Under standard operating conditions, the predicted leak probability remains near ~35%, well below the 70% decision threshold.
+Under standard operating conditions, the predicted leak probability remains well below the 70% decision threshold.
 
-![Figure 1: Leak probability vs. time under normal operating conditions](images/fig1_normal_operation.png)
+![Figure 1: Leak probability vs. time under normal operating conditions](assets/normal.png)
 
 ### Leak Condition (e.g., Steam Generator Tube Rupture)
-When a leak occurs, the predicted probability rapidly exceeds the 70% threshold (reaching >83%), successfully triggering an alert.
+When a leak occurs, the predicted probability rapidly exceeds the 70% threshold, successfully triggering an alert.
 
-![Figure 2: Leak probability vs. time under leak-inducing conditions](images/fig2_steam_generator_tube_rupture.png)
+![Figure 2: Leak probability vs. time under leak-inducing conditions](assets/SGATR.png)
 
 ### Non-Leak Anomaly (e.g., Control Rod Withdrawal)
-During non-leak operational anomalies, predicted probability fluctuates (reaching ~62%) but stays under the threshold, avoiding false alarms.
+During non-leak operational anomalies, predicted probability fluctuates but stays under the threshold, avoiding false alarms.
 
-![Figure 3: Leak probability vs. time under non-leak accident conditions](images/fig3_rod_withdrawal.png)
+![Figure 3: Leak probability vs. time under non-leak accident conditions](assets/RW.png)
 
 ---
 
 ## Model Evaluation
 
-Model performance metrics and confusion matrix results:
+The training cell outputs performance metrics and confusion matrix:
 
-![Confusion Matrix Screenshot](images/confusion_matrix.png)
+![Confusion Matrix Screenshot](assets/confusion_matrix.png)
+
+The first two rows, [141 0] and [37 163], denote:  
+* 141 correctly predicted non-leaks 
+* 0 predicted leak, but actually a non-leak (no false positives) 
+* 37 missed leaks (predicted non-leak but actually a leak) (false negatives) 
+* 163 correctly predicted non-leaks 
+
+In the table it has the columns: precision, recall, f1-score, and support. The easiest way to understand this is to walk through it:  
+* **Non-leaks:** correct 79% of the time, 0 false positives, 88% accuracy  
+* **Leaks:** correct 100% of the time (every leak predicted is a leak), 81% false negatives, 90% accuracy 
+* Overall scores: 
+    * 89% accuracy 
+    * All the numbers (macro avg) are similar means that the model treats both classes equally 
+    * All the numbers (weighted avg) are similar means that the model treats both classes equally 
 
 ---
 
@@ -102,13 +117,13 @@ Model performance metrics and confusion matrix results:
 ### Machine Learning Workflow
 The end-to-end workflow follows standard operational stages:
 
-![Flowchart of Machine Learning Model](images/ml_flowchart.png)
+![Flowchart of Machine Learning Model](assets/ML_model.png)
 
-1. **Problem Formulation:** Binary classification of multi-sensor time-series sequences.
-2. **Data Ingestion:** Reading raw CSV files containing operational readings.
-3. **Preprocessing:** Feature selection, sliding window generation, train/val/test splits, normalization, and class weighting.
-4. **Model Training:** Training sequential layers with validation tracking.
-5. **Inference & Output:** Exporting serialized model assets and plotting continuous probabilities over time.
+1. **Problem Statement:** Binary classification of multi-sensor time-series sequences.
+2. **Data Collection:** Reading raw CSV files containing operational readings.
+3. **Data Preprocessing:** Feature selection, sliding window generation, train/val/test splits, normalization, and class weighting.
+4. **Choose Model and Model Training:** Training sequential layers with validation tracking.
+5. **Deployment:** Exporting serialized model assets and plotting continuous probabilities over time.
 
 ### Model Architecture
 The baseline architecture is built using sequential layers:
@@ -126,18 +141,10 @@ The baseline architecture is built using sequential layers:
 
 Proper sequence preprocessing is required before training:
 
-![Data Preprocessing Block Diagram](images/preprocessing_block_diagram.png)
-
-1. **Labeling:** Assign binary target labels (`1` for leak, `0` for non-leak/normal/non-leak anomaly).
-2. **Cleaning:** Filter out non-numeric columns.
-3. **Feature Intersection:** Align feature schemas across all CSV files by taking the intersection of shared column headers.
-4. **Sliding Windows:** Convert continuous time-series data into fixed sequence windows.
-5. **Data Splitting:** Split sequence windows into **70% Training (`X_train`, `Y_train`)**, **15% Validation (`X_val`, `Y_val`)**, and **15% Testing (`X_test`, `Y_test`)**.
-6. **Normalization:** Scale input features using `StandardScaler`.
-7. **Class Balancing:** Apply `compute_class_weight` to address imbalance between normal operations and rare leak instances.
+![Data Preprocessing Block Diagram](assets/preprocessing.png)
 
 *Resources:*
-* [Sliding Window Method in Time Series Analysis](https://www.geeksforgeeks.org/sliding-window-method-in-time-series-analysis/)
+* [Sliding Window Method in Time Series Analysis](https://lazyprogrammer.me/what-is-the-sliding-window-method-in-time-series-analysis/)
 * [Scikit-learn Train Test Split Documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html)
 
 ---
