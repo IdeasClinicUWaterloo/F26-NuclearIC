@@ -23,6 +23,7 @@ Your goal is to develop solutions that address physical security policy and acce
 Successful solutions should consider:
 
 - Safeguarding vital facility areas against radiological sabotage and theft of sensitive nuclear materials.
+- Detecting unauthorized removal of radiological or nuclear material from the premises, in addition to preventing unauthorized entry.
 - Balancing physical security enforcement with daily operational efficiency and facility access.
 - Incorporating established nuclear security principles from regulatory frameworks like the NRC and IAEA.
 
@@ -55,6 +56,17 @@ Teams are encouraged to combine ideas, explore new approaches, and develop creat
 | **Physical Access Hardware** | Wire a physical NFC badge-reader circuit, flash custom firmware, and verify live badge transit in real time. | [Proposed Solution Walkthrough](policy_simulation/README.md) |
 | **CV Intrusion Detection** | Develop a computer vision system to detect and alert on unauthorized personnel movement or physical facility intrusions. | [OpenCV Documentation](https://docs.opencv.org/) |
 | **Facility Layout Optimization** | Redesign the facility layout map to optimize defensibility, sightlines, and physical barrier placement. | [Sample Facility Layout Map](policy_simulation/assets/facility_map.png) |
+| **Radiological Hazard & Material Monitoring** | Explore approaches for detecting anomalous radiation signatures at facility choke points (e.g., exits, loading docks, vehicle gates) to help identify unauthorized movement of nuclear or radiological material. | [Radiation Portal Monitors Overview](https://www.nrc.gov/about-nrc/radiation/health-effects/detection-radiation) |
+
+Some of these solution paths are not officially supported with an existing complete solution. Teams that want to pursue independent solution paths can consider the CV and Radiological Hazard solutions. Possible directions include:
+
+- **Automated perimeter/intrusion detection:** Building a computer vision system (e.g., using OpenCV) to detect unauthorized personnel movement in restricted or vital areas. There are figurines available that can be used to model staff and intruders.
+- **Radiation portal monitoring:** Simulating or prototyping gamma/neutron detection at facility exit points to flag material leaving without authorization.
+- **Sensor placement strategy:** Modeling where detectors should be sited (vehicle gates, personnel exits, waste handling areas) to maximize detection probability while minimizing false alarms and traffic bottlenecks.
+- **Alarm response integration:** Designing how a detection event would trigger lockdown, notification, or two-person verification procedures, tying back into the Detection, Delay, and Response triad described below.
+- **Nuisance alarm mitigation:** Considering how naturally occurring radioactive material (NORM) or medical isotopes carried by personnel could be filtered out to avoid alarm fatigue.
+
+Teams pursuing this path can treat it as a standalone contribution or as a complement to one of the other solution paths (e.g., feeding detection alerts into a policy simulation dashboard or facility layout redesign).
 
 ---
 
@@ -77,6 +89,7 @@ The following resources may help teams better understand the problem and develop
 - **Judging Criteria:** [Judging Rubric](#)
 - **NFC Hardware Integration:** [PN532 NFC Module Library & Arduino/ESP32 Guides](https://github.com/elechouse/NFC_PN532)
 - **Computer Vision Tools:** [OpenCV Computer Vision Library](https://opencv.org/)
+- **Radiation Detection Basics:** [NRC Radiation Portal Monitors & Detection Overview](https://www.nrc.gov/about-nrc/radiation/health-effects/detection-radiation)
 
 ### Data Sources
 
@@ -89,4 +102,6 @@ The following resources may help teams better understand the problem and develop
 - **The Detection, Delay, and Response Triad:** A core physical security framework combining early intrusion detection, physical delay mechanisms, and response procedures.
 - **Two-Person Rule (M-of-N Authentication):** Requiring dual authorization for high-risk or critical actions to mitigate insider threats.
 - **ACL Fail-Secure Mechanics:** Ensuring physical and software access control systems default to denial ("fail closed") upon system failure or power loss.
+- **Radiation Portal Monitoring:** Fixed detection points (e.g., at exits and vehicle gates) that screen for gamma or neutron emissions to help identify material leaving a facility without authorization.
+- **Nuisance Alarm Rate:** A key design tradeoff in radiation detection systems — sensitivity high enough to catch real threats without triggering excessive false alarms from background sources or medical isotopes.
 - **Sandia National Laboratories:** [Physical Protection System (PPS) Engineering Principles](https://www.sandia.gov/)
