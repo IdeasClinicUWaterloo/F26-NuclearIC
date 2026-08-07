@@ -1,5 +1,8 @@
 import os
+import sys
 import heapq
+
+sys.path.append(os.path.dirname(__file__))
 from blueprint_loader import BlueprintLoader
 from policy_manager import PolicyManager
 from context_validator import ExecutionContext
