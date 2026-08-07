@@ -1,9 +1,5 @@
 # Reactor Optimization
 
-Small modular nuclear reactors have the potential to improve deployment flexibility, reduce construction complexity, and support cleaner energy systems by generating electricity, industrial process heat, or both. An operating reactor draws on many disciplines to design and operate successfully, including applied physics, chemistry, fluids engineering, and a great deal of modelling. The physics and chemistry of a reactor are driven by choices such as fuel type, moderating material, coolant, and control elements, and these choices have profound implications on the physical properties of the reactor. For example, the chemistry of a coolant can matter just as much as the mechanical design. Reactor performance also depends on these choices and much more: fuel rod geometry, material selection, thermal power, control rod behavior, coolant flow, steam flow, startup strategy, cost, fuel lifetime, and safety margins. However, designing and operating an SMR involves many trade-offs.
-
-Students are invited to build models, dashboards, simulations, or optimization algorithms that help compare reactor choices and improve reactor behavior.
-
 ---
 
 ## Table of Contents
@@ -15,6 +11,10 @@ Students are invited to build models, dashboards, simulations, or optimization a
 ---
 
 ## Challenge
+
+Small modular nuclear reactors have the potential to improve deployment flexibility, reduce construction complexity, and support cleaner energy systems by generating electricity, industrial process heat, or both. An operating reactor draws on many disciplines to design and operate successfully, including applied physics, chemistry, fluids engineering, and a great deal of modelling. The physics and chemistry of a reactor are driven by choices such as fuel type, moderating material, coolant, and control elements, and these choices have profound implications on the physical properties of the reactor. For example, the chemistry of a coolant can matter just as much as the mechanical design. Reactor performance also depends on these choices and much more: fuel rod geometry, material selection, thermal power, control rod behavior, coolant flow, steam flow, startup strategy, cost, fuel lifetime, and safety margins. However, designing and operating an SMR involves many trade-offs.
+
+Students are invited to build models, dashboards, simulations, or optimization algorithms that help compare reactor choices and improve reactor behavior.
 
 The challenge in this subproblem is to optimize some part of a reactor system. Teams may focus on reactor design optimization, reactor operation optimization, or a combination of both. A strong solution should not simply choose one input value, but should explore trade-offs between performance, cost, efficiency, safety, and feasibility.
 
