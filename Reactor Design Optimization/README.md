@@ -195,8 +195,6 @@ The starter material may support two broad solution paths:
 
 Teams may choose one path or combine both.
 
-For a broader view of the SMR design landscape beyond this starter tool, see the [OECD-NEA SMR Dashboard](https://www.oecd-nea.org/upload/docs/application/pdf/2025-09/web_-_smr_dashboard_-_third_edition.pdf) and the [IAEA ARIS SMR Catalogue](https://aris.iaea.org/Publications/SMR_catalogue_2024.pdf). Both give a sense of the variety of SMR designs being developed internationally. You can find the BWRX-300 on page 134 of the OECD Dashboard and page 17 of the IAEA Catalogue.
-
 ### Included Components
 
 #### SMR Reactor Design Optimization Tool
