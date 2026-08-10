@@ -1,21 +1,8 @@
-"""Extended Kalman Filter: turns noisy sensor readings into a best guess at
-what the reactor is actually doing.
+"""Extended Kalman filter for the ten-state reactor model.
 
-This is an advanced file. You can use it without reading it, and still build a
-strong project. If you do want to understand it, read the visual explainer
-linked in the README first.
-
-The short version. Every timestep the filter does two things:
-
-    predict -- run the reactor model forward to work out where the reactor
-               should be a moment later
-    update  -- compare that guess against the sensors, and shift it partway
-               toward what they say
-
-How far it shifts depends on which one it trusts more, and that is what the Q
-and R settings control. Note it tracks 10 quantities (power, six precursor
-groups, three temperatures) from only 4 sensors, so it is also filling in
-values that nothing measures directly.
+Each cycle predicts the state with the reactor model, then corrects that
+prediction with the available power and temperature readings. ``Q`` describes
+model uncertainty; ``R`` describes measurement uncertainty.
 """
 
 import numpy as np
@@ -24,105 +11,102 @@ from scipy.linalg import expm
 
 class EKF:
     def __init__(self, model, H, Q, R, x0, P0, dt, jac_eps=1e-6):
+        if not np.isfinite(dt) or dt <= 0:
+            raise ValueError("dt must be a positive finite number")
+        if not np.isfinite(jac_eps) or jac_eps <= 0:
+            raise ValueError("jac_eps must be a positive finite number")
 
         self.model = model
+        self.H = np.array(H, dtype=float, copy=True)
+        self.Q = np.array(Q, dtype=float, copy=True)
+        self.R = np.array(R, dtype=float, copy=True)
+        self.x = np.array(x0, dtype=float, copy=True)
+        self.P = np.array(P0, dtype=float, copy=True)
+        self.dt = float(dt)
+        self.jac_eps = float(jac_eps)
 
-        self.H = H    # which state entries the sensors actually read
-        self.Q = Q    # how much we distrust the model   (bigger = trust it less)
-        self.R = R    # how much we distrust the sensors (bigger = trust them less)
-        self.x = x0   # current best guess at the reactor state
-        self.P = P0   # how unsure we are about that guess
-        self.dt = dt  # length of one timestep, in seconds
-        self.jac_eps = jac_eps  # how hard to nudge each state when measuring slopes
-
-        # From the most recent update(): how far each sensor reading landed
-        # from what the filter expected, and how big a gap is normal. Kept so
-        # you can build fault detection on top -- see normalized_innovation().
+        # Retain the latest residual and covariance for diagnostics.
         self.last_y = None
         self.last_S = None
 
     def _numerical_jacobian(self, rho_rod):
-        """Works out how sensitive the reactor's rate of change is to each of
-        the 10 states, by nudging each one up and down and seeing how much the
-        answer moves.
+        """Linearize the reactor dynamics around the current estimate."""
 
-        The filter needs this to know how fast its uncertainty grows. Doing it
-        by nudging means nobody has to differentiate the reactor equations by
-        hand.
-        """
+        n_states = len(self.x)
+        jacobian = np.zeros((n_states, n_states))
 
-        n = len(self.x)
-        A = np.zeros((n, n))
+        for column in range(n_states):
+            offset = np.zeros(n_states)
+            offset[column] = self.jac_eps
 
-        for j in range(n):
-            dx = np.zeros(n)
-            dx[j] = self.jac_eps
+            rhs_plus = self.model.filter_dynamics(self.x + offset, rho_rod)
+            rhs_minus = self.model.filter_dynamics(self.x - offset, rho_rod)
+            jacobian[:, column] = (
+                (rhs_plus - rhs_minus) / (2 * self.jac_eps)
+            )
 
-            rhs_plus = self.model.filter_dynamics(self.x + dx, rho_rod)
-            rhs_minus = self.model.filter_dynamics(self.x - dx, rho_rod)
+        return jacobian
 
-            A[:, j] = (rhs_plus - rhs_minus) / (2 * self.jac_eps)
+    def predict(self, rho_rod, dt=None):
+        """Advance the state and covariance by one timestep."""
 
-        return A
+        step_dt = self.dt if dt is None else dt
+        if not np.isfinite(step_dt) or step_dt <= 0:
+            raise ValueError("dt must be a positive finite number")
 
-    def predict(self, rho_rod):
-        """Steps the guess forward one timestep and grows the uncertainty to
-        match, since the longer we go without checking a sensor, the less sure
-        we are."""
+        jacobian = self._numerical_jacobian(rho_rod)
 
-        A = self._numerical_jacobian(rho_rod)
+        # The prompt-neutron mode is too fast for the usual I + A*dt shortcut.
+        transition = expm(jacobian * step_dt)
 
-        # expm() here, rather than the usual (I + A*dt) shortcut. The neutron
-        # population settles in well under a millisecond, far quicker than our
-        # 0.1 s timestep, and that shortcut goes unstable when something moves
-        # that fast -- the numbers blow up instead of settling down. expm
-        # handles fast-changing quantities properly.
-        F = expm(A * self.dt)
-
-        self.x = self.model.propagate(self.x, rho_rod, self.dt)
-        self.P = F @ self.P @ F.T + self.Q
+        self.x = self.model.propagate(self.x, rho_rod, step_dt)
+        process_noise = self.Q * (step_dt / self.dt)
+        self.P = transition @ self.P @ transition.T + process_noise
+        self.P = 0.5 * (self.P + self.P.T)
 
         return self.x
 
     def update(self, z, H=None, R=None):
-        """Pulls the guess toward the sensor readings in z.
+        """Correct the estimate with the supplied measurement channels.
 
-        y is the gap between what we measured and what we expected. K decides
-        how much of that gap to act on: near 0 means stick with the model,
-        near 1 means believe the sensors.
-
-        H and R cover all four sensors by default. Pass smaller ones to use
-        only some of them -- that is how a dead sensor is handled, by leaving
-        its row out and carrying on with the ones that still work.
+        Pass reduced ``H`` and ``R`` matrices when only some sensors are
+        available.
         """
 
-        H = self.H if H is None else H
-        R = self.R if R is None else R
+        H = self.H if H is None else np.asarray(H, dtype=float)
+        R = self.R if R is None else np.asarray(R, dtype=float)
+        z = np.asarray(z, dtype=float)
 
-        y = z - H @ self.x
-        S = H @ self.P @ H.T + R
-        K = self.P @ H.T @ np.linalg.inv(S)
+        innovation = z - H @ self.x
+        innovation_covariance = H @ self.P @ H.T + R
 
-        self.x = self.x + K @ y
-        self.P = self.P - K @ H @ self.P
+        # Solving the linear system is more stable than forming S^-1 directly.
+        kalman_gain = np.linalg.solve(
+            innovation_covariance, H @ self.P
+        ).T
 
-        self.last_y = y
-        self.last_S = S
+        self.x = self.x + kalman_gain @ innovation
+
+        # Joseph form preserves symmetry and positive semi-definiteness better
+        # than the shorter P - KHP update.
+        identity = np.eye(len(self.x))
+        correction = identity - kalman_gain @ H
+        self.P = (
+            correction @ self.P @ correction.T
+            + kalman_gain @ R @ kalman_gain.T
+        )
+        self.P = 0.5 * (self.P + self.P.T)
+
+        self.last_y = innovation
+        self.last_S = innovation_covariance
 
         return self.x
 
     def normalized_innovation(self):
-        """How far each sensor reading sat from what the filter expected,
-        measured in multiples of the gap you would normally see anyway. A
-        value around 1 is unremarkable; 5 means that reading is well out of
-        line.
+        """Return each residual divided by its expected standard deviation.
 
-        Nothing uses this yet. It is a reasonable starting point if you want
-        to build fault detection, but be warned that it is not as simple as
-        picking a cut-off. The filter quietly absorbs a slow drift, so the
-        number stays small even while the sensor goes badly wrong, and one
-        broken sensor can drag a healthy one off with it. See "Known Gaps" in
-        the README.
+        Large values flag disagreement with the model, but they do not by
+        themselves identify which sensor is faulty.
         """
 
         if self.last_y is None:

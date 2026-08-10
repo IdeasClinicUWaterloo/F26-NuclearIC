@@ -2,7 +2,7 @@
 
 This folder is the simulated-reactor half of the Controls and Instrumentation challenge (see the [top-level README](../README.md) for the challenge overview). The code here is a working reference implementation: a point-kinetics + thermal reactor model, a PID controller, an EKF state estimator, and a latching safety state machine, wired together through a set of named test scenarios.
 
-Use it to understand how the pieces fit together, then replace or extend whichever piece your team wants to make its own. It is a reference, not a finished product, some things are deliberately left undone (see [Known Gaps](#known-gaps)), and fault diagnosis is missing entirely.
+Use it to understand how the pieces fit together, then replace or extend the part your team wants to own. This is a reference implementation, not a finished product; see [Known Gaps](#known-gaps) before building on it.
 
 ---
 
@@ -20,9 +20,9 @@ Use it to understand how the pieces fit together, then replace or extend whichev
 
 ## Files
 
-Tagged by how much background you need. **Start here** and **Easy** are good first-day targets; **Advanced** files are worth reading but you can treat them as working black boxes and still build a strong project.
+The tags show how much background each file assumes. Start with `controller/control.py`; the advanced model and estimator can be used without understanding every implementation detail.
 
-Make sure to run the project multiple times first with different scenarios, and understand how it works.
+Run several scenarios before changing the implementation.
 
 The code is split into four folders by what each part is responsible for:
 
@@ -53,7 +53,7 @@ Everything imports through those folder names, for example
 | **Easy** | `run/scenarios.py` | Named scenario configs and `build_simulation()`. Adding your own scenario is a few lines of dict. |
 | **Easy** | `run/plotting.py` | `plot_simulation()`: power tracking, rod command, thermal feedback, estimation error, safety state, and temperatures-vs-limits, as separate matplotlib figures. |
 | **Easy** | `run_scenario.py` | CLI entry point. |
-| **Moderate** | `controller/state_machine.py` | `SafetySupervisor`: NORMAL → WARNING → LIMITING → SCRAM → SHUTDOWN, evaluated from raw (unfiltered) instrumentation independently of the EKF, and latches once SCRAMmed.
+| **Moderate** | `controller/state_machine.py` | `SafetySupervisor`: NORMAL → WARNING → LIMITING → SCRAM → SHUTDOWN, evaluated from raw (unfiltered) instrumentation independently of the EKF, and latches once SCRAMmed. |
 | **Moderate** | `reactor/sensors.py` | `Sensor` (Gaussian noise + bias, with `drift` / `stuck` / `dropout` fault injection) and `SensorSuite` (power, fuel_temp, coolant_temp_1, coolant_temp_2, rod_reactivity). Note `rod_reactivity` is simulated but nothing currently uses it. |
 | **Moderate** | `run/simulation.py` | `Simulation`: the per-timestep run loop tying model + controller + sensors + EKF + safety supervisor together. Read `simulate()` to see the order things happen in. Also runnable on its own with `python -m run.simulation`. |
 | **Advanced** | `reactor/model.py` | `ReactorModel`: 6-group delayed-neutron point kinetics coupled to a 3-node thermal model (fuel, coolant node 1, coolant node 2), with fuel/coolant reactivity feedback and an optional timed external disturbance. This is the reactor itself. You generally want to leave it alone and control it, not change it. |
@@ -67,9 +67,12 @@ There is deliberately **no fault-detection module**. The scenarios inject faults
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate      # macOS / Linux
-# .venv\Scripts\activate       # Windows PowerShell
+source .venv/bin/activate       # macOS / Linux
+# .venv\Scripts\Activate.ps1   # Windows PowerShell
 pip install -r requirements.txt
+
+# Run the component and integration tests
+python -m unittest discover -s tests -v
 ```
 
 ---
@@ -77,10 +80,11 @@ pip install -r requirements.txt
 ## Running a Scenario
 
 ```bash
-python run_scenario.py --scenario <name> [--controller pid] [--duration 200] [--no-filter] [--no-plot]
+python run_scenario.py --scenario <name> [--controller pid] [--duration 200] [--seed 0] [--no-filter] [--no-plot]
 ```
 
 - `--controller` picks which controller to run (see [Writing Your Own Controller](#writing-your-own-controller)).
+- `--seed` controls sensor noise. Reuse a seed when comparing controllers.
 - `--no-filter` feeds the controller raw sensor readings instead of the EKF estimate: a direct way to show what your estimator is buying you.
 - `--no-plot` skips the plot windows.
 - Output includes the final safety state and the time spent in each safety state.
@@ -94,9 +98,9 @@ Available `--scenario` values:
 | `nominal` | Undisturbed baseline. The reference case to compare everything else against. |
 | `load_step` | Controller must track a new power setpoint (+1.5%). Not larger, because that is close to all the rods can sustain: see [Known Gaps](#known-gaps). |
 | `coolant_disturbance` | A disturbance large enough to push WARNING/LIMITING, then recover without a SCRAM. |
-| `severe_transient` | A disturbance large enough to blow through the LIMITING margin: the safety supervisor actually SCRAMs and latches. |
+| `severe_transient` | A disturbance large enough to cross the SCRAM threshold and exercise the latch. |
 | `sensor_bias` | The power sensor slowly drifts off true, so the controller is confidently regulating a lie. |
-| `sensor_dropout` | The fuel temperature sensor goes dead (reads NaN). The EKF keeps estimating from the three channels still alive. A good illustration of why you fuse several sensors rather than trusting one. |
+| `sensor_dropout` | The fuel temperature sensor goes dead (reads NaN). The safety state moves to WARNING while the EKF keeps estimating from the three channels still alive. |
 | `stuck_rod` | The control rod actuator sticks in place partway through the run. |
 | `delayed_rod` | The control rod actuator responds with a lag. |
 
@@ -147,7 +151,7 @@ Everything downstream (the safety supervisor, actuator faults, and all the plots
 
 Real limitations of the starter, left open on purpose. Any of these is a legitimate thing to attack.
 
-- **Nothing detects faults.** The scenarios inject sensor drift, dropout, and stuck/lagging rods, but no code notices. Two warnings from having tried: the EKF quietly *absorbs* a slow drift, so its residuals stay small and naive thresholding misses it entirely; and a fault in one channel propagates through the estimator, so the channel that looks worst is often not the broken one. `EKF.normalized_innovation()` is a starting signal, but a check that doesn't depend on the filter at all may work better.
+- **No fault diagnosis.** The safety supervisor warns on an unavailable reading, but it does not detect drift or identify a failed sensor or actuator. The EKF can quietly absorb a slow drift, so a residual threshold alone will miss some failures. `EKF.normalized_innovation()` is a starting signal, not a complete detector.
 - **The two coolant sensors are redundant but unused.** `coolant_temp_1` and `coolant_temp_2` measure nearly the same thing, which is the basis of real sensor-voting schemes. They legitimately differ by up to ~20 K during a severe transient though (node 2 lags node 1), so a naive disagreement threshold false-alarms, which is worth thinking about.
 - **`rod_reactivity` is measured and ignored.** Nothing consumes it. It could detect a stuck or lagging rod directly, rather than inferring it from the power response.
 - **The rods can only move power by about ±2%.** They are worth ±5e-4 in reactivity, and thermal feedback eats 2.475e-2 of reactivity per unit of power, so fully withdrawn sustains roughly `n = 1.020` and no more. Ask for `desired_n = 1.05` and the rod simply pins at its limit. This is why `load_step` only steps to 1.015. Real plants solve this with soluble boron for bulk reactivity and keep the rods for fine control. Adding a boron term, or just widening the rod worth, is a legitimate change to make.
@@ -201,7 +205,7 @@ Good demo: the controller tracks a setpoint change without immediately violating
 ### Milestone 3: Add Safety Logic
 
 - `controller/state_machine.py`'s `SafetySupervisor` already implements the warn/limit/scram thresholds and rod-reactivity override, including the SCRAM latch.
-- Run `--scenario severe_transient` to see the supervisor actually SCRAM and hold `SHUTDOWN`.
+- Run `--scenario severe_transient` to see the supervisor SCRAM and remain latched.
 - Run `--scenario coolant_disturbance` to see it recover through WARNING/LIMITING without ever SCRAMming.
 
 Good demo: explain why SCRAM latches instead of clearing itself once conditions look normal again, and what `scram_rho` represents physically.

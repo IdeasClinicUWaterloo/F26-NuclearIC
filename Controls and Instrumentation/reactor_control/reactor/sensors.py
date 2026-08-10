@@ -1,45 +1,56 @@
-"""Simulated instrumentation: what the controller actually gets to see,
-as opposed to the reactor's true state."""
+"""Noisy reactor instrumentation with optional fault injection."""
 
 import numpy as np
 
 
 class Sensor:
-    """One instrument channel. Reading = true value + bias + gaussian noise,
-    unless it has been told to misbehave via set_fault()."""
+    """A noisy instrument channel with optional drift, stuck, or dropout faults."""
 
     def __init__(self, sigma, bias=0.0, seed=None):
-        self.sigma = sigma  # noise standard deviation
-        self.bias = bias    # constant offset added to every reading
+        if not np.isfinite(sigma) or sigma < 0:
+            raise ValueError("sigma must be a finite, non-negative number")
+        if not np.isfinite(bias):
+            raise ValueError("bias must be finite")
 
+        self.sigma = float(sigma)
+        self.bias = float(bias)
         self.fault = None
         self.fault_parameters = {}
         self.last_reading = None
-
         self.rng = np.random.default_rng(seed)
 
     def set_fault(self, fault_type, parameters=None):
-        """Makes this sensor start misbehaving.
+        """Enable a supported sensor fault.
 
-        "drift"   -- bias creeps by parameters["drift_rate"] per second
-        "stuck"   -- freezes, repeating its last reading forever
-        "dropout" -- reads NaN, i.e. the channel goes dead
+        ``drift`` changes bias by ``drift_rate`` per second, ``stuck`` repeats
+        the last sample, and ``dropout`` reports NaN.
         """
 
+        if fault_type not in {"drift", "stuck", "dropout"}:
+            raise ValueError(f"Unsupported sensor fault: {fault_type!r}")
+
+        parameters = {} if parameters is None else dict(parameters)
+        if fault_type == "drift":
+            drift_rate = parameters.get("drift_rate", 0.0)
+            if not np.isfinite(drift_rate):
+                raise ValueError("drift_rate must be finite")
+
         self.fault = fault_type
-        self.fault_parameters = parameters if parameters is not None else {}
+        self.fault_parameters = parameters
 
     def step(self, dt):
-        """Advances any time-dependent fault by one timestep."""
+        """Advance a time-dependent fault by ``dt`` seconds."""
+
+        if not np.isfinite(dt) or dt < 0:
+            raise ValueError("dt must be a finite, non-negative number")
 
         if self.fault == "drift":
             self.bias += self.fault_parameters.get("drift_rate", 0.0) * dt
 
     def read(self, true_value):
-        """Returns what this sensor reports for the given true value."""
+        """Return a noisy, biased reading of ``true_value``."""
 
-        # A sensor stuck from the very first step has nothing to repeat yet,
-        # so let it take one real sample and freeze on that.
+        # A newly stuck sensor needs one sample before it has a value to repeat.
         if self.fault == "stuck" and self.last_reading is not None:
             return self.last_reading
 
@@ -54,26 +65,30 @@ class Sensor:
 class SensorSuite:
     """Every instrument channel available to the controller."""
 
-    def __init__(self):
-        # 0.2% noise on power, roughly what a real excore neutron detector
-        # manages. Turn it up if you want the filtering to matter more.
-        self.power = Sensor(sigma=0.002)
-        self.fuel_temp = Sensor(sigma=0.8)
-        self.coolant_temp_1 = Sensor(sigma=0.5)
-        self.coolant_temp_2 = Sensor(sigma=0.5)
-        self.rod_reactivity = Sensor(sigma=0.0001)
+    def __init__(self, seed=0):
+        channel_seeds = np.random.SeedSequence(seed).spawn(5)
+
+        self.power = Sensor(sigma=0.002, seed=channel_seeds[0])
+        self.fuel_temp = Sensor(sigma=0.8, seed=channel_seeds[1])
+        self.coolant_temp_1 = Sensor(sigma=0.5, seed=channel_seeds[2])
+        self.coolant_temp_2 = Sensor(sigma=0.5, seed=channel_seeds[3])
+        self.rod_reactivity = Sensor(sigma=0.0001, seed=channel_seeds[4])
 
     def _channels(self):
-        return (self.power, self.fuel_temp, self.coolant_temp_1,
-                self.coolant_temp_2, self.rod_reactivity)
+        return (
+            self.power,
+            self.fuel_temp,
+            self.coolant_temp_1,
+            self.coolant_temp_2,
+            self.rod_reactivity,
+        )
 
     def step(self, dt):
         for sensor in self._channels():
             sensor.step(dt)
 
     def read_all(self, state, rho_rod):
-        """Reads every channel. state is the reactor's true state vector:
-        [n, C1..C6, T_fuel, T_c1, T_c2]."""
+        """Read all channels from the true ten-element reactor state."""
 
         return {
             "power": self.power.read(state[0]),

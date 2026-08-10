@@ -1,8 +1,6 @@
-"""Plots for a completed Simulation run. Each view opens as its own figure
-so nothing gets squashed; add your own here for the demo.
+"""Diagnostic plots for a completed simulation.
 
-Click any legend entry to show/hide that line. Handy when the raw sensor
-cloud is burying the trace you actually want to look at.
+Each view opens separately. Legend entries toggle their corresponding lines.
 """
 
 import numpy as np
@@ -26,7 +24,8 @@ def _clickable_legend(ax, **legend_kwargs):
 
     # legend entries are copies, so map each one back to the real artist
     toggles = {}
-    for handle, text, artist in zip(legend.legend_handles, legend.get_texts(), artists):
+    entries = zip(legend.legend_handles, legend.get_texts(), artists)
+    for handle, text, artist in entries:
         for clickable in (handle, text):
             if clickable is not None:
                 clickable.set_picker(6)  # 6-pixel click radius
@@ -47,12 +46,10 @@ def _clickable_legend(ax, **legend_kwargs):
 
     ax.figure.canvas.mpl_connect("pick_event", on_pick)
 
-    # students won't find this unless we tell them it's there
+    # Keep the interaction discoverable in the figure itself.
     ax.figure.text(0.995, 0.005, "click legend entries to show/hide lines",
                    ha="right", va="bottom", fontsize=7, color="gray", alpha=0.8)
 
-    # keep a reference so the handler isn't garbage collected
-    ax.figure._legend_toggles = toggles
     return legend
 
 
@@ -88,7 +85,7 @@ def _plot_rod_command(simulator):
 
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Reactivity, rho (dk/k)")
-    ax.set_title("Control-Rod Command: controller request vs. what was actually applied")
+    ax.set_title("Control-Rod Command: requested vs. applied")
     _clickable_legend(ax, loc="upper right", fontsize=8, framealpha=0.9)
     ax.grid()
 
@@ -113,8 +110,18 @@ def _plot_estimation_error(simulator):
     measured_err = np.abs(np.array(simulator.n_measured_values) - truth)
     estimated_err = np.abs(np.array(simulator.n_estimated_values) - truth)
 
-    ax.plot(simulator.time_steps, measured_err, label="Raw measurement error", color="gray")
-    ax.plot(simulator.time_steps, estimated_err, label="EKF estimate error", color="tab:blue")
+    ax.plot(
+        simulator.time_steps,
+        measured_err,
+        label="Raw measurement error",
+        color="gray",
+    )
+    ax.plot(
+        simulator.time_steps,
+        estimated_err,
+        label="EKF estimate error",
+        color="tab:blue",
+    )
 
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("|error|")

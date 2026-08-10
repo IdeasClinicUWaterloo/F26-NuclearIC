@@ -1,41 +1,46 @@
+"""Point-kinetics and lumped thermal model used by the simulation and EKF."""
+
 import numpy as np
 from scipy.integrate import solve_ivp
 
 
 class ReactorModel:
-    # Fraction of neutrons that are delayed
+    # Delayed-neutron fractions for the six precursor groups.
     BETA_I = np.array([0.000215, 0.001424, 0.001274, 0.002568, 0.000748, 0.000273])
 
-    # Precursor decay constants [1/s]
+    # Precursor decay constants [1/s].
     LAMBDA_I = np.array([0.0124, 0.0305, 0.111, 0.301, 1.14, 3.01])
 
-    # Total delayed neutron fraction and average decay constant
+    # Total delayed-neutron fraction and prompt-neutron generation time [s].
     BETA = BETA_I.sum()
-    LAMBDA = 5e-5
+    GENERATION_TIME = 5e-5
 
+    P_rated = 100e6  # Rated thermal power [W].
+    mCp_fuel = 4.0e6  # Lumped fuel heat capacity [J/K].
 
-    P_rated = 100e6 # Power rating of the reactor in Watts
-    mCp_fuel = 4.0e6 # Heat capacity of the fuel in J/K
-    mCp_cool = 1.0e6 # Heat capacity of the coolant in J/K
+    tau_fuel = 6.0  # Fuel-to-coolant heat-transfer time [s].
+    tau_cool = 3.0  # Coolant-node heat-transfer time [s].
+    tau_flow = 4.0  # Coolant residence time [s].
 
-    tau_fuel = 6.0 # Time constant for heat transfer from fuel to coolant in seconds
-    tau_cool = 3.0 # Time constant for heat transfer within the coolant in seconds
-    tau_flow = 4.0 # Time constant for coolant flow in seconds
+    T_inlet = 560.0  # Coolant inlet temperature [K].
+    alpha_fuel = -2.5e-5  # Fuel temperature coefficient [reactivity/K].
+    alpha_cool = -8.0e-5  # Coolant temperature coefficient [reactivity/K].
 
-    T_inlet = 560.0 # Inlet temperature of the coolant in Kelvin
-    alpha_fuel = -2.5e-5 # Fuel temperature coefficient
-    alpha_cool = -8.0e-5 # Coolant temperature coefficient
-
-    def __init__(self, disturbance_start=50.0, disturbance_end=100.0, disturbance_magnitude=0.0001):
+    def __init__(self, disturbance_start=50.0, disturbance_end=100.0,
+                 disturbance_magnitude=0.0001):
         self.n0 = 1.0
         self.rho_rod = 0.0
-        self.C0 = (self.BETA_I / (self.LAMBDA * self.LAMBDA_I)) * self.n0
+        self.C0 = (
+            self.BETA_I / (self.GENERATION_TIME * self.LAMBDA_I)
+        ) * self.n0
 
         self.disturbance_start = disturbance_start
         self.disturbance_end = disturbance_end
         self.disturbance_magnitude = disturbance_magnitude
 
-        self.T_fuel0, self.T_c1_0, self.T_c2_0 = self.calculate_steady_state_temps()
+        self.T_fuel0, self.T_c1_0, self.T_c2_0 = (
+            self.calculate_steady_state_temps()
+        )
         self.T_fref = self.T_fuel0
         self.T_cref = 0.5 * (self.T_c1_0 + self.T_c2_0)
 
@@ -45,31 +50,33 @@ class ReactorModel:
         )
 
     def calculate_steady_state_temps(self):
-        """Calculates the steady state temperatures of
-         the fuel and coolant, given the rated power. """
+        """Return fuel and coolant temperatures at rated steady state."""
 
         P0 = self.P_rated * self.n0
         fuel_to_coolant_delta = P0 * self.tau_fuel / self.mCp_fuel
 
-        T_c1_0 = self.T_inlet + (self.tau_flow / self.tau_cool) * fuel_to_coolant_delta
+        T_c1_0 = (
+            self.T_inlet
+            + (self.tau_flow / self.tau_cool) * fuel_to_coolant_delta
+        )
         T_c2_0 = T_c1_0
         T_fuel0 = T_c1_0 + fuel_to_coolant_delta
         return T_fuel0, T_c1_0, T_c2_0
 
-    def rho_external(self, t):
-        """Control-rod reactivity that is constant during one simulation timestep.
-        The value of rho_rod is updated by the controller at each step."""
+    def rho_external(self, _t):
+        """Return the control-rod reactivity held during this solver step."""
 
         return self.rho_rod
 
     def rho_disturbance(self, t):
-        """Optional external reactivity added as disturbance."""
+        """Return the configured reactivity disturbance at time ``t``."""
 
-        return self.disturbance_magnitude if self.disturbance_start <= t < self.disturbance_end else 0.0
+        if self.disturbance_start <= t < self.disturbance_end:
+            return self.disturbance_magnitude
+        return 0.0
 
     def rho_feedback(self, T_fuel, T_c_avg):
-        """Reactivity from the thermal components of the reactor.
-        Forms an internal feedback loop that stabilizes the reactor's power output."""
+        """Return the negative reactivity feedback from temperature changes."""
 
         return (
             self.alpha_fuel * (T_fuel - self.T_fref)
@@ -77,7 +84,7 @@ class ReactorModel:
         )
 
     def rho_total(self, t, T_fuel, T_c_avg):
-        """Combination of the total reactivity."""
+        """Return control, disturbance, and thermal reactivity combined."""
 
         return (
             self.rho_external(t)
@@ -86,19 +93,25 @@ class ReactorModel:
         )
 
     def neutron_equations(self, n, C, rho):
-        """Equations that model the neutron population of the SMR."""
+        """Return point-kinetics rates for power and precursor groups."""
 
-        dndt = ((rho - self.BETA) / self.LAMBDA) * n + np.dot(self.LAMBDA_I, C)
-        dCdt = (self.BETA_I / self.LAMBDA) * n - self.LAMBDA_I * C
+        dndt = (
+            ((rho - self.BETA) / self.GENERATION_TIME) * n
+            + np.dot(self.LAMBDA_I, C)
+        )
+        dCdt = (
+            (self.BETA_I / self.GENERATION_TIME) * n
+            - self.LAMBDA_I * C
+        )
         return dndt, dCdt
 
     def thermal_equations(self, n, T_fuel, T_c1, T_c2):
-        """Equations that model the thermal dynamics of the SMR."""
+        """Return temperature rates for the fuel and two coolant nodes."""
 
-        P = self.P_rated * n
+        power = self.P_rated * n
         T_c_avg = 0.5 * (T_c1 + T_c2)
 
-        dT_fuel_dt = P / self.mCp_fuel - (T_fuel - T_c_avg) / self.tau_fuel
+        dT_fuel_dt = power / self.mCp_fuel - (T_fuel - T_c_avg) / self.tau_fuel
         dT_c1_dt = (
             (T_fuel - T_c1) / self.tau_cool
             - (T_c1 - self.T_inlet) / self.tau_flow
@@ -107,7 +120,7 @@ class ReactorModel:
         return np.array([dT_fuel_dt, dT_c1_dt, dT_c2_dt])
 
     def dynamics(self, t, x):
-        """Combines the neutron and thermal equations into a single system of ODEs."""
+        """Return the complete state derivative for the plant model."""
 
         n = x[0]
         C = x[1:7]
@@ -120,7 +133,7 @@ class ReactorModel:
         return np.concatenate(([dndt], dCdt, dTdt))
 
     def filter_dynamics(self, x, rho_rod):
-        """Returns the dynamics of the system for use in the EKF."""
+        """Return EKF dynamics without the unmeasured external disturbance."""
 
         n = x[0]
         C = x[1:7]
@@ -134,17 +147,16 @@ class ReactorModel:
         return np.concatenate(([dndt], dCdt, dTdt))
 
     def propagate(self, x, rho_rod, dt):
-        """Propagates the state vector forward in time by dt seconds,
-        using the filter dynamics and the given control-rod reactivity."""
+        """Propagate an EKF state by ``dt`` at fixed rod reactivity."""
 
-        sol = solve_ivp(
+        solution = solve_ivp(
             fun=lambda t, xx: self.filter_dynamics(xx, rho_rod),
             t_span=(0.0, dt),
             y0=x,
             method="Radau",
         )
 
-        if not sol.success:
-            raise RuntimeError(sol.message)
+        if not solution.success:
+            raise RuntimeError(solution.message)
 
-        return sol.y[:, -1]
+        return solution.y[:, -1]
