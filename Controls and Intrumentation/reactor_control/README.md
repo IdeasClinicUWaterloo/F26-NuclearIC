@@ -252,6 +252,6 @@ Good demo: a clear idea beyond the baseline, and why it improves control, safety
 
 ### Additional References
 
-- [Anti-windup for PID controllers](https://en.wikipedia.org/wiki/Integral_windup): why `controller/control.py` stops integrating once the rod saturates.
-- [Extended Kalman Filter](https://en.wikipedia.org/wiki/Extended_Kalman_filter): the nonlinear generalisation used here, and the role of the Jacobian.
-- [Fault detection and isolation](https://en.wikipedia.org/wiki/Fault_detection_and_isolation): background for the detection work left open in [Known Gaps](#known-gaps).
+- [Anti-windup for PID control](https://www.mathworks.com/videos/understanding-pid-control-part-2-expanding-beyond-a-simple-integral-1528310418260.html): why `controller/control.py` stops integrating once the rod saturates.
+- [Nonlinear state estimators](https://www.mathworks.com/videos/understanding-kalman-filters-part-5-nonlinear-state-estimators-1495052905460.html): a simple introduction to the Extended Kalman Filter used here and the role of linearization.
+- [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html): background for the detection work left open in [Known Gaps](#known-gaps).

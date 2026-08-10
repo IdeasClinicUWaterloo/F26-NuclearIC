@@ -13,11 +13,7 @@ Below is a chart describing how SMRs work:
 ## Table of Contents
 
 - [Challenge](#challenge)
-- [Two Approaches](#two-approaches)
 - [Potential Solutions](#potential-solutions)
-- [Repository Layout](#repository-layout)
-- [Things to Keep in Mind](#things-to-keep-in-mind)
-- [Notes for Teams](#notes-for-teams)
 - [Resources](#resources)
 
 ---
@@ -50,7 +46,7 @@ Solutions should consider:
 
 ---
 
-## Two Approaches
+### Two Approaches
 
 Teams can approach this challenge from scratch or from either (or both) of two supported directions:
 
@@ -75,23 +71,27 @@ Teams are encouraged to combine ideas, explore new approaches, and develop creat
 | --- | --- | --- |
 | **PID (Proportional Integral Derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. The usual first win, and the baseline everything else is measured against. | [Intro to PID](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb), [How to tune a PID controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec) |
 | **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values you cannot measure directly, such as temperature, reactivity, or sensor bias. Ranges from a moving average to a full Kalman or extended Kalman filter. | [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/) |
-| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands warnings, limiting, SCRAM, and a shutdown that latches until deliberately reset. | [Reactor protection system](https://en.wikipedia.org/wiki/Reactor_protection_system) |
-| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told — then say *which* one, and fall back safely. | [Fault detection and isolation](https://en.wikipedia.org/wiki/Fault_detection_and_isolation) |
-| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. | [LQR](https://en.wikipedia.org/wiki/Linear%E2%80%93quadratic_regulator), [MPC](https://en.wikipedia.org/wiki/Model_predictive_control) |
+| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands warnings, limiting, SCRAM, and a shutdown that latches until deliberately reset. | [Nuclear power plant safety systems](https://www.nrc.gov/reading-rm/basic-ref/students/what-is-nuclear-energy) |
+| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told — then say *which* one, and fall back safely. | [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html) |
+| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. | [What is LQR control?](https://www.mathworks.com/videos/state-space-part-4-what-is-lqr-control-1551955957637.html), [What is model predictive control?](https://www.mathworks.com/help/mpc/gs/what-is-mpc.html) |
 | **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show it holds up rather than being tuned for one happy path. | [`reactor_control/scenarios.py`](reactor_control/scenarios.py) |
 | **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares two controllers across every test case. | [Matplotlib](https://matplotlib.org/stable/index.html), [Plotly Dash](https://dash.plotly.com/) |
 | **Physical analogue build** | A temperature control system, and dye concentration system demonstrating the same feedback, noise, limits, and safety ideas in hardware. | [`Physical Systems/`](Physical%20Systems/) |
 
 ---
 
-## Repository Layout
+## Resources
+
+The following repository materials and references may help teams understand the problem and develop solutions.
+
+### Repository Layout
 
 - [`reactor_control/`](reactor_control/) : the simulated-reactor track: reactor model, sensors, PID controller, EKF, safety state machine, named scenarios, and a CLI runner. See its README for details and the roadmap.
 - [`Physical Systems/`](Physical%20Systems/) : the physical-analogue track: Arduino sketches for a dye-concentration loop and a temperature-control loop, plus a wiring reference. See its README for details and the roadmap.
 
 ---
 
-## Things to Keep in Mind
+### Things to Keep in Mind
 
 - Setpoint tracking accuracy
 - Safety-margin adherence (e.g. temperature, power, or flow limits)
@@ -107,7 +107,7 @@ A strong solution should not only track its setpoint well, but also behave safel
 
 ---
 
-## Notes for Teams
+### Notes for Teams
 
 - This is an educational challenge, not a real nuclear reactor control system.
 - The reactor model is intentionally simplified so teams can focus on controls, instrumentation, estimation, and safety logic.
@@ -118,10 +118,6 @@ A strong solution should not only track its setpoint well, but also behave safel
 - Document your assumptions, tuning choices, and failure modes so judges can understand your design.
 
 ---
-
-## Resources
-
-The following resources may help teams better understand the problem and develop solutions.
 
 ### Background Information
 
@@ -146,6 +142,6 @@ The following resources may help teams better understand the problem and develop
 ### Additional References
 
 - [Reactor Dynamics](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/): reactivity, feedback, and transient behaviour.
-- [State-space representation](https://en.wikipedia.org/wiki/State-space_representation): the framework underneath LQR and Kalman filtering.
-- [Model Predictive Control](https://en.wikipedia.org/wiki/Model_predictive_control): planning control actions against explicit constraints.
-- [Fault detection and isolation](https://en.wikipedia.org/wiki/Fault_detection_and_isolation): detecting and diagnosing sensor and actuator faults.
+- [What is state space?](https://www.mathworks.com/discovery/state-space.html): the framework underneath LQR and Kalman filtering.
+- [What is model predictive control?](https://www.mathworks.com/help/mpc/gs/what-is-mpc.html): planning control actions against explicit constraints.
+- [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html): detecting and diagnosing sensor and actuator faults.
