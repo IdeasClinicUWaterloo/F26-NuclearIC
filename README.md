@@ -1,9 +1,14 @@
 # Welcome to the 2026 Nuclear Innovation Challenge!
 
-Created By: Engineering IDEAs Clinic Co-op Students
+Created by Engineering IDEAs Clinic co-op students.
+
+## Accessibility
+
+This README uses descriptive headings, meaningful link names, short sections, and alt text for images so it is easier to navigate with screen readers and other assistive technologies. The challenge also welcomes accessible solutions that work for people with different needs and levels of technical experience.
 
 ## Table of Contents
 
+- [Accessibility](#accessibility)
 - [Quick Links](#quick-links)
 - [Your Mission](#your-mission)
 - [Sub-Problems](#sub-problems)
@@ -12,11 +17,14 @@ Created By: Engineering IDEAs Clinic Co-op Students
   - [Reactor Design Optimization](#reactor-design-optimization)
   - [Security](#security)
 - [General Resources](#general-resources)
+  - [Presentation and Submission](#presentation-and-submission)
+  - [Judging Criteria](#judging-criteria)
+  - [Schedule](#schedule)
 
 ## Quick Links
 
 - [BWRX-300 Small Modular Reactor](https://www.gevernova.com/nuclear/carbon-free-power/bwrx-300-small-modular-reactor)
-- [Controls and Instrumentation Subproblem](Controls%20and%20Intrumentation/)
+- [Controls and Instrumentation Subproblem](Controls%20and%20Instrumentation/)
 - [Leak Detection and Cleanup Subproblem](Leak%20Detection%20and%20Cleanup/)
 - [Reactor Design Optimization Subproblem](Reactor%20Design%20Optimization/)
 - [Security Subproblem](Security/)
@@ -27,9 +35,9 @@ _Theme: Small Modular Reactors (SMRs)_
 
 ![Chart explaining the components and operation of a small modular reactor](assets/SMR_Chart.png)
 
-As the technology advances to embrace Artificial Intelligence (AI), data centers have become massive energy consumption sinks. To provide the energy output demanded by data centers, alternative energy production frontiers need to be considered. Small Modular Reactors (SMRs) are at the forefront of this conversations, with multiple being developed to address these energy needs. The Darlington New Nuclear project is a SMR project currently in development in Ontario, marking the first SMR in the Western world. It began construction in May 2025, and is expected to finish in 2029.
+As technology advances to embrace Artificial Intelligence (AI), data centres have become major energy consumers. To provide the energy output demanded by data centres, alternative energy-production options need to be considered. Small Modular Reactors (SMRs) are at the forefront of these conversations, with multiple designs being developed to address these energy needs. The Darlington New Nuclear Project is an SMR project under construction in Ontario and is expected to become the first grid-scale SMR in the G7. Construction began in May 2025, with completion expected by the end of the decade and connection to the electricity grid expected by the end of 2030.
 
-The Darlington project uses the GE Vernova Hitachi BWRX-300 boiling water reactor (BWR). The BWR uses nuclear fission to turn water into steam, which goes directly to a turbine to create electricity. The project is expected to create more than 18 000 jobs, add $38.5 Billion to Canada's GDP, and provide 1.2 Gigawatts of energy between the four planned units, supplying power to over a million homes.
+The Darlington project uses the GE Vernova Hitachi BWRX-300 boiling water reactor (BWR). The BWR uses nuclear fission to turn water into steam, which goes directly to a turbine to create electricity. Construction of the four planned units is expected to create up to 18,000 jobs. Their construction, operation, and maintenance are expected to add $38.5 billion to Canada's GDP over 65 years. Together, the four units will provide 1,200 megawatts of electricity, enough to power approximately 1.2 million homes.
 
 To find out more: [BWRX-300 SMR](https://www.gevernova.com/nuclear/carbon-free-power/bwrx-300-small-modular-reactor)
 
@@ -56,7 +64,7 @@ Students may also build a safe physical analogue system, such as a temperature c
 - Create a dashboard to show power, temperature, control input, and safety state
 - Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller
 
-Learn more in the [Controls and Instrumentation subproblem](Controls%20and%20Intrumentation/).
+Learn more in the [Controls and Instrumentation subproblem](Controls%20and%20Instrumentation/).
 
 ### Leak Detection and Cleanup
 
@@ -110,12 +118,31 @@ Learn more in the [Security subproblem](Security/).
 
 ## General Resources
 
-Resources and Kit information can be found in the folders for the respective subproblem.
+Resources and kit information can be found in the folder for each subproblem.
 
-To sign out a kit, go to the sign out table and speak to a coop. You will have to go through safety training for some of the kits.
+To sign out a kit, go to the sign-out table and speak to a co-op student. You will have to complete safety training for some of the kits.
 
 ### Presentation and Submission
 
-Please find details about the rubric, presentation and submission [here](/Presentation%20&%20Submission/).
+Teams will give a short presentation of about 3 to 5 minutes. Include:
+
+- the problem you chose and who it affects
+- how your solution works
+- the prototype, simulation, dashboard, research, or hardware demonstration
+- the safety constraints and edge cases you considered
+- the result you achieved
+- what you would improve with more time
+
+Your submission may include code, a dashboard, a simulation, a hardware and software demonstration, a design with partial implementation, a research-based proposal, or a combination of these.
+
+### Judging Criteria
+
+| Category | What judges are looking for |
+| --- | --- |
+| **Relevance and impact** | The solution addresses a meaningful problem related to SMRs and could help its intended users or stakeholders. |
+| **Feasibility** | The idea, cost, assumptions, and implementation are realistic. |
+| **Prototype execution** | The prototype, simulation, analysis, or demonstration works and is well made. |
+| **Safety and technical understanding** | The team identifies important safety limits, failure modes, and relevant engineering principles. |
+| **Demo and presentation** | The team explains the problem, decisions, trade-offs, and results clearly. |
 
 ### Schedule

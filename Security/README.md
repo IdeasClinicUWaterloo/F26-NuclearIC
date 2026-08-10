@@ -85,8 +85,8 @@ The following resources may help teams better understand the problem and develop
 ### Technical Resources
 
 - **Proposed Solution Walkthrough:** [Step-by-Step Setup & Execution Guide](policy_simulation/README.md)
-- **Submission Guidelines:** [Submission Instructions](#)
-- **Judging Criteria:** [Judging Rubric](#)
+- **Submission Guidelines:** [Presentation and Submission](../README.md#presentation-and-submission)
+- **Judging Criteria:** [Judging Criteria](../README.md#judging-criteria)
 - **NFC Hardware Integration:** [PN532 NFC Module Library & Arduino/ESP32 Guides](https://github.com/elechouse/NFC_PN532)
 - **Computer Vision Tools:** [OpenCV Computer Vision Library](https://opencv.org/)
 - **Radiation Detection Basics:** [NRC Radiation Portal Monitors & Detection Overview](https://www.nrc.gov/about-nrc/radiation/health-effects/detection-radiation)

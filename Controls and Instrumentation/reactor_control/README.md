@@ -1,6 +1,6 @@
 # Simulated Reactor Track
 
-This folder is the simulated-reactor half of the Instrumentation and Controls challenge (see the [top-level README](../README.md) for the challenge overview). The code here is a working reference implementation: a point-kinetics + thermal reactor model, a PID controller, an EKF state estimator, and a latching safety state machine, wired together through a set of named test scenarios.
+This folder is the simulated-reactor half of the Controls and Instrumentation challenge (see the [top-level README](../README.md) for the challenge overview). The code here is a working reference implementation: a point-kinetics + thermal reactor model, a PID controller, an EKF state estimator, and a latching safety state machine, wired together through a set of named test scenarios.
 
 Use it to understand how the pieces fit together, then replace or extend whichever piece your team wants to make its own. It is a reference, not a finished product, some things are deliberately left undone (see [Known Gaps](#known-gaps)), and fault diagnosis is missing entirely.
 

@@ -1,6 +1,6 @@
 # Physical Analogue Track
 
-This folder details physical-analogue solutions of the Instrumentation and Controls challenge (see the [top-level README](../README.md) for the challenge overview). Two working example builds already exist here: a dye-concentration control loop and a temperature control loop. Teams can wire up as-is, modify, or simply use as reference while building a different physical analogue.
+This folder details physical-analogue solutions for the Controls and Instrumentation challenge (see the [top-level README](../README.md) for the challenge overview). Two working example builds already exist here: a dye-concentration control loop and a temperature control loop. Teams can wire them as-is, modify them, or use them as references while building a different physical analogue.
 
 ## Files
 

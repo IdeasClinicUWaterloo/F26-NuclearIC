@@ -1,4 +1,4 @@
-# Instrumentation and Controls
+# Controls and Instrumentation
 
 Small Modular Reactors (SMRs) are being developed as a new generation of nuclear power plants that can be built as compact devices with advanced safety and monitoring systems. In Canada, SMR development is especially relevant because projects such as the Darlington New Nuclear Project are moving from design and planning toward construction.
 
@@ -71,12 +71,12 @@ Teams are encouraged to combine ideas, explore new approaches, and develop creat
 | --- | --- | --- |
 | **PID (Proportional Integral Derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. The usual first win, and the baseline everything else is measured against. | [Intro to PID](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb), [How to tune a PID controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec) |
 | **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values you cannot measure directly, such as temperature, reactivity, or sensor bias. Ranges from a moving average to a full Kalman or extended Kalman filter. | [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/) |
-| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands warnings, limiting, SCRAM, and a shutdown that latches until deliberately reset. | [Nuclear power plant safety systems](https://www.nrc.gov/reading-rm/basic-ref/students/what-is-nuclear-energy) |
+| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands through warnings, limiting, SCRAM, or a shutdown that latches until deliberately reset. | [Nuclear power plant safety systems](https://www.nrc.gov/reading-rm/basic-ref/students/what-is-nuclear-energy) |
 | **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told — then say *which* one, and fall back safely. | [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html) |
 | **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. | [What is LQR control?](https://www.mathworks.com/videos/state-space-part-4-what-is-lqr-control-1551955957637.html), [What is model predictive control?](https://www.mathworks.com/help/mpc/gs/what-is-mpc.html) |
-| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show it holds up rather than being tuned for one happy path. | [`reactor_control/scenarios.py`](reactor_control/scenarios.py) |
+| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show it holds up rather than being tuned for one happy path. | [`reactor_control/run/scenarios.py`](reactor_control/run/scenarios.py) |
 | **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares two controllers across every test case. | [Matplotlib](https://matplotlib.org/stable/index.html), [Plotly Dash](https://dash.plotly.com/) |
-| **Physical analogue build** | A temperature control system, and dye concentration system demonstrating the same feedback, noise, limits, and safety ideas in hardware. | [`Physical Systems/`](Physical%20Systems/) |
+| **Physical analogue build** | Temperature-control and dye-concentration systems demonstrating the same feedback, noise, limits, and safety ideas in hardware. | [`Physical Systems/`](Physical%20Systems/) |
 
 ---
 
@@ -137,7 +137,7 @@ A strong solution should not only track its setpoint well, but also behave safel
 
 ### Data Sources
 
-- No external dataset is required. The simulated track generates its own data through [`reactor_control/scenarios.py`](reactor_control/scenarios.py); the physical track produces data from your own hardware.
+- No external dataset is required. The simulated track generates its own data through [`reactor_control/run/scenarios.py`](reactor_control/run/scenarios.py); the physical track produces data from your own hardware.
 
 ### Additional References
 
