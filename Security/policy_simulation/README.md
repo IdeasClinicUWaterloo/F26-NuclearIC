@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this approach, you will act as a Systems Security Engineer. The challenge is split into two parts. Depending on your team's focus and interests, you can choose to complete Part 1, Part 2, or both:
+In this approach, you will act as a member of the Systems Security team. The challenge is split into two parts. Depending on your team's focus and interests, you can choose to complete Part 1, Part 2, or both:
 
 - **Systems Track (Part 1 Only):** Focus on security policy architecture, zone topology, and defeating simulated adversary attacks. Test your policy using the software-based badge emulator built into the dashboard.
 - **Hardware Track (Part 2 Only):** Focus on building the physical NFC reader circuit, flashing firmware, and verifying live transit. Use the ready-to-test default policy configuration provided in the workspace without designing a policy from scratch.
@@ -158,3 +158,15 @@ Security/
 
 1. **`policy_config.json`:** Your finalized permission matrix and zone topography exported via the graphical interface.
 2. **`justification.md`:** A completed engineering report defending your design choices, zone boundaries, state-dependent logic, hardware implementation (if completed), and responses to test scenarios.
+
+## Opportunities for Innovation
+
+This solution establishes a strong foundation for access control, policy design, adversary testing, and hardware-enabled verification. However, to cover the scientific judgement component of the rubric, you can focus on more advanced safety and consequence-informed decision support.
+
+Potential innovation directions include:
+
+- Linking badge movement decisions to radiological source-term or dose-based reasoning, such as identifying whether a person or package is moving through a contamination boundary or into an area that should be constrained for dose or shielding reasons.
+- Integrating reactor-state science into the access-control logic, so plant conditions, system faults, and emergency operating modes can influence how security decisions are interpreted and prioritised.
+- Introducing a scientific decision layer that connects policy enforcement to measurable reactor safety indicators, material inventory, radiological spread, and safety-margin assumptions.
+
+Taken together, these opportunities would allow the current engineered security model to evolve into a science-informed safety and risk model that better connects operational access control with nuclear consequence assessment.
