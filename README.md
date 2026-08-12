@@ -143,14 +143,41 @@ Teams will give a short presentation of about 3 to 5 minutes. Include:
 
 Your submission may include code, a dashboard, a simulation, a hardware and software demonstration, a design with partial implementation, a research-based proposal, or a combination of these.
 
+### Schedule
+
+**Location**: IDEAs Clinic room (E7-1427)
+
+**Prep Session**: October 2 (Fri), 5:30 PM - 8:00 PM
+Here you will introduced to the problem and the tools you will have to solve it. You will also start forming teams.
+**Hackathon**: October 3 & 4 (Sat & Sun), 9:00 AM - 5:00 PM
+This is the bulk of the mostly freeform design time. You will consult with CNL reps and put together your solutions.
+Judging will begin around 2:30pm on Sunday.
+
 ### Judging Criteria
 
-| Category | What judges are looking for |
-| --- | --- |
-| **Relevance and impact** | The solution addresses a meaningful problem related to SMRs and could help its intended users or stakeholders. |
-| **Feasibility** | The idea, cost, assumptions, and implementation are realistic. |
-| **Prototype execution** | The prototype, simulation, analysis, or demonstration works and is well made. |
-| **Safety and technical understanding** | The team identifies important safety limits, failure modes, and relevant engineering principles. |
-| **Demo and presentation** | The team explains the problem, decisions, trade-offs, and results clearly. |
+| Category | What judges are looking for | Score |
+| --- | --- | --- |
+| **Ideation** |  |  |
+| **Integration of Engineering and Science** | Is there at least 20% Engineering and at least 20% Science in each solution? | /10 |
+| **Relevance** | How relevant is the solution to the problem space? | /3 |
+| **Feasibility** | How feasible is the solution? | /3 |
+| **Impact** | How positively does the idea impact stakeholders? | /3 |
+| **Quality of Output** |  |  |
+| **Quality of Output** | At the time of judging, how put-together is the prototype, model, proposal, etc.? | /5 |
+| **Strength of Evidence** | How solid is the evidence for the proposed solution? Examples include literature review, calculations, and experimental results. | /5 |
+| **Representation of Final Solution** | How representative of the final solution is the output of the weekend? | /5 |
+| **Safety & Regulations** |  |  |
+| **Public Safety Considerations** | Are risks to the general public recognized and addressed? | /3 |
+| **Employee / Operator Safety** | Does the design account for risks to workers/users, such as ergonomics, exposure, and radiation safety? | /3 |
+| **Regulatory Awareness** | Has the team identified relevant Canadian regulations, such as CNSC requirements, the Nuclear Safety and Control Act, and Packaging and Transport Regulations? | /3 |
+| **Security** |  |  |
+| **Threat Awareness** | Has the team identified risks from misuse or bad actors? | /3 |
+| **Mitigation Measures** | How effective are the proposed protections, such as access control, fail-safes, and monitoring? | /3 |
+| **Transparency vs. Security** | Does the design responsibly balance openness and public transparency with the need for security? | /3 |
+| **Demo / Pitch / Presentation** |  |  |
+| **Clarity** | How clear was the presentation in terms of explanation? | /5 |
+| **Depth** | Was the extent of the team's knowledge thoroughly expressed? | /5 |
+| **Demo** | How well designed was the demonstration? Was it an impactful way to demonstrate what the team tried to accomplish? | /5 |
 
-### Schedule
+
+
