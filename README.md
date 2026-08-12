@@ -54,7 +54,7 @@ design. Your solutions can take many forms, including a Prototype, a Model, a Pr
 balance between science and engineering can vary in the solutions as long as a threshold of
 20% engineering and 20% science is surpassed. Your output by the end of the weekend should convince the judges that your solution is feasible, safe, and secure.
 
-As you make your solution this weekend, use the judging criteria to guide your decisions and demonstration.
+As you make your solution this weekend, use the  [judging criteria](#judging-criteria) to guide your decisions and demonstration.
 
 ---
 
@@ -148,32 +148,47 @@ Your submission may include code, a dashboard, a simulation, a hardware and soft
 
 **Prep Session**: October 2 (Fri), 5:30 PM - 8:00 PM
 Here you will introduced to the problem and the tools you will have to solve it. You will also start forming teams.
+
 **Hackathon**: October 3 & 4 (Sat & Sun), 9:00 AM - 5:00 PM
 This is the bulk of the mostly freeform design time. You will consult with CNL reps and put together your solutions.
 Judging will begin around 2:30pm on Sunday.
 
 ### Judging Criteria
 
+
+#### Ideation
 | Category | What judges are looking for | Score |
 | --- | --- | --- |
-| **Ideation** |  |  |
 | **Integration of Engineering and Science** | Is there at least 20% Engineering and at least 20% Science in each solution? | /10 |
 | **Relevance** | How relevant is the solution to the problem space? | /3 |
 | **Feasibility** | How feasible is the solution? | /3 |
 | **Impact** | How positively does the idea impact stakeholders? | /3 |
-| **Quality of Output** |  |  |
+
+
+#### Quality of Output
+| Category | What judges are looking for | Score |
+| --- | --- | --- |
 | **Quality of Output** | At the time of judging, how put-together is the prototype, model, proposal, etc.? | /5 |
 | **Strength of Evidence** | How solid is the evidence for the proposed solution? Examples include literature review, calculations, and experimental results. | /5 |
 | **Representation of Final Solution** | How representative of the final solution is the output of the weekend? | /5 |
-| **Safety & Regulations** |  |  |
+
+#### Safety & Regulations
+| Category | What judges are looking for | Score |
+| --- | --- | --- |
 | **Public Safety Considerations** | Are risks to the general public recognized and addressed? | /3 |
 | **Employee / Operator Safety** | Does the design account for risks to workers/users, such as ergonomics, exposure, and radiation safety? | /3 |
 | **Regulatory Awareness** | Has the team identified relevant Canadian regulations, such as CNSC requirements, the Nuclear Safety and Control Act, and Packaging and Transport Regulations? | /3 |
-| **Security** |  |  |
+
+#### Security
+| Category | What judges are looking for | Score |
+| --- | --- | --- |
 | **Threat Awareness** | Has the team identified risks from misuse or bad actors? | /3 |
 | **Mitigation Measures** | How effective are the proposed protections, such as access control, fail-safes, and monitoring? | /3 |
 | **Transparency vs. Security** | Does the design responsibly balance openness and public transparency with the need for security? | /3 |
-| **Demo / Pitch / Presentation** |  |  |
+
+#### Demo / Pitch / Presentation
+| Category | What judges are looking for | Score |
+| --- | --- | --- |
 | **Clarity** | How clear was the presentation in terms of explanation? | /5 |
 | **Depth** | Was the extent of the team's knowledge thoroughly expressed? | /5 |
 | **Demo** | How well designed was the demonstration? Was it an impactful way to demonstrate what the team tried to accomplish? | /5 |
