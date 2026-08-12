@@ -1,441 +1,153 @@
 # Reactor Design Optimization
 
----
-
-## Table of Contents
-
-- [Challenge](#challenge)
-- [Potential Solutions](#potential-solutions)
-- [Resources](#resources)
-
----
-
 ## Challenge
 
-Small modular nuclear reactors have the potential to improve deployment flexibility, reduce construction complexity, and support cleaner energy systems by generating electricity, industrial process heat, or both. An operating reactor draws on many disciplines to design and operate successfully, including applied physics, chemistry, fluids engineering, and a great deal of modelling. The physics and chemistry of a reactor are driven by choices such as fuel type, moderating material, coolant, and control elements, and these choices have profound implications on the physical properties of the reactor. For example, the chemistry of a coolant can matter just as much as the mechanical design. Reactor performance also depends on these choices and much more: fuel rod geometry, material selection, thermal power, control rod behavior, coolant flow, steam flow, startup strategy, cost, fuel lifetime, and safety margins. However, designing and operating an SMR involves many trade-offs.
+Small modular reactors (SMRs) involve trade-offs among performance, cost, efficiency, safety, and feasibility. Choices such as fuel, moderator, coolant, materials, fuel rod geometry, thermal power, control strategy, and flow rates can affect how a reactor is designed or operated.
 
-Students are invited to build models, dashboards, simulations, or optimization algorithms that help compare reactor choices and improve reactor behavior.
+Your challenge is to optimize one focused part of a reactor system. You may build a model, dashboard, simulation, controller, research study, or optimization algorithm. A strong project should compare alternatives and explain the trade-offs rather than identify a single input value as universally best.
 
-The challenge in this subproblem is to optimize some part of a reactor system. Teams may focus on reactor design optimization, reactor operation optimization, or a combination of both. A strong solution should not simply choose one input value, but should explore trade-offs between performance, cost, efficiency, safety, and feasibility.
+This challenge supports two broad directions:
 
-## Potential Solutions
+- **Design optimization:** compare choices such as fuel, materials, geometry, power, lifecycle cost, and fuel lifetime.
+- **Operation optimization:** adjust control rods, coolant flow, steam flow, or controller parameters during startup, demand tracking, and recovery.
 
-Teams may choose one focused direction or combine multiple approaches. Possible projects include:
+Teams may choose either direction or combine them.
 
-| Potential Solution | Description | Resources |
-| --- | --- | --- |
-| **Reactor design comparison dashboard** | Compare reactor designs and clearly present their performance and trade-offs. | [SMR Reactor Design Optimization Tool](#smr-reactor-design-optimization-tool) |
-| **Lifecycle cost and deployment feasibility study** | Study lifecycle costs and the practical feasibility of deploying different designs. | [Design optimization tool](#smr-reactor-design-optimization-tool) |
-| **Fuel and material trade-off analysis** | Compare fuel and material choices and explain their effects on cost, lifetime, and performance. | [Science and engineering path](#science--engineering-path) |
-| **Design-space exploration tool** | Compare many possible reactor designs across a range of inputs. | [Recommended roadmap](#recommended-roadmap) |
-| **Sensitivity analysis report** | Show which inputs have the greatest effect on reactor cost or performance. | [Milestone 4: Perform Sensitivity Analysis](#milestone-4-perform-sensitivity-analysis) |
-| **Improved visualization dashboard** | Visualize reactor costs, fuel lifetime, and design trade-offs. | [SMR Reactor Design Optimization Tool](#smr-reactor-design-optimization-tool) |
-| **Automated reactor simulator controller** | Operate the provided reactor simulator by adjusting control rods, coolant flow, and steam flow during startup, demand tracking, and recovery. | [Manchester Nuclear Reactor Simulator Optimizer](#manchester-nuclear-reactor-simulator-optimizer) |
-| **Controller tuning optimizer** | Tune controller parameters to improve simulator score or stability. | [Controls and simulation path](#controls--simulation-path) |
-| **Simulation logging and performance analysis** | Capture simulator data over time and analyze controller performance, tracking error, and stability across runs. | [Manchester Nuclear Reactor Simulator Optimizer](#manchester-nuclear-reactor-simulator-optimizer) |
-| **Combined design-and-operation study** | Optimize reactor design and operating strategy together. | [Included components](#included-components) |
-| **Isotope production or process-heat study** | Study the feasibility of medical or industrial isotopes, district heating, or industrial process heat for a proposed SMR deployment. | [Example research questions](#example-research-questions) |
-| **Recommendation memo or pitch deck** | Present a final recommendation for a reactor design or operating strategy. | [Present the trade-offs](#6-present-the-trade-offs) |
+## Project Ideas
 
-### Ways to Approach This Challenge
+| Direction | Example project |
+| --- | --- |
+| Design comparison | Build a dashboard that compares reactor designs and presents their performance and trade-offs. |
+| Cost and feasibility | Study lifecycle costs or deployment feasibility for a specific use case. |
+| Fuel and materials | Compare fuel or material choices and explain their effects on cost, lifetime, and performance. |
+| Sensitivity analysis | Determine which inputs have the greatest effect on cost, performance, or safety margins. |
+| Design-space search | Automatically test and rank many possible reactor designs. |
+| Simulator control | Build a controller that adjusts rods, coolant, and steam during a simulator run. |
+| Controller tuning | Tune controller parameters to improve tracking, stability, recovery, or simulator score. |
+| Applied research | Study an SMR application such as process heat, district heating, or isotope production. |
 
-This subproblem is intentionally open to multiple backgrounds, reflecting the science and engineering required to design and operate a reactor. The goal is to use data, models, and reasoning to compare reactor options and make a clear recommendation.
+Projects can emphasize science and engineering, business and economics, software and data, or controls and simulation. Teams should still connect their work to relevant physical constraints and include at least 20% science and engineering in their solution.
 
-#### Science / Engineering Path
-Focus on reactor design choices and physical trade-offs. The starter tool defaults to a BWRX-300-style light-water SMR (the reactor used in the Darlington New Nuclear Project) as a concrete reference point, but teams are encouraged to explore other SMR types as well.
+## Starter Tools
 
-Remember to check out the [OECD-NEA SMR Dashboard](https://www.oecd-nea.org/upload/docs/application/pdf/2025-09/web_-_smr_dashboard_-_third_edition.pdf) and the [IAEA ARIS SMR Catalogue](https://aris.iaea.org/Publications/SMR_catalogue_2024.pdf) for information on current SMRs in the world.
+### SMR Reactor Design Optimization Tool
 
-Possible directions:
-- Compare fuel types such as UO2, MOX, and TRISO
-- Study how fuel rod geometry affects fuel lifetime and power density
-- Research SMR types and explain which design choices fit each reactor concept
-- Explore the interplay between physics, chemistry, materials science, and fluids engineering: when you choose a physics or design parameter (fuel, moderator, coolant, cladding, and so on), what chemistry or materials-science implications follow? How do those implications limit you, and what workarounds or opportunities do they create?
-- Add or justify safety constraints such as temperature limits or operating margins
-- Create a technical proposal for a balanced reactor design
+The [SMR Reactor Design Optimization Tool](smr-reactor-design-optimizer/) is a Python and Streamlit application for comparing a subset of reactor design choices. Its default model uses a BWRX-300-style light-water SMR as a worked example.
 
-#### Business / Economics Path
-Focus on cost, deployment, and feasibility.
+The tool includes inputs for fuel rod geometry, fuel and structural materials, thermal power, and capacity factor. It estimates outputs such as core procurement cost, lifecycle cost, fuel replacement interval, and normalized cost per MWh.
 
-Possible directions:
-- Compare upfront cost versus lifecycle cost
-- Analyze which design choices create the biggest cost changes
-- Build a dashboard for cost breakdowns and trade-offs
-- Rank reactor designs by economic practicality
-- Create a deployment recommendation for a specific use case such as remote power, industrial heat, or grid support
+Possible extensions include sensitivity charts, material comparisons, design-space exploration, improved cost or constraint models, and ranked design recommendations. See the [tool README](smr-reactor-design-optimizer/README.md) for details.
 
-#### Software / Data Path
-Focus on tools, dashboards, and automated analysis.
+### Manchester Nuclear Reactor Simulator Optimizer
 
-Possible directions:
-- Improve the design optimization dashboard
-- Add sensitivity analysis and design-space exploration
-- Build charts that explain the trade-offs clearly
-- Automate the search for strong design options
-- Export ranked results or comparison reports
+The [Manchester Nuclear Reactor Simulator Optimizer](closed-loop-optimization-of-a-nuclear-reactor-simulator/) is a browser-based framework for treating the Manchester simulator as a dynamic control problem.
 
-#### Controls / Simulation Path
-Focus on reactor operation over time.
+It can read reactor state, apply control commands, automate startup and demand tracking, and log performance. Possible extensions include automated controller tuning, run-comparison dashboards, tracking-error analysis, recovery improvements, black-box optimization, or reinforcement-learning experiments.
 
-Possible directions:
-- Build or improve an automated reactor simulator controller, a control algorithm that operates the provided reactor simulator on its own (adjusting control rods, coolant flow, and steam flow) to handle startup, demand tracking, and recovery without manual input
-- Tune startup, tracking, and recovery behavior
-- Log simulator runs and compare controller versions
-- Optimize controller parameters to improve score or stability
+See the [simulator optimizer README](closed-loop-optimization-of-a-nuclear-reactor-simulator/README.md) for its architecture and current status.
 
-### Recommended Roadmap
+## Recommended Workflow
 
-Teams are encouraged to take the project in any direction. These milestones are not requirements or a scoring checklist; they are meant to give less experienced teams a practical path from running the model to implementing and upgrading it to their own solution. Advanced teams can skip, combine, or replace them with their own plan.
+These steps are guidance, not requirements. Advanced teams may replace them with their own process.
 
-#### Milestone 1: Understand the Reactor System
+### 1. Choose a Focus
 
-Goal: identify what inputs and outputs matter.
+Define the part of the system you want to improve and the metric you will use to evaluate it.
 
-Suggested outcomes:
+Example objectives include:
 
-* Review the provided reactor design or simulator tools
-* Identify controllable inputs such as fuel type, rod dimensions, materials, power level, coolant flow, steam flow, or control rod position
-* Identify important outputs such as lifecycle cost, fuel lifetime, thermal power, generator output, temperature, tracking error, score, or safety status
-* Explain what trade-off the team wants to optimize
+- minimize lifecycle cost per MWh
+- increase fuel replacement interval
+- maximize simulator score
+- reduce power-demand tracking error
+- improve startup or recovery behavior
+- balance cost, performance, and safety constraints
 
-Good demo: the team can explain what part of the reactor system they are optimizing and why it matters.
+### 2. Establish a Baseline
 
-#### Milestone 2: Run a Baseline Case
+Run the starter tool or simulator with its current settings. Save the important inputs and outputs so later changes can be compared fairly.
 
-Goal: create a starting point that future improvements can be compared against.
+Useful design metrics include lifecycle cost, cost per MWh, procurement cost, fuel lifetime, and power density. Useful operation metrics include score, generator output, tracking error, time within tolerance, temperatures, shutdown state, and recovery events.
 
-Suggested outcomes:
+### 3. Compare Alternatives
 
-* Run the provided design optimization model or reactor simulator
-* Record baseline inputs and outputs
-* Save key results such as cost, efficiency, fuel lifetime, score, or tracking error
-* Identify weaknesses in the baseline design or control strategy
+Test a small number of meaningful alternatives before building a complex optimizer. For example, compare fuel types, rod dimensions, materials, power levels, startup strategies, or controller gains.
 
-Good demo: the team can show a baseline result and describe what they want to improve.
+Use tables or charts to show how each input affects the results. A simple sensitivity analysis can reveal which variables are worth optimizing.
 
-#### Milestone 3: Add Comparison Tools
+### 4. Automate the Search
 
-Goal: make reactor trade-offs visible.
+Define an objective function and constraints, then search across the most important parameters. Depending on the project, this could use a grid search, random search, Bayesian optimization, Optuna, or another justified method.
 
-Suggested outcomes:
+Save the best candidates and compare them with the baseline. Avoid optimizing only one number if doing so creates an impractical or unsafe result.
 
-* Compare multiple fuel types, materials, geometries, or operating strategies
-* Create tables showing how each choice affects cost and performance
-* Add charts for cost breakdown, lifecycle cost, fuel lifetime, generator output, temperature, or tracking error
-* Highlight the best-performing or most balanced options
+### 5. Explain the Recommendation
 
-Good demo: the tool clearly shows how changing an input affects reactor performance.
+Your final demonstration should answer:
 
-#### Milestone 4: Perform Sensitivity Analysis
+- What did you optimize, and why?
+- Which inputs changed?
+- Which metric improved, and by how much?
+- What constraints or assumptions did you use?
+- What trade-offs or drawbacks did the change introduce?
+- What would you improve with more time?
 
-Goal: identify which parameters matter most.
+## Development Setup
 
-Suggested outcomes:
+Create and activate a virtual environment before installing dependencies.
 
-* Change one input at a time and measure how outputs change
-* Compare parameters such as rod length, rod diameter, rod count, fuel type, cladding material, power level, coolant behavior, or control gains
-* Rank inputs by their effect on cost, efficiency, score, tracking error, or safety behavior
-* Use results to decide where optimization should focus
-
-Good demo: the team can show which inputs have the largest effect on reactor performance.
-
-#### Milestone 5: Build an Optimization Method
-
-Goal: move from manual testing to automated search.
-
-Suggested outcomes:
-
-* Define an objective function, such as minimizing lifecycle cost, maximizing score, reducing tracking error, or balancing cost and fuel lifetime
-* Search across design parameters, control parameters, or both
-* Save and compare the best solutions found
-
-Good demo: the system can automatically test multiple options and identify a better-performing design or strategy.
-
-#### Milestone 6: Evaluate Trade-Offs
-
-Goal: show that the chosen solution is not just better in one metric, but understandable overall.
-
-Suggested outcomes:
-
-* Compare optimized and baseline results
-* Show whether improvements in one metric cause drawbacks in another
-* Discuss trade-offs such as higher upfront cost versus lower lifecycle cost, faster startup versus safety margin, or better demand tracking versus thermal stability
-* Present results using tables, charts, or dashboards
-
-Good demo: the team can explain why their optimized result is useful and what trade-offs it creates.
-
-#### Milestone 7: Make Your Solution Stand Out
-
-Goal: turn the starter system into the team’s own solution.
-
-Possible directions:
-
-* Better design optimization: improve the cost model, add more materials, add constraints, or perform design-space exploration
-* Better control optimization: improve startup, demand tracking, recovery, or controller parameter tuning
-* Better analysis: add dashboards, sensitivity charts, run comparison tools, or result exports
-* Better objective functions: balance multiple goals such as cost, performance, safety, and fuel lifetime
-* Better automation: run large batches of experiments and save ranked results
-* Better explanation: turn simulation results into a clear reactor design or operating proposal
-
-Good demo: the project has a clear idea beyond the starter code and shows why that idea improves reactor optimization.
-
-## Resources
-
-The following starter materials and references may help teams better understand the problem and develop solutions.
-
-### Starter Package Overview
-
-This folder contains starter material for the reactor optimization subproblem. It is intended as a base package that teams can extend during the event, not as a polished production system.
-
-The starter material may support two broad solution paths:
-
-1. Reactor design optimization
-   Compare SMR design choices such as fuel rod geometry, material selection, fuel type, thermal power, cost, and fuel lifetime.
-
-2. Reactor operation optimization
-   Control a reactor simulator over time by adjusting operating inputs such as control rods, coolant flow, steam flow, and startup or recovery logic.
-
-Teams may choose one path or combine both.
-
-### Included Components
-
-#### SMR Reactor Design Optimization Tool
-
-A design-focused tool for comparing a subset of reactor design choices. The model defaults to a BWRX-300-style light-water SMR (the design planned for OPG's Darlington New Nuclear Project), so the SMR type options are currently focused around that reactor class — but it provides a useful worked example, and teams are welcome to extend it to other SMR types.
-
-This tool can be used to explore:
-
-* fuel rod length
-* rod outer diameter
-* pellet diameter
-* rod count
-* fuel material
-* cladding material
-* guide tube material
-* spacer material
-* nozzle material
-* SMR type
-* thermal power
-* capacity factor
-* lifecycle cost
-* fuel replacement interval
-* normalized cost per MWh
-
-Possible extensions include:
-
-* fuel comparison charts
-* material comparison charts
-* cost breakdown tables
-* sensitivity analysis
-* design-space exploration
-* top design rankings
-* improved optimization objectives
-
-#### Manchester Nuclear Reactor Simulator Optimizer
-
-An operation-focused tool for controlling a reactor simulator as a dynamic system.
-
-This tool can be used to explore:
-
-* live reactor state monitoring
-* control rod movement
-* coolant flow control
-* steam flow control
-* startup behavior
-* demand tracking
-* recovery behavior
-* score improvement
-* controller parameter tuning
-* simulator run logging
-
-Possible extensions include:
-
-* automated controller tuning
-* run comparison dashboards
-* tracking-error analysis
-* safety and recovery improvements
-* black-box optimization
-* reinforcement learning experiments
-
-### Development Setup
-
-#### Python Environment
-
-The Python starter code should be run inside a local virtual environment.
-
-Suggested setup:
-
-```bash
+```powershell
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\Activate.ps1
+```
+
+### Run the Design Tool
+
+```powershell
+cd smr-reactor-design-optimizer
 python -m pip install -r requirements.txt
+python -m streamlit run app.py
 ```
 
-If a requirements file is not provided yet, teams may need to install packages manually depending on their chosen solution path.
+### Run the Simulator Automation
 
-For design dashboards:
-
-```bash
-python -m pip install streamlit pandas plotly
-```
-
-For browser-based simulator automation:
-
-```bash
+```powershell
+cd closed-loop-optimization-of-a-nuclear-reactor-simulator
 python -m pip install playwright
 python -m playwright install
+python window.py
 ```
 
-For parameter optimization:
+The simulator optimizer interacts with an external educational simulator. Review its README and code before running it.
 
-```bash
-python -m pip install optuna
-```
+## What Makes a Strong Solution
 
-### Suggested Workflow
+A strong project does not need to be the most complex one. It should:
 
-#### 1. Choose an Optimization Focus
+- define a focused and measurable problem
+- use relevant physics or engineering reasoning
+- compare results against a baseline
+- consider safety limits, feasibility, and edge cases
+- make experiments repeatable
+- explain assumptions and model limitations
+- present trade-offs clearly
 
-Decide whether the team is focusing on:
+A balanced design may be more useful than the cheapest design. Likewise, a controller with slightly slower response may be preferable if it is more stable or maintains a larger safety margin.
 
-* reactor design optimization
-* reactor operation/control optimization
-* both design and operation
+## Research Starting Points
 
-The project should have a clear optimization target.
+Questions you could investigate include:
 
-Examples:
+- Which design parameters most affect lifecycle cost or fuel lifetime?
+- How sensitive are results to fuel rod geometry or material assumptions?
+- Does lower lifecycle cost require higher upfront cost?
+- Which controller parameters most affect tracking error or simulator score?
+- Can startup, steady-state tracking, and recovery be optimized separately?
+- Does aggressive control improve tracking while reducing stability margins?
+- How would the preferred design change for grid power, remote power, or industrial heat?
 
-* minimize lifecycle cost per MWh
-* maximize reactor simulator score
-* reduce power-demand tracking error
-* increase fuel replacement interval
-* compare material and fuel choices
-* balance upfront cost against long-term cost
-* improve startup and recovery behavior
+For information on current SMR concepts, consult the [OECD Nuclear Energy Agency SMR Dashboard](https://www.oecd-nea.org/upload/docs/application/pdf/2025-09/web_-_smr_dashboard_-_third_edition.pdf) and the [IAEA ARIS SMR Catalogue](https://aris.iaea.org/Publications/SMR_catalogue_2024.pdf).
 
-#### 2. Run the Baseline Tool
+## Disclaimer
 
-Start with the provided model or simulator.
-
-For design optimization:
-
-* run the design dashboard
-* record the default design
-* note baseline cost and fuel lifetime
-
-For operation optimization:
-
-* run the reactor simulator automation
-* record baseline score and tracking behavior
-* note where the controller fails or performs poorly
-
-#### 3. Log Results
-
-Optimization is difficult without measurable results.
-
-Useful design metrics:
-
-* core procurement cost
-* operational cost per year
-* maintenance cost per year
-* lifecycle cost
-* lifecycle cost per MWh
-* fuel procurement cost per MWh
-* rod replacement interval
-
-Useful operation metrics:
-
-* final score
-* peak score
-* generator output
-* power demand
-* average tracking error
-* percent of time within tolerance
-* core temperature
-* coolant temperature
-* shutdown status
-* recovery events
-
-#### 4. Compare Alternatives
-
-Before building a complex optimizer, compare a few simple alternatives.
-
-Examples:
-
-* UO2 vs MOX vs TRISO
-* different rod diameters
-* different rod counts
-* different cladding materials
-* fixed power vs power scaling
-* conservative vs aggressive startup
-* different steam or rod control gains
-
-This helps identify which variables are worth optimizing.
-
-#### 5. Add Automated Search
-
-Once the team has a baseline and metrics, automate the search.
-
-Possible approaches:
-
-* grid search over a small set of values
-* random search over a larger range
-* Bayesian optimization
-* Optuna parameter tuning
-* reinforcement learning for time-based control decisions
-
-Teams should save the best results and compare them against the baseline.
-
-#### 6. Present the Trade-Offs
-
-Strong solutions should explain the result, not just output a number.
-
-A final demo should answer:
-
-* What was optimized?
-* What inputs were changed?
-* What metric improved?
-* What trade-offs were introduced?
-* Was the optimized solution practical?
-* What would be improved next?
-
-### Example Research Questions
-
-* Which design parameters most affect lifecycle reactor cost?
-* Which materials produce the largest cost or fuel lifetime changes?
-* Does a lower lifecycle cost require a higher upfront procurement cost?
-* Which fuel type performs best under the current cost model?
-* How sensitive is reactor cost to rod geometry?
-* Which controller parameters most affect simulator score?
-* Can startup and recovery be optimized separately from steady-state tracking?
-* Does aggressive control improve demand tracking but increase instability?
-* Can a combined design and operation strategy outperform either approach alone?
-* At what point does parameter optimization stop being enough and reinforcement learning become worthwhile?
-
-### Notes for Teams
-
-This challenge is intentionally open-ended. There is not one correct answer.
-
-Teams that combine science and engineering perspectives often do well here. For example, someone comfortable reasoning about reactor physics, chemistry, and materials trade-offs alongside someone focused on software, data, or controls. Remember, teams need at least 20% of science and engineering in their solution.
-
-For design optimization, a good solution may involve choosing a balanced design rather than the absolute cheapest design. For example, a design with higher upfront cost may have lower lifecycle cost or longer fuel lifetime.
-
-For operation optimization, the simulator behaves like a dynamic control system. A single fixed control setting is usually not enough. Strong controllers should respond over time to demand, output, temperature, and safety conditions.
-
-Teams should focus on clear comparisons, repeatable experiments, and explainable trade-offs.
-
-### Status
-
-Current state of the starter material:
-
-* reactor design optimization prototype available
-* reactor operation/control prototype available
-* baseline design comparison possible
-* automated simulator control demonstrated
-* logging and evaluation can be extended
-* ready for sensitivity analysis, dashboard improvements, and automated parameter optimization
-
-### Disclaimer
-
-This challenge is focused on educational simulation, design exploration, and algorithmic optimization. It is not intended to model, validate, or represent real-world nuclear plant design, licensing, operation, or safety practices.
+This challenge is intended for educational simulation, design exploration, and algorithmic optimization. The starter models simplify real systems and are not intended to design, validate, license, operate, or represent the safety practices of a real nuclear plant.
