@@ -55,19 +55,16 @@ This challenge invites students to design a controller for a simplified SMR-insp
 
 Students may also build a safe physical analogue system, such as a temperature controller, syringe pump, or water-flow controller, to demonstrate the same feedback control ideas in hardware.
 
-
-| Engineering Perspective                                                                                                                                                                                                                                                                                                                                                                                                                         | Science Perspective                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - Build a PID controller to track a target power level<br>- Filter noisy sensor readings<br>- Add safety logic for warnings, limits, SCRAM, or shutdown<br>- Detect faults such as bad sensors, stuck actuators, or cooling problems<br>- Create a dashboard to show power, temperature, control input, and safety state<br>- Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller | - Build a PID controller to track a target power level<br>- Filter noisy sensor readings<br>- Add safety logic for warnings, limits, SCRAM, or shutdown<br>- Detect faults such as bad sensors, stuck actuators, or cooling problems<br>- Create a dashboard to show power, temperature, control input, and safety state<br>- Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller |
-
 #### Potential Solutions
 
-- Build a PID controller to track a target power level
-- Filter noisy sensor readings
-- Add safety logic for warnings, limits, SCRAM, or shutdown
-- Detect faults such as bad sensors, stuck actuators, or cooling problems
-- Create a dashboard to show power, temperature, control input, and safety state
-- Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller
+| Engineering Perspective | Science Perspective |
+|---|---|
+| • Build a PID controller to track a target power level | • Conduct a study on how temperature, humidity, and radiation-like conditions affect sensor accuracy |
+| • Filter noisy sensor readings | • Examine anomaly detection through observing system parameters behaviour before abnormal events|
+| • Add safety logic for warnings, limits, SCRAM, or shutdown | •  Evaluate and compare PID, adaptive, and model-based control methods |
+| • Detect faults such as bad sensors, stuck actuators, or cooling problems | • Study how small measurement errors and uncertainty affect reactor-state estimates |
+| • Create a dashboard showing power, temperature, control input, and safety state | • Investigate how corrupted sensor data affects operational decisions |
+| • Build a physical analogue, such as a temperature-control system, syringe pump, or peristaltic-pump flow controller | •  Investigate temperature and flow behavior using dyes, thermal sensors, and pumps |
 
 Learn more in the [Controls and Instrumentation subproblem](Controls%20and%20Instrumentation/).
 
