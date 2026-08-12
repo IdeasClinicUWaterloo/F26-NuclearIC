@@ -56,6 +56,10 @@ balance between science and engineering can vary in the solutions as long as a t
 
 As you make your solution this weekend, use the  [judging criteria](#judging-criteria) to guide your decisions and demonstration.
 
+#### Team Formation 
+
+Your team should comprise of 3-5 students with a close-to even split between students from the Science Faculty and students from the Engineering Faculty.
+
 ---
 
 ## Sub-Problems
@@ -102,7 +106,7 @@ Participants are encouraged to build tools, simulations, dashboards, or algorith
 
 | Engineering Perspective | Science Perspective |
 |---|---|
-|&bull; Use the provided **SMR Reactor Design Optimization Tool** to set parameters and examine their effects on reactor cost and efficiency.<br>&bull; Develop an **automated reactor controller** that reads the live state of a simulator and adjusts control values to maximize efficiency.<br>&bull; Apply **reactor optimization methods** to improve startup, tracking, recovery, or design performance.<br>&bull; Create a **reactor comparison dashboard** for designs, simulator runs, costs, and performance metrics.<br>&bull; Build a **reactor data analysis system** to identify which design or control parameters affect performance most.<br>&bull; Research an **SMR design concept** and develop a proposal for a particular reactor design.|&bull; Conduct a **reactor-channel flow investigation** using safe surrogate systems to model coolant movement and heat removal through reactor channels.<br>&bull; Perform a **component lifespan study** examining how temperature, flow, load cycles, and other operating conditions influence longevity.<br>&bull; Create a **reactor efficiency map** relating coolant flow, temperature, and power output to identify efficient operating ranges.<br>&bull; Complete a **reactor lifecycle optimization study** examining how design choices affect long-term performance, maintenance needs, and operating efficiency.|
+|&bull; Use the provided **SMR Reactor Design Optimization Tool** to set parameters and examine their effects on reactor cost and efficiency.<br>&bull; Develop an **automated reactor controller** that reads the live state of a simulator and adjusts control values to maximize efficiency.<br>&bull; Apply **reactor optimization methods** to improve startup, tracking, recovery, or design performance.<br>&bull; Create a **reactor comparison dashboard** for designs, simulator runs, costs, and performance metrics.<br>&bull; Build a **reactor data analysis system** to identify which design or control parameters affect performance most.<br>&bull; Research an **SMR design concept** and develop a proposal for a particular reactor design.|&bull; Conduct a **reactor-channel flow investigation** using safe surrogate systems to model coolant movement and heat removal through reactor channels.<br>&bull; Create a **cost optimization** strategy for the plant <br>&bull; Perform a **component lifespan study** examining how temperature, flow, load cycles, and other operating conditions influence longevity.<br>&bull; Create a **reactor efficiency map** relating coolant flow, temperature, and power output to identify efficient operating ranges.<br>&bull; Complete a **reactor lifecycle optimization study** examining how design choices affect long-term performance, maintenance needs, and operating efficiency.|
 
 Learn more in the [Reactor Design Optimization subproblem](Reactor%20Design%20Optimization/).
 
