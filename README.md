@@ -59,8 +59,7 @@ Students may also build a safe physical analogue system, such as a temperature c
 
 | Engineering Perspective | Science Perspective |
 |---|---|
-| • Build a PID controller to track a target power level | • Conduct a study on how temperature, humidity, and radiation-like conditions affect sensor
-accuracy |
+| • Build a PID controller to track a target power level | • Conduct a study on how temperature, humidity, and radiation-like conditions affect sensor accuracy |
 | • Filter noisy sensor readings | • Examine anomaly detection through observing system parameters behaviour before abnormal events|
 | • Add safety logic for warnings, limits, SCRAM, or shutdown | •  Evaluate and compare PID, adaptive, and model-based control methods |
 | • Detect faults such as bad sensors, stuck actuators, or cooling problems | • Study how small measurement errors and uncertainty affect reactor-state estimates |
