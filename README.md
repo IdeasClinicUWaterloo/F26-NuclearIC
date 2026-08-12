@@ -29,11 +29,13 @@ This README uses descriptive headings, meaningful link names, short sections, an
 - [Reactor Design Optimization Subproblem](Reactor%20Design%20Optimization/)
 - [Security Subproblem](Security/)
 
-## Your Mission
 
-_Theme: Small Modular Reactors (SMRs)_
+### Theme: Small Modular Reactors (SMRs)
+
 
 ![Chart explaining the components and operation of a small modular reactor](assets/SMR_Chart.png)
+
+## Background
 
 As technology advances to embrace Artificial Intelligence (AI), data centres have become major energy consumers. To provide the energy output demanded by data centres, alternative energy-production options need to be considered. Small Modular Reactors (SMRs) are at the forefront of these conversations, with multiple designs being developed to address these energy needs. The Darlington New Nuclear Project is an SMR project under construction in Ontario and is expected to become the first grid-scale SMR in the G7. Construction began in May 2025, with completion expected by the end of the decade and connection to the electricity grid expected by the end of 2030.
 
@@ -42,6 +44,17 @@ The Darlington project uses the GE Vernova Hitachi BWRX-300 boiling water reacto
 To find out more: [BWRX-300 SMR](https://www.gevernova.com/nuclear/carbon-free-power/bwrx-300-small-modular-reactor)
 
 For a broader view of SMR design, see the [OECD-NEA SMR Dashboard](https://www.oecd-nea.org/upload/docs/application/pdf/2025-09/web_-_smr_dashboard_-_third_edition.pdf) and the [IAEA ARIS SMR Catalogue](https://aris.iaea.org/Publications/SMR_catalogue_2024.pdf). Both give a sense of the variety of SMR designs being developed internationally. You can find the BWRX-300 on page 134 of the OECD Dashboard and page 17 of the IAEA Catalogue.
+
+
+## Your Mission
+In this challenge, your team has been invited to build a solution to improve SMRs in some way. You may extend the supplied code and hardware designs, combine ideas from several sub-problems, or create a related solution of your own. Your solution should be catered towards a real SMR - the BWRX-300 or any other you may be interested in.
+
+As this is an interdisciplinary challenge, solutions should combine scientific thinking and engineering
+design. Your solutions can take many forms, including a Prototype, a Model, a Proposal, an Experiment etc. The
+balance between science and engineering can vary in the solutions as long as a threshold of
+20% engineering and 20% science is surpassed. Your output by the end of the weekend should convince the judges that your solution is feasible, safe, and secure.
+
+As you make your solution this weekend, use the judging criteria to guide your decisions and demonstration.
 
 ---
 
