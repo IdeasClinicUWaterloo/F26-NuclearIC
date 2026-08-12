@@ -93,9 +93,13 @@ python src/evaluate_policy.py
    - **Ground:** Connect RC522 `GND` → Arduino `GND`
    - **SPI Bus:** Connect `SDA` → Pin 10, `MOSI` → Pin 11, `MISO` → Pin 12, `SCK` → Pin 13, `RST` → Pin 9
 2. **Flash Firmware:**
-   - Open `src/firmware.ino` in the Arduino IDE.
-   - Install the `MFRC522` library (by GithubCommunity) via the Library Manager.
-   - Upload the sketch to your Arduino Uno R4.
+   - Choose your reader:
+     - For RC522 SPI: open `src/firmware_SPI.ino`.
+     - For PN532 I2C: open `src/firmware_I2C.ino`.
+   - Install the required library:
+     - RC522 SPI: `MFRC522` (GithubCommunity)
+     - PN532 I2C: `Adafruit PN532`
+   - Upload the appropriate sketch to your Arduino Uno R4.
 
 ### Phase 5: Live Physical Verification & SCADA Integration (Part 2 - Hardware Track)
 
@@ -104,7 +108,7 @@ python src/evaluate_policy.py
 **Steps:**
 1. **Discover Card UIDs:** Scan your physical NTAG215 badges to obtain their 7-byte hexadecimal UIDs (e.g., `04:3E:5B:A2:91:5D:80`). The UIDs will be output in the Serial Monitor of the Arduino IDE.
 2. **Register Badges:** Update the `NFC_REGISTRY` dictionary inside `src/dashboard.py` with your card UIDs and assigned roles. Close the Serial Monitor in Arduino IDE after pasting the UIDs.
-3. **Run Live Terminal:** Launch `python src/unified_dashboard.py` and switch to **Tab 3 (Live Hardware & Transit SCADA Monitor)**.
+3. **Run Live Terminal:** Launch `python src/dashboard.py` and switch to **Tab 3 (Live Hardware & Transit SCADA Monitor)**.
 
    *(Note for Hardware-Only students: The system automatically loads a ready-to-test default policy configuration so you can scan immediately without completing Part 1).*
 
@@ -113,7 +117,7 @@ python src/evaluate_policy.py
 ![Screenshot of Tab 3 of the dashboard, showing the live SCADA transit monitor with a room-to-room route drawn on the 2D facility map.](assets/Tab_3.png)
 
    You can configure the starting room, destination room, plant state, and time before tapping the badge.
-4. **Tap Badges:** Tap an NTAG215 card on the RC522 reader. The app evaluates the path using Dijkstra's algorithm and draws the route on the 2D SCADA map.
+4. **Tap Badges:** Tap an NTAG215 card on the connected NFC reader. The app evaluates the path using Dijkstra's algorithm and draws the route on the 2D SCADA map.
 
 ### Phase 6: System Documentation & Final Submission
 
@@ -138,7 +142,8 @@ Security/
 │   └── src/
 │       ├── dashboard.py              # Master application (Zone Editor, Matrix, SCADA Hardware)
 │       ├── evaluate_policy.py        # Automated adversary simulation test
-│       ├── firmware.ino              # Arduino Uno R4 / RC522 SPI firmware
+│       ├── firmware_SPI.ino          # Arduino Uno R4 / RC522 SPI firmware
+│       ├── firmware_I2C.ino          # Arduino Uno R4 / PN532 I2C firmware
 │       ├── hardware_bridge.py        # Standalone terminal serial bridge
 │       ├── blueprint_loader.py       # Blueprint JSON parser & graph loader
 │       ├── policy_manager.py         # Multi-state security policy evaluator

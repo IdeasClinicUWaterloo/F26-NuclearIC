@@ -55,6 +55,11 @@ This challenge invites students to design a controller for a simplified SMR-insp
 
 Students may also build a safe physical analogue system, such as a temperature controller, syringe pump, or water-flow controller, to demonstrate the same feedback control ideas in hardware.
 
+
+| Engineering Perspective                                                                                                                                                                                                                                                                                                                                                                                                                         | Science Perspective                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - Build a PID controller to track a target power level<br>- Filter noisy sensor readings<br>- Add safety logic for warnings, limits, SCRAM, or shutdown<br>- Detect faults such as bad sensors, stuck actuators, or cooling problems<br>- Create a dashboard to show power, temperature, control input, and safety state<br>- Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller | - Build a PID controller to track a target power level<br>- Filter noisy sensor readings<br>- Add safety logic for warnings, limits, SCRAM, or shutdown<br>- Detect faults such as bad sensors, stuck actuators, or cooling problems<br>- Create a dashboard to show power, temperature, control input, and safety state<br>- Build a physical analogue such as a temperature control system, syringe pump, or peristaltic pump flow controller |
+
 #### Potential Solutions
 
 - Build a PID controller to track a target power level
@@ -103,14 +108,14 @@ Learn more in the [Reactor Design Optimization subproblem](Reactor%20Design%20Op
 
 Nuclear facilities are highly critical locations that require extremely strict security measures to prevent sabotage. Nuclear facilities integrate multi-layered security protocols and policies to protect the premises from bad actors. SMR facilities may need to diverge from the traditional reactor structure, which may introduce new security concerns.
 
-This challenge invites students to develop a security plan or system for the SMR facility. Participants may explore multiple security concepts, including Security Policy, Zone Access, Cybersecurity, Intruder Detection, etc.
+This challenge asks teams to design access-control policies, detection strategies, and response workflows that safeguard vital areas, detect unauthorized removal of radiological material, and mitigate insider or external threats without causing excessive nuisance alarms or operational paralysis.
 
 #### Potential Solutions
 
-- Use the provided security simulation dashboard to set zones and policies for a fictional SMR facility and test against various attackers
-- Develop a computer vision system to detect intruders
-- Integrate Radio Frequency Identification (RFID) or Near Field Communication (NFC) based access restrictions
-- Design a layout for an SMR facility that would be more effective than the one provided at repelling attackers
+- Build a policy-simulation dashboard to design zones, access rules, and test adversary profiles
+- Prototype NFC/RFID badge readers or physical access hardware with fail-secure mechanics
+- Develop computer-vision intrusion/perimeter detection and alarm integration
+- Optimize facility layout and add radiation portal monitoring at choke points to detect illicit material movement
 
 Learn more in the [Security subproblem](Security/).
 
