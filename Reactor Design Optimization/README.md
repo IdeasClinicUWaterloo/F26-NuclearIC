@@ -44,6 +44,8 @@ This subproblem is intentionally open to multiple backgrounds, reflecting the sc
 #### Science / Engineering Path
 Focus on reactor design choices and physical trade-offs. The starter tool defaults to a BWRX-300-style light-water SMR (the reactor used in the Darlington New Nuclear Project) as a concrete reference point, but teams are encouraged to explore other SMR types as well.
 
+Remember to check out the [OECD-NEA SMR Dashboard](https://www.oecd-nea.org/upload/docs/application/pdf/2025-09/web_-_smr_dashboard_-_third_edition.pdf) and the [IAEA ARIS SMR Catalogue](https://aris.iaea.org/Publications/SMR_catalogue_2024.pdf) for information on current SMRs in the world.
+
 Possible directions:
 - Compare fuel types such as UO2, MOX, and TRISO
 - Study how fuel rod geometry affects fuel lifetime and power density
@@ -415,7 +417,7 @@ A final demo should answer:
 
 This challenge is intentionally open-ended. There is not one correct answer.
 
-Teams that combine perspectives often do well here — for example, someone comfortable reasoning about reactor physics, chemistry, and materials trade-offs alongside someone focused on software, data, or controls. This isn't a requirement, just a pattern worth keeping in mind when forming a team or dividing up work.
+Teams that combine science and engineering perspectives often do well here. For example, someone comfortable reasoning about reactor physics, chemistry, and materials trade-offs alongside someone focused on software, data, or controls. Remember, teams need at least 20% of science and engineering in their solution.
 
 For design optimization, a good solution may involve choosing a balanced design rather than the absolute cheapest design. For example, a design with higher upfront cost may have lower lifecycle cost or longer fuel lifetime.
 
