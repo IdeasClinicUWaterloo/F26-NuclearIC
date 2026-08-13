@@ -163,9 +163,9 @@ Real limitations of the starter, left open on purpose. Any of these is a legitim
 ## How Real Reactors Do This
 
 Worth knowing where the starter is faithful and where it simplifies. The
-description below follows Wang et al., *[Small Modular Reactors: An Overview of
-Modeling, Control, Simulation, and Applications](https://ieeexplore.ieee.org/document/10384339)*,
-IEEE Access 2024. Section II.C covers light water reactor control.
+description below follows Wang et al., *Small Modular Reactors: An Overview of
+Modeling, Control, Simulation, and Applications*, IEEE Access 2024. The paper
+is linked in [Resources](#resources); Section II.C covers light-water reactor control.
 
 **What we model the same way:**
 
@@ -187,7 +187,7 @@ These milestones describe what already works in this folder and what to verify o
 
 ### Milestone 1: Run the Reactor Simulation
 
-- Read the [point kinetics equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/), then read `reactor/model.py`'s `neutron_equations` and `thermal_equations`.
+- Review the point-kinetics background in [Resources](#resources), then read `reactor/model.py`'s `neutron_equations` and `thermal_equations`.
 - Run `python run_scenario.py --scenario nominal` and inspect the plots.
 - Identify the control input (`Controller.update` returns a rod speed), the sensor outputs (`SensorSuite`'s five channels), and the hidden values nothing measures directly (the six precursor concentrations `C1` to `C6`, and the two coolant-node temperatures).
 
@@ -197,7 +197,7 @@ Good demo: explain how the model responds when `rho_rod` changes, and why the si
 
 - `controller/control.py` implements an anti-windup PID on rod speed; it currently runs as P-only with `kp=3e-4`.
 - Run `--scenario load_step` and observe tracking, overshoot, and settling time. It reaches the setpoint to within about 0.07% in roughly 190 s.
-- Try adding `ki`/`kd` and compare. See [how to tune a PID controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec).
+- Try adding `ki`/`kd` and compare. The shared PID resources in the [parent challenge README](../README.md#shared-control-resources) provide a practical tuning process.
 - Turn `kp` up and watch the trade-off: tracking gets faster, but past about `1e-3` the rods spend most of their time pegged at maximum speed chasing sensor noise. That's a real failure mode, not a simulation artefact.
 
 Good demo: the controller tracks a setpoint change without immediately violating safety limits.
@@ -212,7 +212,7 @@ Good demo: explain why SCRAM latches instead of clearing itself once conditions 
 
 ### Milestone 4: Improve Instrumentation and State Estimation
 
-- `estimation/ekf.py` estimates the full state (including the hidden precursor and coolant-node values) from four of the noisy sensor channels: power and the three temperatures. Start with [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/) if the maths is unfamiliar.
+- `estimation/ekf.py` estimates the full state (including the hidden precursor and coolant-node values) from four of the noisy sensor channels: power and the three temperatures. The Kalman-filter introductions in [Resources](#resources) explain the predict/update cycle if the mathematics is unfamiliar.
 - Compare a run with and without `--no-filter`, and check the estimation-error figure (true vs. measured vs. estimated).
 - The process-noise matrix `Q` in `simulation._build_ekf` is the main lever on how well the estimate tracks. Try changing it and watch what happens.
 
@@ -242,20 +242,30 @@ Good demo: a clear idea beyond the baseline, and why it improves control, safety
 
 ## Resources
 
-### Background Information
+Software-track references are grouped here so they are not duplicated in the parent challenge README.
 
-- [Point Kinetics Equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/): the neutron-population model `reactor/model.py` implements, including why delayed neutrons are what make a reactor controllable at all.
-- [Reactor Dynamics](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/): broader context on reactivity, feedback, and transients.
+### Reactor Model and Safety
 
-### Technical Resources
+- [Point Kinetics Equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/): the neutron-population model implemented in `reactor/model.py`.
+- [Reactor Dynamics](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/): broader background on reactivity, feedback, and transients.
+- [Small Modular Reactors: An Overview of Modeling, Control, Simulation, and Applications](https://ieeexplore.ieee.org/document/10384339): a review of SMR modeling and control; Section II.C discusses light-water reactor control.
+- [Nuclear power plant safety systems](https://www.nrc.gov/reading-rm/basic-ref/students/what-is-nuclear-energy): introductory context for reactor safety and shutdown systems.
 
-- [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/): the clearest visual introduction to Kalman filtering. Read this before `estimation/ekf.py`; it explains the predict/update cycle and what the covariance matrices are actually doing.
-- [How to Tune a PID Controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec): practical tuning procedure for the `kp`/`ki`/`kd` gains in `controller/control.py`.
-- [SciPy `solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html): the ODE integrator the model uses. The reactor is stiff, which is why it runs the `Radau` method rather than the default.
-- [Matplotlib documentation](https://matplotlib.org/stable/index.html): for extending `run/plotting.py`.
+### Advanced Control
 
-### Additional References
+- [Anti-windup for PID control](https://www.mathworks.com/videos/understanding-pid-control-part-2-expanding-beyond-a-simple-integral-1528310418260.html): why the controller stops integrating when the rod actuator saturates.
+- [What is state space?](https://www.mathworks.com/discovery/state-space.html): background for state-space control, estimation, and system models.
+- [What is LQR control?](https://www.mathworks.com/videos/state-space-part-4-what-is-lqr-control-1551955957637.html): an introduction to linear-quadratic regulation.
+- [What is model predictive control?](https://www.mathworks.com/help/mpc/gs/what-is-mpc.html): planning control actions against explicit constraints.
 
-- [Anti-windup for PID control](https://www.mathworks.com/videos/understanding-pid-control-part-2-expanding-beyond-a-simple-integral-1528310418260.html): why `controller/control.py` stops integrating once the rod saturates.
-- [Nonlinear state estimators](https://www.mathworks.com/videos/understanding-kalman-filters-part-5-nonlinear-state-estimators-1495052905460.html): a simple introduction to the Extended Kalman Filter used here and the role of linearization.
-- [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html): background for the detection work left open in [Known Gaps](#known-gaps).
+### Estimation and Fault Detection
+
+- [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/): a visual introduction to the Kalman-filter predict/update cycle.
+- [Nonlinear state estimators](https://www.mathworks.com/videos/understanding-kalman-filters-part-5-nonlinear-state-estimators-1495052905460.html): an introduction to the Extended Kalman Filter and linearization.
+- [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html): background for the fault-detection work described in [Known Gaps](#known-gaps).
+
+### Implementation and Visualization
+
+- [SciPy `solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html): the ODE integrator used by the reactor model with the `Radau` method.
+- [Matplotlib documentation](https://matplotlib.org/stable/index.html): reference for extending the existing scenario plots.
+- [Plotly Dash](https://dash.plotly.com/): a possible framework for an interactive monitoring or comparison dashboard.

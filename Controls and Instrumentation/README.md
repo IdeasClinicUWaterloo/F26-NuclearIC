@@ -67,16 +67,18 @@ The ideas below are examples to help teams explore possible directions. They are
 
 Teams are encouraged to combine ideas, explore new approaches, and develop creative solutions.
 
-| Potential Solution | Description | Resources |
-| --- | --- | --- |
-| **PID (Proportional Integral Derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. The usual first win, and the baseline everything else is measured against. | [Intro to PID](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb), [How to tune a PID controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec) |
-| **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values you cannot measure directly, such as temperature, reactivity, or sensor bias. Ranges from a moving average to a full Kalman or extended Kalman filter. | [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/) |
-| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands through warnings, limiting, SCRAM, or a shutdown that latches until deliberately reset. | [Nuclear power plant safety systems](https://www.nrc.gov/reading-rm/basic-ref/students/what-is-nuclear-energy) |
-| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told — then say *which* one, and fall back safely. | [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html) |
-| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. | [What is LQR control?](https://www.mathworks.com/videos/state-space-part-4-what-is-lqr-control-1551955957637.html), [What is model predictive control?](https://www.mathworks.com/help/mpc/gs/what-is-mpc.html) |
-| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show it holds up rather than being tuned for one happy path. | [`reactor_control/run/scenarios.py`](reactor_control/run/scenarios.py) |
-| **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares two controllers across every test case. | [Matplotlib](https://matplotlib.org/stable/index.html), [Plotly Dash](https://dash.plotly.com/) |
-| **Physical analogue build** | Temperature-control and dye-concentration systems demonstrating the same feedback, noise, limits, and safety ideas in hardware. | [`Physical Systems/`](Physical%20Systems/) |
+| Potential Solution | Description |
+| --- | --- |
+| **PID (Proportional Integral Derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. The usual first win, and the baseline everything else is measured against. |
+| **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values you cannot measure directly, such as temperature, reactivity, or sensor bias. Ranges from a moving average to a full Kalman or extended Kalman filter. |
+| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands through warnings, limiting, SCRAM, or a shutdown that latches until deliberately reset. |
+| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told—then identify the fault and fall back safely. |
+| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. |
+| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show it holds up rather than being tuned for one happy path. |
+| **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares two controllers across every test case. |
+| **Physical analogue build** | Build a temperature-control or dye-concentration system demonstrating the same feedback, noise, limits, and safety ideas in hardware. |
+
+Software-track implementation guidance and references are collected in the [`reactor_control` README](reactor_control/README.md). Physical-track guidance is in the [`Physical Systems` README](Physical%20Systems/README.md).
 
 ---
 
@@ -124,24 +126,16 @@ A strong solution should not only track its setpoint well, but also behave safel
 - [Canadian SMR Action Plan](https://smractionplan.ca/): national context for why SMRs matter in Canada.
 - [Darlington New Nuclear Project](https://www.opg.com/powering-ontario/our-generation/nuclear/darlington-new-nuclear-project/): the Ontario build moving from design into construction.
 - [GE Vernova Hitachi BWRX-300](https://www.gevernova.com/nuclear/carbon-free-power/bwrx-300-small-modular-reactor): the SMR design being deployed at Darlington.
-- [Point Kinetics Equations](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/point-kinetics-equations/): the reactor-physics model behind the simulated track.
 
-### Technical Resources
+### Physical-Track Resource
 
-- [Introduction to PID Controllers](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb): what the three terms actually do.
-- [How to Tune a PID Controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec): a practical tuning procedure to work through.
-- [How a Kalman Filter Works, in Pictures](https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/): the clearest visual introduction to filtering and state estimation.
-- [SciPy documentation](https://docs.scipy.org/doc/scipy/): ODE integration and linear algebra used by the simulated track.
-- [Matplotlib documentation](https://matplotlib.org/stable/index.html): plotting and dashboards.
 - [Arduino reference](https://www.arduino.cc/reference/en/): for the physical analogue track.
+
+### Shared Control Resources
+
+- [Introduction to PID Controllers](https://www.digikey.de/en/maker/projects/introduction-to-pid-controllers/763a6dca352b4f2ba00adde46445ddeb): an introduction to proportional, integral, and derivative control for either track.
+- [How to Tune a PID Controller](https://www.digikey.com/en/maker/projects/how-to-tune-a-pid-controller/9ee9a111aef049af9f84f785779989ec): a practical tuning process that can be applied to simulated or physical systems.
 
 ### Data Sources
 
 - No external dataset is required. The simulated track generates its own data through [`reactor_control/run/scenarios.py`](reactor_control/run/scenarios.py); the physical track produces data from your own hardware.
-
-### Additional References
-
-- [Reactor Dynamics](https://www.nuclear-power.com/nuclear-power/reactor-physics/reactor-dynamics/): reactivity, feedback, and transient behaviour.
-- [What is state space?](https://www.mathworks.com/discovery/state-space.html): the framework underneath LQR and Kalman filtering.
-- [What is model predictive control?](https://www.mathworks.com/help/mpc/gs/what-is-mpc.html): planning control actions against explicit constraints.
-- [Detecting and diagnosing faults](https://www.mathworks.com/help/predmaint/detect-and-diagnose-faults.html): detecting and diagnosing sensor and actuator faults.
