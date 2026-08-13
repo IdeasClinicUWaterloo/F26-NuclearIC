@@ -46,7 +46,7 @@ Solutions should consider:
 
 ## Potential Solutions
 
-The supported solutions below provide working materials or a defined walkthrough that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
+The supported solutions below provide working materials or a defined walkthrough that teams can build on. The extension ideas show ways to develop those starting points further. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
 
 ### Supported Solutions
 
@@ -55,6 +55,15 @@ The supported solutions below provide working materials or a defined walkthrough
 | **Security policy-simulation dashboard** | Design zones and access rules and test them against simulated adversary profiles. | [Policy simulation walkthrough](policy_simulation/README.md) |
 | **Physical access hardware** | Prototype NFC or RFID badge readers and fail-secure mechanics. | [Hardware walkthrough](policy_simulation/README.md) |
 | **Computer-vision intrusion detection** | Detect movement in restricted areas and integrate detections with alarms. | [OpenCV documentation](https://docs.opencv.org/) |
+
+### Ways to Extend the Supported Solutions
+
+| Extension | Description |
+| --- | --- |
+| **Facility layout testing** | Extend the policy simulation to compare sightlines, security zones, detector coverage, and physical barrier placement. |
+| **Alarm response integration** | Connect a detection event to lockdown, notification, or two-person verification procedures in the policy simulation. |
+| **Live hardware integration** | Feed NFC or RFID badge-reader events into the dashboard and verify that software policies and physical access controls agree. |
+| **Computer-vision scenario testing** | Test intrusion detection against different personnel movements, restricted areas, lighting conditions, and nuisance events. |
 
 ### Additional Possibilities
 

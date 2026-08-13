@@ -65,7 +65,7 @@ The dye build can either hold a directly measured colour-sensor intensity within
 
 ## Potential Solutions
 
-The supported solutions below provide working materials that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
+The supported solutions below provide working materials that teams can build on. The extension ideas show ways to develop those starting points further. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
 
 ### Supported Solutions
 
@@ -73,6 +73,19 @@ The supported solutions below provide working materials that teams can extend. T
 | --- | --- | --- |
 | **Simulated reactor track** | Improve control, fault detection, safety, estimation, or visualization, or study reactor kinetics, heat transfer, uncertainty, power, temperature, and reactivity. | [`reactor_control/README.md`](reactor_control/README.md) |
 | **Physical analogue track** | Build a temperature, dye, pump, or flow system that demonstrates feedback and safety, or study temperature, flow, mixing, sensor accuracy, and system response. | [`Physical Systems/README.md`](Physical%20Systems/README.md) and [`Physical Systems/WIRING.md`](Physical%20Systems/WIRING.md) |
+
+### Ways to Extend the Supported Solutions
+
+| Extension | Description |
+| --- | --- |
+| **PID (proportional-integral-derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. This is a useful baseline for comparing other approaches. |
+| **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values that cannot be measured directly, such as temperature, reactivity, or sensor bias. Approaches can range from a moving average to a Kalman or extended Kalman filter. |
+| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands through warnings, limiting, SCRAM, or a shutdown that latches until deliberately reset. |
+| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told—then identify the fault and fall back safely. |
+| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. |
+| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show that it is robust rather than tuned for one happy path. |
+| **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares controllers across every test case. |
+| **Physical analogue build** | Build a temperature-control or dye-concentration system demonstrating the same feedback, noise, limits, and safety ideas in hardware. |
 
 ### Additional Possibilities
 
@@ -88,19 +101,6 @@ The supported solutions below provide working materials that teams can extend. T
 | Science | Design a **predictive instrumentation maintenance platform** that anticipates instrument failures. |
 | Science | Develop an **AI-assisted alarm prioritization system** that groups and ranks alarms during abnormal conditions. |
 | Science | Conduct a **human-factors control-panel redesign** that applies cognitive science to reduce operator mistakes. |
-
-### Ways to Extend the Supported Solutions
-
-| Extension | Description |
-| --- | --- |
-| **PID (proportional-integral-derivative) control** | Build and tune a PID controller so the system tracks its target with minimal overshoot and settles quickly. This is a useful baseline for comparing other approaches. |
-| **Filtering and state estimation** | Clean up noisy sensor readings before the controller sees them, and estimate values that cannot be measured directly, such as temperature, reactivity, or sensor bias. Approaches can range from a moving average to a Kalman or extended Kalman filter. |
-| **Safety supervision** | Add a layer above the controller that watches for unsafe conditions and overrides commands through warnings, limiting, SCRAM, or a shutdown that latches until deliberately reset. |
-| **Fault detection and isolation** | Notice when a sensor is drifting, stuck, or dead, or when an actuator is not doing what it was told—then identify the fault and fall back safely. |
-| **Advanced control** | Go beyond PID with gain scheduling, a linear-quadratic regulator, or model predictive control that plans ahead against known constraints. |
-| **Testing across scenarios** | Exercise the controller against setpoint changes, disturbances, sensor noise, and actuator faults, and show that it is robust rather than tuned for one happy path. |
-| **Visualization and evaluation** | Build dashboards, live plots, scenario replays, or an automated scoring sweep that compares controllers across every test case. |
-| **Physical analogue build** | Build a temperature-control or dye-concentration system demonstrating the same feedback, noise, limits, and safety ideas in hardware. |
 
 Software-track implementation guidance and references are collected in the [`reactor_control` README](reactor_control/README.md). Physical-track guidance is in the [`Physical Systems` README](Physical%20Systems/README.md).
 

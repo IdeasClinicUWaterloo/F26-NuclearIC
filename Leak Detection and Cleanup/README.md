@@ -44,7 +44,7 @@ Solutions should consider:
 
 ## Potential Solutions
 
-The supported solutions below provide working materials that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
+The supported solutions below provide working materials that teams can build on. The extension ideas show ways to develop those starting points further. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
 
 ### Supported Solutions
 
@@ -53,6 +53,15 @@ The supported solutions below provide working materials that teams can extend. T
 | **AI leak-detection model** | Train a model that identifies leaks from time-series sensor data. | [ML framework notebook](machine_learning/) |
 | **Simulated-vibration localization system** | Use a simple containment structure and simulated vibration readings to locate modelled leaks. | [Sensor localization tools](sensor_localization/) |
 | **Digital facility patrol simulation** | Program a drone or robot to search a simulated facility for leaks. | [3D simulation environment](leak-detection-simulation/) |
+
+### Ways to Extend the Supported Solutions
+
+| Extension | Description |
+| --- | --- |
+| **Real-time operator alert dashboard** | Visualize sensor data streams, estimated leak coordinates, contamination maps, and operational anomalies from one or more supported solutions. |
+| **Sensor fusion and calibration** | Combine noisy readings from multiple sensors, account for calibration differences, and compare localization accuracy under different sensor arrangements. |
+| **False-alarm filtering** | Extend the AI leak-detection model to distinguish leak signatures from normal operating changes, sensor noise, and other non-leak events. |
+| **Contamination mapping** | Extend the digital patrol simulation so a drone or robot records readings, estimates the affected area, and updates a facility map as it moves. |
 
 ### Additional Possibilities
 

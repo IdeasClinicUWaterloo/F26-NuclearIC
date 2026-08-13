@@ -15,7 +15,7 @@ Teams may choose either direction or combine them.
 
 ## Potential Solutions
 
-The supported solutions below provide working materials that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
+The supported solutions below provide working materials that teams can build on. The extension ideas show ways to develop those starting points further. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
 
 ### Supported Solutions
 
@@ -23,6 +23,16 @@ The supported solutions below provide working materials that teams can extend. T
 | --- | --- | --- |
 | **SMR Reactor Design Optimization Tool** | Set design parameters and examine their effects on reactor cost and efficiency. | [Design optimization tool](smr-reactor-design-optimizer/) |
 | **Automated reactor controller** | Read the live state of a simulator and adjust control values to maximize efficiency. | [Manchester simulator optimizer](closed-loop-optimization-of-a-nuclear-reactor-simulator/) |
+
+### Ways to Extend the Supported Solutions
+
+| Extension | Description |
+| --- | --- |
+| **Sensitivity charts and material comparisons** | Extend the design tool to show which geometry, material, power, or capacity-factor inputs most affect cost, efficiency, and fuel lifetime. |
+| **Design-space exploration** | Automatically test and rank many candidate designs while respecting relevant cost, performance, and safety constraints. |
+| **Improved cost or constraint models** | Refine the assumptions used by the design tool and show how the changes affect its recommendations. |
+| **Automated controller tuning** | Search for controller settings that improve startup, demand tracking, recovery, or simulator score. |
+| **Run-comparison dashboard** | Compare simulator runs using tracking error, time within tolerance, temperatures, shutdown state, and recovery events. |
 
 ### Additional Possibilities
 

@@ -62,7 +62,7 @@ Your team should comprise of 3-5 students with a close-to even split between stu
 
 ## Sub-Problems
 
-### Controls and Instrumentation
+### [Controls and Instrumentation](Controls%20and%20Instrumentation/)
 
 Modern energy systems rely on sensors, controllers, and safety systems to operate reliably. In nuclear power plants, instrumentation and control systems help monitor reactor power, temperature, coolant conditions, and control rod movement to keep the system stable and safe.
 
@@ -78,7 +78,7 @@ Projects may take the form of software, hardware, experiments, simulations, data
 
 Learn more in the [Controls and Instrumentation subproblem](Controls%20and%20Instrumentation/).
 
-### Leak Detection and Cleanup
+### [Leak Detection and Cleanup](Leak%20Detection%20and%20Cleanup/)
 
 A big concern in any nuclear facility is quickly detecting leaks. SMRs face additional concerns compared to traditional reactors because of their different geometry and narrow form factor.
 
@@ -92,7 +92,7 @@ This challenge invites students to develop a system capable of autonomously dete
 
 Learn more in the [Leak Detection and Cleanup subproblem](Leak%20Detection%20and%20Cleanup/).
 
-### Reactor Design Optimization
+### [Reactor Design Optimization](Reactor%20Design%20Optimization/)
 
 SMRs are a relatively new technology that have some advantages over traditional nuclear reactors, but also some disadvantages. A major part of designing SMRs is optimizing their design to minimize their disadvantages and maximize their advantages. There are many parts of a reactor that can affect efficiency, cost, and feasibility of the design. Reactor performance depends on design choices such as fuel rod geometry and material selection, and operating choices such as control rod movement, coolant flow, steam flow, and startup strategy.
 
@@ -108,7 +108,7 @@ Participants are encouraged to build tools, simulations, dashboards, or algorith
 
 Learn more in the [Reactor Design Optimization subproblem](Reactor%20Design%20Optimization/).
 
-### Security
+### [Security](Security/)
 
 Nuclear facilities are highly critical locations that require extremely strict security measures to prevent sabotage. Nuclear facilities integrate multi-layered security protocols and policies to protect the premises from bad actors. SMR facilities may need to diverge from the traditional reactor structure, which may introduce new security concerns.
 
