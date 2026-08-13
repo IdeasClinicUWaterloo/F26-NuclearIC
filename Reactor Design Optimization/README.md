@@ -13,18 +13,30 @@ This challenge supports two broad directions:
 
 Teams may choose either direction or combine them.
 
-## Project Ideas
+## Potential Solutions
 
-| Direction | Example project |
+The supported solutions below provide working materials that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
+
+### Supported Solutions
+
+| Supported Solution | Possible Directions | Resources |
+| --- | --- | --- |
+| **SMR Reactor Design Optimization Tool** | Set design parameters and examine their effects on reactor cost and efficiency. | [Design optimization tool](smr-reactor-design-optimizer/) |
+| **Automated reactor controller** | Read the live state of a simulator and adjust control values to maximize efficiency. | [Manchester simulator optimizer](closed-loop-optimization-of-a-nuclear-reactor-simulator/) |
+
+### Additional Possibilities
+
+| Perspective | Possibility |
 | --- | --- |
-| Design comparison | Build a dashboard that compares reactor designs and presents their performance and trade-offs. |
-| Cost and feasibility | Study lifecycle costs or deployment feasibility for a specific use case. |
-| Fuel and materials | Compare fuel or material choices and explain their effects on cost, lifetime, and performance. |
-| Sensitivity analysis | Determine which inputs have the greatest effect on cost, performance, or safety margins. |
-| Design-space search | Automatically test and rank many possible reactor designs. |
-| Simulator control | Build a controller that adjusts rods, coolant, and steam during a simulator run. |
-| Controller tuning | Tune controller parameters to improve tracking, stability, recovery, or simulator score. |
-| Applied research | Study an SMR application such as process heat, district heating, or isotope production. |
+| Engineering | Apply **reactor optimization methods** to improve startup, tracking, recovery, or design performance. |
+| Engineering | Create a **reactor comparison dashboard** for designs, simulator runs, costs, and performance metrics. |
+| Engineering | Build a **reactor data analysis system** to identify which design or control parameters affect performance most. |
+| Engineering | Research an **SMR design concept** and develop a proposal for a particular reactor design. |
+| Science | Conduct a **reactor-channel flow investigation** using safe surrogate systems to model coolant movement and heat removal through reactor channels. |
+| Science | Create a **cost-optimization strategy** for the plant. |
+| Science | Perform a **component lifespan study** examining how temperature, flow, load cycles, and other operating conditions influence longevity. |
+| Science | Create a **reactor efficiency map** relating coolant flow, temperature, and power output to identify efficient operating ranges. |
+| Science | Complete a **reactor lifecycle optimization study** examining how design choices affect long-term performance, maintenance needs, and operating efficiency. |
 
 Projects can emphasize science and engineering, business and economics, software and data, or controls and simulation. Teams should still connect their work to relevant physical constraints and include at least 20% science and engineering in their solution.
 

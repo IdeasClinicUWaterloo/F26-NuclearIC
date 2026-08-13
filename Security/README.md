@@ -46,27 +46,36 @@ Solutions should consider:
 
 ## Potential Solutions
 
-The ideas below are examples to help teams explore possible directions. They are not the only possible solutions.
+The supported solutions below provide working materials or a defined walkthrough that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
 
-Teams are encouraged to combine ideas, explore new approaches, and develop creative solutions.
+### Supported Solutions
 
-| Potential Solution | Description | Resources |
-| ------------------ | ----------- | --------- |
-| **Software Policy Simulation** | Design security zones and access-control policies within a dashboard environment and test them against simulated adversary profiles. | [Proposed Solution Walkthrough](policy_simulation/README.md) |
-| **Physical Access Hardware** | Wire a physical NFC badge-reader circuit, flash custom firmware, and verify live badge transit in real time. | [Proposed Solution Walkthrough](policy_simulation/README.md) |
-| **CV Intrusion Detection** | Develop a computer vision system to detect and alert on unauthorized personnel movement or physical facility intrusions. | [OpenCV Documentation](https://docs.opencv.org/) |
-| **Facility Layout Optimization** | Redesign the facility layout map to optimize defensibility, sightlines, and physical barrier placement. | [Sample Facility Layout Map](policy_simulation/assets/facility_map.png) |
-| **Radiological Hazard & Material Monitoring** | Explore approaches for detecting anomalous radiation signatures at facility choke points (e.g., exits, loading docks, vehicle gates) to help identify unauthorized movement of nuclear or radiological material. | [Radiation Portal Monitors Overview](https://www.nrc.gov/about-nrc/radiation/health-effects/detection-radiation) |
+| Supported Solution | Possible Directions | Resources |
+| --- | --- | --- |
+| **Security policy-simulation dashboard** | Design zones and access rules and test them against simulated adversary profiles. | [Policy simulation walkthrough](policy_simulation/README.md) |
+| **Physical access hardware** | Prototype NFC or RFID badge readers and fail-secure mechanics. | [Hardware walkthrough](policy_simulation/README.md) |
+| **Computer-vision intrusion detection** | Detect movement in restricted areas and integrate detections with alarms. | [OpenCV documentation](https://docs.opencv.org/) |
 
-Some of these solution paths are not officially supported with an existing complete solution. Teams that want to pursue independent solution paths can consider the CV and Radiological Hazard solutions. Possible directions include:
+### Additional Possibilities
 
-- **Automated perimeter/intrusion detection:** Building a computer vision system (e.g., using OpenCV) to detect unauthorized personnel movement in restricted or vital areas. There are figurines available that can be used to model staff and intruders.
-- **Radiation portal monitoring:** Simulating or prototyping gamma/neutron detection at facility exit points to flag material leaving without authorization.
-- **Sensor placement strategy:** Modeling where detectors should be sited (vehicle gates, personnel exits, waste handling areas) to maximize detection probability while minimizing false alarms and traffic bottlenecks.
-- **Alarm response integration:** Designing how a detection event would trigger lockdown, notification, or two-person verification procedures, tying back into the Detection, Delay, and Response triad described below.
-- **Nuisance alarm mitigation:** Considering how naturally occurring radioactive material (NORM) or medical isotopes carried by personnel could be filtered out to avoid alarm fatigue.
+| Perspective | Possibility |
+| --- | --- |
+| Engineering | Create a **critical-sensor integrity monitoring system** that detects manipulation or malfunction. |
+| Engineering | Build an **operational anomaly-detection platform** that identifies unusual data across plant systems. |
+| Science | Perform a **security-sensor technology assessment** comparing thermal imaging, cameras, acoustic systems, and environmental sensors. |
+| Science | Conduct a **facility layout and detection coverage study** to improve security effectiveness. |
+| Science | Study **environmental indicators of unusual activity** that could improve situational awareness. |
+| Science | Assess **radiological hazard and material monitoring** at entrances, exits, and other key zones. |
+| Science | Investigate **false-alarm reduction methods** that improve detection without causing alarm fatigue. |
 
-Teams pursuing this path can treat it as a standalone contribution or as a complement to one of the other solution paths (e.g., feeding detection alerts into a policy simulation dashboard or facility layout redesign).
+### Developing the Additional Possibilities
+
+The additional possibilities do not have complete repository solutions. Teams can treat them as standalone contributions or connect them to a supported solution—for example, by feeding a sensor-integrity alert into the policy-simulation dashboard. Possible directions include:
+
+- **Radiation portal monitoring:** Simulate or prototype gamma or neutron detection at facility exit points to flag material leaving without authorization.
+- **Sensor placement strategy:** Model where detectors should be sited to maximize detection probability while minimizing false alarms and traffic bottlenecks.
+- **Alarm response integration:** Design how a detection event would trigger lockdown, notification, or two-person verification procedures, tying back into the Detection, Delay, and Response triad described below.
+- **Nuisance-alarm mitigation:** Consider how naturally occurring radioactive material (NORM) or medical isotopes carried by personnel could be filtered out to avoid alarm fatigue.
 
 ---
 

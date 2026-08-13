@@ -44,16 +44,32 @@ Solutions should consider:
 
 ## Potential Solutions
 
-The ideas below are examples to help teams explore possible directions. They are not the only possible solutions.
+The supported solutions below provide working materials that teams can extend. The additional possibilities are independent ideas that teams may pursue from scratch or combine with a supported solution.
 
-Teams are encouraged to combine ideas, explore new approaches, and develop creative solutions.
+### Supported Solutions
 
-| Potential Solution | Description | Resources |
-| ------------------ | ----------- | --------- |
-| **Sensor Localization & Triangulation** | Develop multi-point sensor algorithms and signal fusion techniques to pinpoint leak source locations from radiation readings. | [Sensor Localization Tools](sensor_localization) |
-| **ML Time-Series Leak Classifier** | Train neural network or machine learning models on time-series sensor data to detect leak signatures and filter out false alarms. | [ML Framework Notebook](machine_learning) |
-| **Autonomous Robotic Inspection** | Program autonomous drones or robots to navigate facility 3D layouts, inspect high-risk areas, and map contamination spread. | [3D Simulation Environment](leak-detection-simulation) |
-| **Real-Time Operator Alert Dashboard** | Build an interactive user interface to visualize sensor data streams, show estimated leak coordinates, and flag operational anomalies. | [Godot Engine Docs](https://docs.godotengine.org/) \| [Streamlit](https://streamlit.io/) |
+| Supported Solution | Possible Directions | Resources |
+| --- | --- | --- |
+| **AI leak-detection model** | Train a model that identifies leaks from time-series sensor data. | [ML framework notebook](machine_learning/) |
+| **Simulated-vibration localization system** | Use a simple containment structure and simulated vibration readings to locate modelled leaks. | [Sensor localization tools](sensor_localization/) |
+| **Digital facility patrol simulation** | Program a drone or robot to search a simulated facility for leaks. | [3D simulation environment](leak-detection-simulation/) |
+
+### Additional Possibilities
+
+| Perspective | Possibility |
+| --- | --- |
+| Engineering | Develop a **sensor-integrated pipe sleeve** that continuously monitors piping and joints. |
+| Engineering | Design a **drone-based facility inspection system** that uses cameras and environmental sensors in difficult-to-access spaces. |
+| Science | Conduct a **coolant leak dispersion experiment** using safe surrogate fluids to study how leaks spread through narrow SMR geometries. |
+| Science | Perform **early leak signature characterization** to determine which physical indicators appear first as a leak develops. |
+| Science | Complete a **thermal plume mapping study** investigating heat patterns around small leaks. |
+| Science | Run a **tracer-based leak tracking investigation** using dyes or tracers to study migration through confined systems. |
+| Science | Conduct **sensor placement optimization research** to identify effective sensor configurations for compact SMR layouts. |
+| Science | Perform a **material-defect leakage study** exploring how crack size, shape, and orientation affect leak rates. |
+| Science | Complete a **comparative evaluation of leak-detection technologies** including acoustic, thermal, pressure, chemical, and radiation-based methods. |
+| Science | Carry out a **machine-learning analysis of leak scenarios** to determine whether sensor patterns can distinguish different leak types. |
+| Science | Develop an **environmental transport model** investigating how contaminants move through ventilation systems and enclosed spaces. |
+| Science | Build a **cleanup effectiveness evaluation platform** that compares cleanup and containment materials. |
 
 ---
 
