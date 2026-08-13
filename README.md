@@ -1,5 +1,11 @@
 # Welcome to the 2026 Nuclear Innovation Challenge!
 
+
+### Theme: Small Modular Reactors (SMRs)
+
+
+![Chart explaining the components and operation of a small modular reactor](assets/SMR_Chart.png)
+
 Created by Engineering IDEAs Clinic co-op students.
 
 ## Accessibility
@@ -29,11 +35,6 @@ This README uses descriptive headings, meaningful link names, short sections, an
 - [Reactor Design Optimization Subproblem](Reactor%20Design%20Optimization/)
 - [Security Subproblem](Security/)
 
-
-### Theme: Small Modular Reactors (SMRs)
-
-
-![Chart explaining the components and operation of a small modular reactor](assets/SMR_Chart.png)
 
 ## Background
 
