@@ -100,6 +100,8 @@ python src/evaluate_policy.py
      - RC522 SPI: `MFRC522` (GithubCommunity)
      - PN532 I2C: `Adafruit PN532`
    - Upload the appropriate sketch to your Arduino Uno R4.
+3. **Optional LED Integration:**
+   - You may notice that the firmware code includes integration for LED indicators. You may wire LEDs by reading the code and determining how to connect them to the Arduino if you want. This part of the code is intentionally left as a starting point for teams that want to independently add hardware and change the firmware as they see fit. 
 
 ### Phase 5: Live Physical Verification & SCADA Integration (Part 2 - Hardware Track)
 
