@@ -1,277 +1,201 @@
-// test_rgb.ino
-// Bench test for the TCS34725 colour sensor (DFRobot SEN0212 / Gravity, or
-// the Adafruit breakout -- same IC, same I2C address 0x29) before
-// integrating into dye_concentration_controller.ino.
+// SEN0101 / TCS3200 bench test and dye-calibration helper
+// Arduino UNO R4 Minima, Serial Monitor at 9600 baud
 //
-// Lives in its own sketch folder so it compiles on its own: open
-// test_rgb/test_rgb.ino in the Arduino IDE and upload. Serial at 9600,
-// same as the main controller sketch.
+// Wiring:
+//   VDD/VCC -> Arduino 5V
+//   GND     -> Arduino GND
+//   OE      -> GND
+//   OUT     -> D2
+//   S0      -> D9
+//   S1      -> D10
+//   S2      -> D11
+//   S3      -> D12
 //
-// WIRING (4 wires, no soldering -- the Gravity PH2.0 cable is enough):
-//   VCC -> Arduino 5V   (3.3V also fine, board takes 3.3-5V)
-//   GND -> Arduino GND
-//   SDA -> see board note below
-//   SCL -> see board note below
+// Serial commands (set line ending to Newline):
+//   r             select red as the calibration channel
+//   g             select green as the calibration channel
+//   b             select blue as the calibration channel
+//   c             select clear as the calibration channel
+//   s 5.0         capture the selected channel at concentration 5.0
+//   z             capture the selected channel as concentration 0.0
 //
-// WHICH PINS FOR SDA/SCL -- THIS DIFFERS BY BOARD:
-//   Classic Uno R3:  A4 = SDA, A5 = SCL. The dedicated SDA/SCL pins next
-//                    to AREF are the same bus, so either works.
-//   UNO R4 Minima:   use the DEDICATED SDA/SCL pins next to AREF only.
-//                    A4/A5 are plain analog pins on the R4 and are NOT
-//                    connected to the I2C bus -- wiring there gives an
-//                    empty I2C scan and looks exactly like a dead sensor.
-//
-// Gravity cable colours: red = VCC, black = GND, blue = SDA, green = SCL.
-//
-// ONBOARD LEDS: the SEN0212's 4 white LEDs are on whenever its LED pin is
-// left unconnected, and the 4-pin Gravity cable doesn't break that pin out.
-// So this test assumes they're ON and you're measuring REFLECTANCE: the
-// LEDs light the dyed water, the sensor reads what comes back. More dye ->
-// less light returns -> lower `c`, which is the same direction as the
-// transmittance setup, so the absorbance maths below is unchanged.
-//
-// Keep the sensor and tank shrouded (a cardboard box with a cutout is
-// fine) and keep room lighting steady -- ambient light matters more in
-// reflectance than it did in transmittance.
-//
-// WHAT THIS SKETCH IS FOR:
-//   1. Confirm the sensor is detected at all.
-//   2. Check you aren't saturating the ADC (see SAT_LIMIT below).
-//   3. Capture clearRef and find the clear-water-to-dye swing -- the two
-//      numbers dye_concentration_controller.ino needs calibrated.
-//
-// SERIAL COMMANDS (type the letter, press Enter):
-//   c  capture the current `c` reading as clearRef
-//   r  reset the min/max swing tracker
+// Tape or rigidly mount the sensor outside the transparent control tank. Fix the
+// phone flashlight directly opposite at the same height so light passes through
+// the liquid into the sensor. Keep the phone/flashlight setting, sensor and light
+// positions, 350 mL working volume, tank orientation and closed cardboard
+// enclosure fixed for every sample. The printed calibration rows can be copied
+// into CAL_INTENSITY_HZ and CAL_CONCENTRATION in the main controller.
 
-#include <Wire.h>
-#include "Adafruit_TCS34725.h"
+const uint8_t SENSOR_OUT_PIN = 2;
+const uint8_t SENSOR_S0_PIN  = 9;
+const uint8_t SENSOR_S1_PIN  = 10;
+const uint8_t SENSOR_S2_PIN  = 11;
+const uint8_t SENSOR_S3_PIN  = 12;
 
-// ---------------- Sensor config ----------------
-// If readings pin near SAT_LIMIT (see below), lower the gain first:
-//   TCS34725_GAIN_1X / _4X / _16X / _60X
-// Integration time options:
-//   TCS34725_INTEGRATIONTIME_2_4MS / _24MS / _50MS / _101MS / _154MS / _700MS
-// Set to 154MS/16X rather than the controller sketch's 50MS/4X: at 50MS/4X
-// the raw counts came back around 130, which is the sensor's dark-current
-// floor rather than a real measurement. This is ~12x more sensitive.
-// More gain amplifies noise as well as signal, so getting actual light
-// onto the sensor is the better fix -- treat this as a floor, not a
-// substitute for illumination.
-Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_154MS, TCS34725_GAIN_16X);
+enum ColourChannel : uint8_t {
+  RED_FILTER,
+  BLUE_FILTER,
+  CLEAR_FILTER,
+  GREEN_FILTER
+};
 
-// Approximate full-scale count for the integration time set above. The
-// TCS34725's ceiling is 1024 counts per 2.4ms cycle, capped at 65535:
-//   2_4MS ~1000   24MS ~10000   50MS ~21000   101MS ~43000   154MS+ 65535
-// Update this if you change the integration time above.
-const uint16_t SAT_LIMIT = 65535;
+ColourChannel selectedCalibrationChannel = GREEN_FILTER;
 
-// ---------------- State ----------------
-uint16_t clearRef = 0;      // 0 = not captured yet
-uint16_t cMin = 65535;      // swing tracker
-uint16_t cMax = 0;
-bool sensorOk = false;      // false -> loop() prints diagnostics instead of readings
+const unsigned long SENSOR_PULSE_TIMEOUT_US = 50000;
+const uint8_t SENSOR_PERIOD_SAMPLES = 20;
+unsigned long lastReportMs = 0;
 
-void setup() {
-  Serial.begin(9600);
-
-  // On native-USB boards (UNO R4, Leonardo, Micro) the serial port isn't
-  // ready the instant the sketch starts, so early prints vanish. Wait for
-  // it, but time out so a classic Uno (or a board running without the
-  // Serial Monitor open) still proceeds.
-  while (!Serial && millis() < 3000);
-
-  Serial.println();
-  Serial.println("=== test_rgb starting (9600 baud) ===");
-
-  Wire.begin();
-  i2cScan();
-
-  sensorOk = tcs.begin();
-
-  if (sensorOk) {
-    Serial.println("TCS34725 detected.");
-
-    // Throw away one reading: the first getRawData() after begin() can
-    // return 0 before the first integration cycle has finished, which
-    // otherwise pins the swing tracker's minimum at 0 forever.
-    uint16_t r, g, b, c;
-    tcs.getRawData(&r, &g, &b, &c);
-
-    Serial.println("Commands: 'c' = capture clearRef, 'r' = reset min/max");
-  } else {
-    Serial.println("TCS34725 NOT found.");
+const char *channelName(ColourChannel channel) {
+  switch (channel) {
+    case RED_FILTER:   return "red";
+    case BLUE_FILTER:  return "blue";
+    case CLEAR_FILTER: return "clear";
+    case GREEN_FILTER: return "green";
   }
-  Serial.println();
+  return "unknown";
+}
+void selectColourChannel(ColourChannel channel) {
+  switch (channel) {
+    case RED_FILTER:
+      digitalWrite(SENSOR_S2_PIN, LOW);
+      digitalWrite(SENSOR_S3_PIN, LOW);
+      break;
+    case BLUE_FILTER:
+      digitalWrite(SENSOR_S2_PIN, LOW);
+      digitalWrite(SENSOR_S3_PIN, HIGH);
+      break;
+    case CLEAR_FILTER:
+      digitalWrite(SENSOR_S2_PIN, HIGH);
+      digitalWrite(SENSOR_S3_PIN, LOW);
+      break;
+    case GREEN_FILTER:
+      digitalWrite(SENSOR_S2_PIN, HIGH);
+      digitalWrite(SENSOR_S3_PIN, HIGH);
+      break;
+  }
+  delay(3);
 }
 
-void loop() {
-  handleSerialCommand();
+float readFrequencyHz(ColourChannel channel) {
+  selectColourChannel(channel);
 
-  // Don't hang on a failed sensor -- keep reporting, so a blank monitor
-  // always means a serial/upload problem and never a silent sketch.
-  if (!sensorOk) {
-    Serial.println("No sensor (expect 0x29). Check VCC, GND, and SDA/SCL.");
-    Serial.println("  UNO R4: use the dedicated SDA/SCL pins past AREF, NOT A4/A5.");
-    Serial.println("  Uno R3: A4 = SDA, A5 = SCL.");
-    i2cScan();
-    sensorOk = tcs.begin();   // retry, so fixing the wiring recovers live
-    delay(2000);
-    return;
-  }
+  unsigned long totalPeriodUs = 0;
+  uint8_t validPeriods = 0;
 
-  // Initialised, NOT left as uninitialised locals. If the I2C read fails,
-  // uninitialised values would hold constant stack garbage and print as
-  // plausible-looking readings that ignore light and gain changes.
-  uint16_t r = 0, g = 0, b = 0, c = 0;
-  tcs.getRawData(&r, &g, &b, &c);
+  for (uint8_t i = 0; i < SENSOR_PERIOD_SAMPLES; ++i) {
+    const unsigned long lowUs =
+        pulseIn(SENSOR_OUT_PIN, LOW, SENSOR_PULSE_TIMEOUT_US);
+    const unsigned long highUs =
+        pulseIn(SENSOR_OUT_PIN, HIGH, SENSOR_PULSE_TIMEOUT_US);
 
-  // Confirm the chip is really answering. A valid TCS34725 returns 0x44
-  // (or 0x4D for the TCS34727 variant). 0xFF or 0x00 means the reads
-  // aren't reaching a powered sensor -- check VCC before anything else.
-  uint8_t id = readChipId();
-  if (id != 0x44 && id != 0x4D && id != 0x10) {
-    Serial.print("BAD CHIP ID 0x");
-    if (id < 16) Serial.print("0");
-    Serial.print(id, HEX);
-    Serial.println(" -- sensor not really responding. Check VCC (try 5V) and GND.");
-    delay(1000);
-    return;
-  }
-
-  // Track the swing so you can see how far `c` moves between pure water
-  // and your most concentrated dye mixture.
-  if (c < cMin) cMin = c;
-  if (c > cMax) cMax = c;
-
-  Serial.print("r="); Serial.print(r);
-  Serial.print(" g="); Serial.print(g);
-  Serial.print(" b="); Serial.print(b);
-  Serial.print(" c="); Serial.print(c);
-
-  Serial.print(" | swing="); Serial.print(cMin);
-  Serial.print(".."); Serial.print(cMax);
-
-  // Absorbance, only once you've captured a reference. This is the exact
-  // expression dye_concentration_controller.ino uses, so whatever you see
-  // here is what the PID will be fed.
-  if (clearRef > 0) {
-    double absorbance = log10((double)clearRef / max((int)c, 1));
-    Serial.print(" | ref="); Serial.print(clearRef);
-    Serial.print(" A="); Serial.print(absorbance, 4);
-    Serial.print(" conc="); Serial.print(absorbance * 100.0, 1);
-  } else {
-    Serial.print(" | no ref yet (send 'c' with pure water in the tank)");
-  }
-
-  // Saturated means the reading stops responding to more light, so the
-  // loop goes blind at the bright end while still looking healthy.
-  if (c >= SAT_LIMIT) {
-    Serial.print("  <-- SATURATED, lower the gain");
-  }
-
-  Serial.println();
-
-  delay(250);
-}
-
-// Reads the TCS34725's ID register (0x12, with the 0x80 command bit set)
-// directly over I2C, bypassing the library. This is the ground truth for
-// "is a real sensor answering": it can't be faked by stale variables.
-uint8_t readChipId() {
-  const uint8_t TCS_ADDR = 0x29;
-
-  Wire.beginTransmission(TCS_ADDR);
-  Wire.write(0x80 | 0x12);
-  if (Wire.endTransmission() != 0) return 0xFF;
-
-  if (Wire.requestFrom(TCS_ADDR, (uint8_t)1) != 1) return 0xFF;
-  return Wire.read();
-}
-
-// Probes every I2C address and reports which ones answer. This separates a
-// wiring problem from a sketch/library problem: if 0x29 shows up here, the
-// sensor is physically fine and the issue is above the wiring. If nothing
-// shows up at all, it's power, SDA/SCL, or a missing common ground.
-void i2cScan() {
-  Serial.print("I2C scan:");
-  int found = 0;
-
-  for (uint8_t addr = 1; addr < 127; addr++) {
-    Wire.beginTransmission(addr);
-    if (Wire.endTransmission() == 0) {
-      Serial.print(" 0x");
-      if (addr < 16) Serial.print("0");
-      Serial.print(addr, HEX);
-      found++;
+    if (lowUs > 0 && highUs > 0) {
+      totalPeriodUs += lowUs + highUs;
+      ++validPeriods;
     }
   }
 
-  if (found == 0) {
-    Serial.println(" nothing found -- check power and SDA/SCL wiring");
-  } else {
-    Serial.print("  (");
-    Serial.print(found);
-    Serial.println(" device(s); TCS34725 should appear as 0x29)");
+  if (validPeriods == 0 || totalPeriodUs == 0) return NAN;
+  return 1000000.0f * validPeriods / totalPeriodUs;
+}
+
+void printHelp() {
+  Serial.println(F("Commands: r/g/b/c = select channel, s <concentration> = sample, z = zero sample"));
+  Serial.println(F("CSV sample format: calibration,channel,concentration,intensity_hz"));
+}
+
+void captureCalibrationPoint(float concentration) {
+  const float intensityHz = readFrequencyHz(selectedCalibrationChannel);
+
+  if (isnan(intensityHz)) {
+    Serial.println(F("ERROR: no sensor frequency; check OUT, OE, power and ground"));
+    return;
   }
+
+  Serial.print(F("calibration,"));
+  Serial.print(channelName(selectedCalibrationChannel));
+  Serial.print(',');
+  Serial.print(concentration, 4);
+  Serial.print(',');
+  Serial.println(intensityHz, 2);
 }
 
 void handleSerialCommand() {
   if (!Serial.available()) return;
 
-  char cmd = Serial.read();
-  while (Serial.available()) Serial.read(); // discard newline / rest of line
+  String command = Serial.readStringUntil('\n');
+  command.trim();
+  if (command.length() == 0) return;
 
-  uint16_t r, g, b, c;
+  const char first = tolower(command.charAt(0));
 
-  switch (cmd) {
-    case 'c':
-    case 'C':
-      tcs.getRawData(&r, &g, &b, &c);
-      clearRef = c;
-      Serial.print(">>> clearRef captured: ");
-      Serial.println(clearRef);
-      Serial.println(">>> Put this in dye_concentration_controller.ino as clearRef.");
-      break;
-
-    case 'r':
-    case 'R':
-      cMin = 65535;
-      cMax = 0;
-      Serial.println(">>> min/max swing reset");
-      break;
-
-    default:
-      break; // ignore stray characters, including bare newlines
+  if (first == 'r' && command.length() == 1) {
+    selectedCalibrationChannel = RED_FILTER;
+  } else if (first == 'g' && command.length() == 1) {
+    selectedCalibrationChannel = GREEN_FILTER;
+  } else if (first == 'b' && command.length() == 1) {
+    selectedCalibrationChannel = BLUE_FILTER;
+  } else if (first == 'c' && command.length() == 1) {
+    selectedCalibrationChannel = CLEAR_FILTER;
+  } else if (first == 'z' && command.length() == 1) {
+    captureCalibrationPoint(0.0);
+    return;
+  } else if (first == 's') {
+    const int separator = command.indexOf(' ');
+    if (separator < 0) {
+      Serial.println(F("Use: s <known concentration>, for example s 5.0"));
+      return;
+    }
+    captureCalibrationPoint(command.substring(separator + 1).toFloat());
+    return;
+  } else {
+    printHelp();
+    return;
   }
+
+  Serial.print(F("Selected calibration channel: "));
+  Serial.println(channelName(selectedCalibrationChannel));
 }
 
-/*
- * HOW TO USE THIS, IN ORDER:
- *
- * 1. Upload with nothing in the tank but pure water. Confirm you get
- *    readings and no "not found" message.
- *
- * 2. Check saturation. If `c` sits at SAT_LIMIT, drop the gain to
- *    TCS34725_GAIN_1X and re-upload. Repeat until `c` sits comfortably
- *    below the limit -- somewhere in the middle of the range is ideal, so
- *    there's room to move in both directions.
- *
- * 3. Send 'c' to capture clearRef with pure water in the tank.
- *
- * 4. Send 'r', then add dye up to your most concentrated mixture, watching
- *    the swing tracker. A useful swing is a large, steady gap between cMin
- *    and cMax. If the gap is small or noisy, fix that before tuning any
- *    PID gains -- no amount of tuning recovers a signal that isn't there.
- *    Things to try: shroud out more ambient light, move the sensor closer
- *    to the tank wall, or raise the gain if you have headroom.
- *
- * 5. Copy the clearRef value from step 3 into
- *    dye_concentration_controller.ino, replacing the placeholder 800.
- *
- * 6. The `conc` column is the placeholder scale factor (absorbance * 100)
- *    from the main sketch. It is NOT calibrated to real concentration
- *    units. To fix that, mix several known dye concentrations, record `A`
- *    at each, and fit a curve -- see the calibration notes at the bottom
- *    of dye_concentration_controller.ino.
- */
+void setup() {
+  Serial.begin(9600);
+  while (!Serial && millis() < 3000) {}
+  Serial.setTimeout(100);
+
+  pinMode(SENSOR_OUT_PIN, INPUT);
+  pinMode(SENSOR_S0_PIN, OUTPUT);
+  pinMode(SENSOR_S1_PIN, OUTPUT);
+  pinMode(SENSOR_S2_PIN, OUTPUT);
+  pinMode(SENSOR_S3_PIN, OUTPUT);
+
+  // S0 LOW + S1 HIGH selects 2% output-frequency scaling.
+  digitalWrite(SENSOR_S0_PIN, LOW);
+  digitalWrite(SENSOR_S1_PIN, HIGH);
+
+  Serial.println(F("=== SEN0101 / TCS3200 dye calibration ==="));
+  Serial.println(F("Default calibration channel: green"));
+  printHelp();
+}
+
+void loop() {
+  handleSerialCommand();
+
+  const unsigned long now = millis();
+  if (now - lastReportMs < 1000) return;
+  lastReportMs = now;
+
+  const float redHz = readFrequencyHz(RED_FILTER);
+  const float greenHz = readFrequencyHz(GREEN_FILTER);
+  const float blueHz = readFrequencyHz(BLUE_FILTER);
+  const float clearHz = readFrequencyHz(CLEAR_FILTER);
+
+  Serial.print(F("live_hz red="));
+  Serial.print(redHz, 2);
+  Serial.print(F(" green="));
+  Serial.print(greenHz, 2);
+  Serial.print(F(" blue="));
+  Serial.print(blueHz, 2);
+  Serial.print(F(" clear="));
+  Serial.print(clearHz, 2);
+  Serial.print(F(" selected="));
+  Serial.println(channelName(selectedCalibrationChannel));
+}

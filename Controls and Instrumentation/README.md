@@ -52,11 +52,13 @@ Teams can approach this challenge from scratch or from either (or both) of two s
 
 - **Simulated reactor track**: work with a simplified reactor model where reactor power, delayed neutron behavior, fuel temperature, coolant temperature, reactivity, and control rod position evolve over time. See [`reactor_control/README.md`](reactor_control/README.md) for the code, how to run it, and a roadmap.
 
-- **Physical analogue track**: build a small hands-on control system that represents the same core ideas (feedback control, noisy sensors, actuator limits, disturbances, safety limits, fault handling) without needing to resemble a reactor directly. See [`Physical Systems/README.md`](Physical%20Systems/README.md) for the existing example builds, wiring reference, and a roadmap.
+- **Physical analogue track**: build a small hands-on control system that represents the same core ideas (feedback control, noisy sensors, actuator limits, disturbances, safety limits, fault handling) without needing to resemble a reactor directly. See [`Physical Systems/README.md`](Physical%20Systems/README.md) for the existing example builds and roadmap, and [`Physical Systems/WIRING.md`](Physical%20Systems/WIRING.md) for the current apparatus, power and pin-level wiring plan.
 
 Both tracks are invited to design control, estimation, fault detection, and visualization features that help their system track a requested setpoint while avoiding unsafe operation.
 
 Physical systems do not need to resemble a reactor directly, they act as analogues for any system where a controller must regulate an output while respecting physical constraints. Two example builds (dye concentration control, temperature control) already exist in [`Physical Systems/`](Physical%20Systems/) as a starting point, but teams are free to build a different analogue.
+
+The dye build can either hold a directly measured colour-sensor intensity within a tolerance band or use a concentration setpoint after calibration. Concentration calibration uses measured dilutions of the same prepared dyed-water reservoir solution that the apparatus will pump; raw concentrated dye is not added directly to the control tank.
 
 
 ---
@@ -89,7 +91,7 @@ The following repository materials and references may help teams understand the 
 ### Repository Layout
 
 - [`reactor_control/`](reactor_control/) : the simulated-reactor track: reactor model, sensors, PID controller, EKF, safety state machine, named scenarios, and a CLI runner. See its README for details and the roadmap.
-- [`Physical Systems/`](Physical%20Systems/) : the physical-analogue track: Arduino sketches for a dye-concentration loop and a temperature-control loop, plus a wiring reference. See its README for details and the roadmap.
+- [`Physical Systems/`](Physical%20Systems/) : the physical-analogue track: Arduino sketches for a dye-concentration loop and a temperature-control loop, plus the current [`WIRING.md`](Physical%20Systems/WIRING.md) apparatus guide. See its README for details and the roadmap.
 
 ---
 
