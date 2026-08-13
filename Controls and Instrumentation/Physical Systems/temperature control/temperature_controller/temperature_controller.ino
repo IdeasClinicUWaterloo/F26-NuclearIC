@@ -290,8 +290,6 @@ void loop() {
  *                                  Do NOT use NC -- that inverts it and the pad
  *                                  runs whenever the board is off.)
  *   Pad supply (-) -> pad (-)
- *   Put an inline fuse on the pad's supply, sized just above its rated current.
- *
  *   Two checks before the pad goes anywhere near water:
  *   a) Confirm the polarity. Load this sketch with the pad DISCONNECTED and
  *      watch the module's LED: it should be dark at reset, then light and click
@@ -310,12 +308,12 @@ void loop() {
  *   IN1 <- Arduino pin 10 (PWM, speed)
  *   IN2 <- Arduino pin 11 (driven LOW by this sketch, fixed direction)
  *   GND  <- common ground (Arduino GND tied to the pump supply ground)
- *   VM/VMotor <- 3 V pump supply (+), separate from Arduino 5V
+ *   VCC <- 3 V pump supply (+), separate from Arduino 5V
  *   OUT1/OUT2 -> the pump's two leads
  *   If exposed, SLP/SLEEP/nSLEEP -> Arduino 5V. Modules that only expose
  *   IN1-IN4 handle the sleep connection on the board.
  *
- *   The DRV8833 accepts 2.7-10.8 V on VM, but the selected pump is rated for
+ *   The DRV8833 accepts 2.7-10.8 V on VCC, but the selected pump is rated for
  *   3 V. Do NOT connect the 12 V heater supply to this pump circuit.
  *
  * COMMISSIONING ORDER (do these in sequence, do not skip ahead)

@@ -13,7 +13,7 @@
 // buzzes, never fully closes, and destroys its own contacts. The dead band
 // between the thresholds is what keeps switching down to a sane rate.
 //
-// Feed DRV8833 VM/VMotor from the 3 V pump supply. If the module exposes a
+// Feed DRV8833 VCC from the 3 V pump supply. If the module exposes a
 // SLP/SLEEP/nSLEEP pin, tie it to 5 V. Do not connect the 12 V heater supply
 // to the pump circuit.
 #include <OneWire.h>
@@ -140,11 +140,10 @@ void loop() {
  *    runs whenever the Arduino is off.
  * 3. Pump only, heater still disconnected. Confirm it actually moves water and
  *    that the DRV8833 is on the 3 V pump supply, not the heater supply.
- * 4. Check the relay's contact rating against the pad's actual current draw, and
- *    fuse the pad's supply just above that. If the pad is a MAINS part rather
- *    than low-voltage, the switched side is lethal and the module's open screw
- *    terminal is not an appropriate way to carry it -- that needs an enclosed,
- *    strain-relieved build checked by someone qualified.
+ * 4. Check the relay's contact rating against the pad's actual current draw. If
+ *    the pad is a MAINS part rather than low-voltage, the switched side is lethal
+ *    and the module's open screw terminal is not appropriate. That needs an
+ *    enclosed, strain-relieved build checked by someone qualified.
  * 5. Full loop. Expect visible overshoot past 40 C on the first warm-up; that is
  *    expected with bang-bang plate control and is the main thing the PID version
  *    improves on.

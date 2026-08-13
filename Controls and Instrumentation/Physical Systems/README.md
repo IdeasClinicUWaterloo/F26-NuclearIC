@@ -10,12 +10,13 @@ Start with the [apparatus and wiring guide](WIRING.md). It is the current hardwa
 
 The dye apparatus uses:
 
-- a DFRobot SEN0101/TCS3200 colour sensor;
-- three 3 V submersible pumps for dyed water, clear water and waste;
-- two DRV8833 dual motor-driver boards;
-- a 500 mL control-tank cup, limited to a maximum liquid volume of 450 mL and enclosed in a cardboard box to reduce interference from room light;
-- a phone flashlight fixed directly opposite the colour sensor across the control tank as the current transmitted-light source; and
-- an Arduino UNO R4 Minima powered from a laptop.
+- DFRobot SEN0101/TCS3200 colour sensor
+- Three 3 V submersible pumps for dyed water, clear water and waste
+- Two DRV8833 dual motor-driver boards
+- 500 mL control-tank cup with a maximum liquid volume of 450 mL
+- Cardboard enclosure to reduce interference from room light
+- Phone flashlight fixed directly opposite the colour sensor across the control tank
+- Arduino UNO R4 Minima powered from a laptop
 
 The controller adds dyed or clear water to move the measured concentration toward its target. The waste pump removes mixed liquid to manage the control-tank level. Start commissioning at a normal working volume of approximately 350 mL, leaving about 100 mL before the strict 450 mL maximum.
 
@@ -29,12 +30,12 @@ The [`rgb/`](dye%20concentration%20control/rgb/) folder contains the current SEN
 
 The temperature apparatus uses:
 
-- a waterproof DS18B20 temperature probe;
-- a 12 V DC, 15 W silicone heater pad attached to an aluminium plate;
-- a DFRobot DFR0473 relay to switch the heater;
-- one 3 V submersible coolant pump controlled through a DRV8833;
-- copper tubing formed into the coolant loop; and
-- an Arduino UNO R4 Minima powered from a laptop.
+- Waterproof DS18B20 temperature probe
+- 12 V DC, 15 W silicone heater pad attached to an aluminium plate
+- DFRobot DFR0473 relay to switch the heater
+- One 3 V submersible coolant pump controlled through a DRV8833
+- Copper tubing formed into the coolant loop
+- Arduino UNO R4 Minima powered from a laptop
 
 The aluminium plate is the controlled thermal load. The silicone pad heats the plate directly, copper tubing secured in thermal contact with the plate removes heat when coolant flows, and the DS18B20 is fastened to the plate to measure its temperature. The heater is connected to the relay’s `COM` and `NO` contacts and is therefore off when relay control power is lost.
 
@@ -72,23 +73,23 @@ The temperature sketches use `D2` for the relay, `D4` for the DS18B20, and `D10`
 - Verify the plate-mounted temperature probe against a known contact thermometer throughout the expected operating range.
 - Measure the coolant pump’s lowest reliable starting PWM.
 
-The existing flow curves and PID gains are starting points only; do not treat them as calibrated values.
+The existing flow curves and PID gains are starting points only. Do not treat them as calibrated values.
 
 #### Optional dye intensity-to-concentration calibration
 
-This procedure is needed only for `CALIBRATED_CONCENTRATION_PID_MODE`. Teams that only need repeatable control around a chosen sensor reading can use `INTENSITY_BAND_MODE` instead. The SEN0101 reports light intensity as a frequency; converting that frequency into a concentration unit depends on the dye colour, cup, liquid depth, sensor position and lighting.
+This procedure is needed only for `CALIBRATED_CONCENTRATION_PID_MODE`. Teams that only need repeatable control around a chosen sensor reading can use `INTENSITY_BAND_MODE` instead. The SEN0101 reports light intensity as a frequency. Converting that frequency into a concentration unit depends on the dye colour, cup, liquid depth, sensor position and lighting.
 
-1. Prepare one uniform **dyed-water reservoir solution** using a recorded quantity of raw dye and water. Use this same recipe in the apparatus. The operating reservoir can and normally should contain substantially more than the control-tank working volume; roughly 500 mL to 1 L is a practical starting range for a bench demonstration. Raw concentrated dye is not pumped directly into the control tank.
+1. Prepare one uniform **dyed-water reservoir solution** using a recorded quantity of raw dye and water. Use this same recipe in the apparatus. The operating reservoir can and normally should contain substantially more than the control-tank working volume. Roughly 500 mL to 1 L is a practical starting range for a bench demonstration. Raw concentrated dye is not pumped directly into the control tank.
 2. Select and mark one normal control-tank working volume. Start with `350 mL`, which leaves about 100 mL below the strict `450 mL` maximum in the 500 mL cup. Every calibration standard and every controlled run must use this same working volume because changing liquid depth changes the optical reading.
-3. Prepare at least six standards spanning the range expected during operation. Include clear water as the zero point. For a 350 mL total volume, an example relative series is 0, 7, 14, 21, 28 and 35 mL of dyed-water reservoir solution, with clear water added until each sample reaches exactly 350 mL. These correspond to 0%, 2%, 4%, 6%, 8% and 10% reservoir solution by volume. Measure each completed standard in the control tank; do not create the standards by pumping unmeasured amounts into it.
+3. Prepare at least six standards spanning the range expected during operation. Include clear water as the zero point. For a 350 mL total volume, an example relative series is 0, 7, 14, 21, 28 and 35 mL of dyed-water reservoir solution, with clear water added until each sample reaches exactly 350 mL. These correspond to 0%, 2%, 4%, 6%, 8% and 10% reservoir solution by volume. Measure each completed standard in the control tank. Do not create the standards by pumping unmeasured amounts into it.
 4. Assign concentration values using one consistent unit:
-   - if the dyed-water reservoir concentration is known, `C_standard = C_reservoir × V_reservoir / V_total`;
-   - if it is unknown, use relative reservoir-solution concentration, `% v/v = 100 × V_reservoir / V_total`.
+   - If the dyed-water reservoir concentration is known: `C_standard = C_reservoir × V_reservoir / V_total`
+   - If it is unknown, use relative reservoir-solution concentration: `% v/v = 100 × V_reservoir / V_total`
 5. Tape or rigidly mount the SEN0101 outside the transparent tank wall. Fix the phone flashlight directly opposite the sensor, at the same height, so its light passes through the liquid into the sensor. Keep the same control tank, 350 mL working volume, phone and flashlight setting, sensor/light distance, alignment and closed cardboard housing for every measurement. Do not cover either optical face with tape. Changing any part of this geometry or illumination invalidates the calibration.
-6. Upload `rgb/test_rgb/test_rgb.ino`. Compare the live red, green, blue and clear frequencies across the standards. Select the channel with the largest stable, monotonic change; green is the starting choice for red dye, but the measurements decide.
-7. For every standard, mix thoroughly, allow bubbles and motion to settle, then record at least three frequency readings. Use their average. In the Serial Monitor, select the channel with `r`, `g`, `b` or `c`, then enter `s <concentration>`; use `z` for the zero sample.
+6. Upload `rgb/test_rgb/test_rgb.ino`. Compare the live red, green, blue and clear frequencies across the standards. Select the channel with the largest stable, monotonic change. Green is the starting choice for red dye, but the measurements decide.
+7. For every standard, mix thoroughly, allow bubbles and motion to settle, then record at least three frequency readings. Use their average. In the Serial Monitor, select the channel with `r`, `g`, `b` or `c`, then enter `s <concentration>`. Use `z` for the zero sample.
 8. Set `CAL_POINT_COUNT` to the number of standards, then enter the averaged frequencies and matching concentrations into `CAL_INTENSITY_HZ` and `CAL_CONCENTRATION` in `rgb/dye_concentration_controller/dye_concentration_controller.ino`, ordered by increasing concentration. Set `CONCENTRATION_CHANNEL` to the selected colour filter, update `targetConcentration` to the same concentration unit, and only then set `CALIBRATION_READY = true`.
-9. Test one additional known concentration that was not used to build the table. If the calculated value is poor, add more standards or repeat the measurements before tuning the PID. Do not command a target outside the calibrated concentration range; the sketch clamps out-of-range sensor readings rather than extrapolating them.
+9. Test one additional known concentration that was not used to build the table. If the calculated value is poor, add more standards or repeat the measurements before tuning the PID. Do not command a target outside the calibrated concentration range. The sketch clamps out-of-range sensor readings rather than extrapolating them.
 
 Recalibrate whenever the dyed-water reservoir recipe, control tank, fill volume, phone or flashlight output, sensor/light position, enclosure or illumination changes.
 
@@ -101,8 +102,8 @@ Recalibrate whenever the dyed-water reservoir recipe, control tank, fill volume,
 ### 5. Verify safety behaviour
 
 - Keep liquids and tubing physically separated from all electronics.
-- Treat 450 mL as the absolute control-tank limit. Mark it visibly and add an independent high-level cutoff; calibrated waste-pump flow alone cannot detect a blockage, stalled pump or accumulating level error.
-- Use the 2 A inline fuse in the 12 V heater circuit.
+- Treat 450 mL as the absolute control-tank limit. Mark it visibly and add an independent high-level cutoff. Calibrated waste-pump flow alone cannot detect a blockage, stalled pump or accumulating level error.
+- Use a regulated 12 V supply with built-in current limiting and short-circuit protection.
 - Disconnect the DS18B20 during a supervised test and confirm that the heater turns off and cooling goes to maximum.
 - Trigger the software over-temperature limit deliberately during commissioning.
 
