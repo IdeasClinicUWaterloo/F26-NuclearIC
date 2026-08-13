@@ -8,9 +8,6 @@
 
 Created by Engineering IDEAs Clinic co-op students.
 
-## Accessibility
-
-This README uses descriptive headings, meaningful link names, short sections, and alt text for images so it is easier to navigate with screen readers and other assistive technologies. The challenge also welcomes accessible solutions that work for people with different needs and levels of technical experience.
 
 ## Table of Contents
 
