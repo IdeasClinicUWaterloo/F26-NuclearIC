@@ -307,14 +307,14 @@ void loop() {
  * Coolant pump, via DRV8833 OUT1/OUT2:
  *   IN1 <- Arduino pin 10 (PWM, speed)
  *   IN2 <- Arduino pin 11 (driven LOW by this sketch, fixed direction)
- *   GND  <- common ground (Arduino GND tied to the pump supply ground)
- *   VCC <- 3 V pump supply (+), separate from Arduino 5V
+ *   GND  <- common ground shared with Arduino GND
+ *   VCC  <- motor-driver supply (+), set for the selected pump
  *   OUT1/OUT2 -> the pump's two leads
  *   If exposed, SLP/SLEEP/nSLEEP -> Arduino 5V. Modules that only expose
  *   IN1-IN4 handle the sleep connection on the board.
  *
- *   The DRV8833 accepts 2.7-10.8 V on VCC, but the selected pump is rated for
- *   3 V. Do NOT connect the 12 V heater supply to this pump circuit.
+ *   The selected pump is rated for 3 V. Do NOT connect the 12 V heater supply
+ *   to this motor-driver circuit.
  *
  * COMMISSIONING ORDER (do these in sequence, do not skip ahead)
  *

@@ -6,9 +6,9 @@
 //   GND     -> Arduino GND
 //   OE      -> GND
 //   OUT     -> D2
-//   S0      -> D9
-//   S1      -> D10
-//   S2      -> D11
+//   S0      -> D4
+//   S1      -> D7
+//   S2      -> D8
 //   S3      -> D12
 //
 // Serial commands (set line ending to Newline):
@@ -27,9 +27,9 @@
 // into CAL_INTENSITY_HZ and CAL_CONCENTRATION in the main controller.
 
 const uint8_t SENSOR_OUT_PIN = 2;
-const uint8_t SENSOR_S0_PIN  = 9;
-const uint8_t SENSOR_S1_PIN  = 10;
-const uint8_t SENSOR_S2_PIN  = 11;
+const uint8_t SENSOR_S0_PIN  = 4;
+const uint8_t SENSOR_S1_PIN  = 7;
+const uint8_t SENSOR_S2_PIN  = 8;
 const uint8_t SENSOR_S3_PIN  = 12;
 
 enum ColourChannel : uint8_t {

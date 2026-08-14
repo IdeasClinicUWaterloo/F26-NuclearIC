@@ -24,20 +24,20 @@
 
 // ---------------- SEN0101 / TCS3200 pins ----------------
 const uint8_t SENSOR_OUT_PIN = 2;
-const uint8_t SENSOR_S0_PIN  = 9;
-const uint8_t SENSOR_S1_PIN  = 10;
-const uint8_t SENSOR_S2_PIN  = 11;
+const uint8_t SENSOR_S0_PIN  = 4;
+const uint8_t SENSOR_S1_PIN  = 7;
+const uint8_t SENSOR_S2_PIN  = 8;
 const uint8_t SENSOR_S3_PIN  = 12;
 
 // OE is tied directly to GND in the wiring guide, so no Arduino pin is needed.
 
 // ---------------- DRV8833 pump pins ----------------
 const uint8_t DYE_PUMP_PWM_PIN     = 3; // Driver 1 IN1
-const uint8_t DYE_PUMP_LOW_PIN     = 4; // Driver 1 IN2
-const uint8_t WATER_PUMP_PWM_PIN   = 5; // Driver 1 IN3
-const uint8_t WATER_PUMP_LOW_PIN   = 7; // Driver 1 IN4
-const uint8_t WASTE_PUMP_PWM_PIN   = 6; // Driver 2 IN1
-const uint8_t WASTE_PUMP_LOW_PIN   = 8; // Driver 2 IN2
+const uint8_t DYE_PUMP_LOW_PIN     = 5; // Driver 1 IN2
+const uint8_t WATER_PUMP_PWM_PIN   = 6; // Driver 1 IN3
+const uint8_t WATER_PUMP_LOW_PIN   = 9; // Driver 1 IN4
+const uint8_t WASTE_PUMP_PWM_PIN   = 10; // Driver 2 IN1
+const uint8_t WASTE_PUMP_LOW_PIN   = 11; // Driver 2 IN2
 
 // If exposed, each DRV8833 SLP/SLEEP/nSLEEP pin is tied to Arduino 5V.
 
