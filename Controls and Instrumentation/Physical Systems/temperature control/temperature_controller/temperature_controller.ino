@@ -56,7 +56,8 @@ const int PUMP_IN2_PIN     = 11; // DRV8833 IN2, held LOW in software (fixed dir
 const bool RELAY_ACTIVE_LOW = false;
 
 // ---------------- Setpoint ----------------
-double targetTempC = 40.0; // requested setpoint
+double targetTempC = 35.0; // adjustable setpoint
+const double MAX_SETPOINT_C = 45.0;
 
 // ---------------- Safety limits ----------------
 // Backstop sits well above the setpoint so ordinary tuning overshoot does not
@@ -192,6 +193,11 @@ void failSafe(const char *reason) {
 }
 
 void loop() {
+  // Keep participant-set targets below the apparatus limit.
+  if (targetTempC > MAX_SETPOINT_C) {
+    targetTempC = MAX_SETPOINT_C;
+  }
+
   unsigned long now = millis();
 
   // ---- collect a finished conversion, then immediately start the next ----
@@ -331,7 +337,7 @@ void loop() {
  *    dead time, and it is what makes the loop overshoot. A long lag means you
  *    need a smaller Kp and a larger Kd.
  * 5. Closed loop, and only now tune. Set Ki = Kd = 0, raise Kp until the plate
- *    reaches roughly 40 C with a steady oscillation, then halve it. Add Ki to
+ *    reaches roughly 35 C with a steady oscillation, then halve it. Add Ki to
  *    remove the remaining steady-state offset below setpoint -- go gently, it
  *    can cause slow creeping overshoot. Add Kd last, to damp overshoot when you
  *    step the setpoint.
@@ -341,11 +347,11 @@ void loop() {
  *    and confirm the same. A safety path you have never seen fire is not a
  *    safety path.
  *
- * WHY 40 C IS THE EASY DIRECTION TO GET WRONG
+ * WHY 35 C IS THE EASY DIRECTION TO GET WRONG
  *
- * At a 40 C setpoint, ambient is ~20 C below you and the pad is the only thing
+ * At a 35 C setpoint, ambient is ~15 C below you and the pad is the only thing
  * pushing up, so the loop will spend most of its life on the heating half of the
  * range and barely touch the pump. That is expected. The pump matters during
  * overshoot recovery and setpoint step-downs, which is exactly when a badly
- * tuned Ki will have already carried you past 40 C.
+ * tuned Ki will have already carried you past 35 C.
  */

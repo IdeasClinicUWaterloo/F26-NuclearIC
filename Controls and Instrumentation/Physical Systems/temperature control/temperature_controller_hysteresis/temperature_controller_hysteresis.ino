@@ -1,4 +1,4 @@
-// 40 C temperature controller -- hysteresis (bang-bang), no PID
+// 35 C temperature controller -- hysteresis (bang-bang), no PID
 //
 // Bench-test sketch. Simpler sibling of temperature_controller/, which runs the
 // same hardware under a split-range PID. Use this one to prove out the wiring,
@@ -30,16 +30,18 @@ const bool RELAY_ACTIVE_LOW = false;
 const uint8_t RELAY_ON_LEVEL  = RELAY_ACTIVE_LOW ? LOW : HIGH;
 const uint8_t RELAY_OFF_LEVEL = RELAY_ACTIVE_LOW ? HIGH : LOW;
 // ---------------- Temperature settings ----------------
-const float SETPOINT_C   = 40.0;
+constexpr float SETPOINT_C     = 35.0;
+constexpr float MAX_SETPOINT_C = 45.0;
+static_assert(SETPOINT_C <= MAX_SETPOINT_C, "SETPOINT_C must be 45 C or lower");
 const float HYSTERESIS_C = 0.5;
-const float HEATER_ON_C  = SETPOINT_C - HYSTERESIS_C; // 39.5
-const float HEATER_OFF_C = SETPOINT_C + HYSTERESIS_C; // 40.5
+const float HEATER_ON_C  = SETPOINT_C - HYSTERESIS_C; // 34.5
+const float HEATER_OFF_C = SETPOINT_C + HYSTERESIS_C; // 35.5
 // Derived from HEATER_OFF_C, not from SETPOINT_C: this guarantees the cooling
 // band sits entirely above the heating band no matter what HYSTERESIS_C is set
 // to. Anchoring PUMP_ON_C to the setpoint instead lets the two bands overlap
 // once HYSTERESIS_C exceeds the gap, and then both actuators run at once.
-const float PUMP_OFF_C = HEATER_OFF_C;       // 40.5, hand-off point
-const float PUMP_ON_C  = HEATER_OFF_C + 0.5; // 41.0, cooling starts here
+const float PUMP_OFF_C = HEATER_OFF_C;       // 35.5, hand-off point
+const float PUMP_ON_C  = HEATER_OFF_C + 0.5; // 36.0, cooling starts here
 // Independent over-temperature cutoff. Kept well clear of the setpoint because
 // bang-bang control plus the pad's stored heat overshoots noticeably on the
 // first warm-up -- a tighter limit just nuisance-trips before the rig settles.
@@ -145,7 +147,7 @@ void loop() {
  *    the pad is a MAINS part rather than low-voltage, the switched side is lethal
  *    and the module's open screw terminal is not appropriate. That needs an
  *    enclosed, strain-relieved build checked by someone qualified.
- * 5. Full loop. Expect visible overshoot past 40 C on the first warm-up; that is
+ * 5. Full loop. Expect visible overshoot past 35 C on the first warm-up; that is
  *    expected with bang-bang plate control and is the main thing the PID version
  *    improves on.
  * 6. Fire both safety paths on purpose. Unplug the probe mid-run and confirm the

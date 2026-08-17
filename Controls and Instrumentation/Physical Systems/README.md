@@ -67,6 +67,8 @@ Recalibrate when results change unexpectedly.
 
 The silicone pad heats the aluminium plate. The coolant tube cools it. The DS18B20 measures the plate temperature.
 
+The default setpoint is 35 °C. It can be changed up to 45 °C. The heater shuts off at 55 °C.
+
 Sketches:
 
 - [PID controller](temperature%20control/temperature_controller/temperature_controller.ino)
