@@ -52,7 +52,9 @@ The supported solutions below provide working materials that teams can build on.
 | --- | --- | --- |
 | **AI leak-detection model** | Train a model that identifies leaks from time-series sensor data. | [ML framework notebook](machine_learning/) |
 | **Simulated-vibration localization system** | Use a simple containment structure and simulated vibration readings to locate modelled leaks. | [Sensor localization tools](sensor_localization/) |
-| **Digital facility patrol simulation** | Program a drone or robot to search a simulated facility for leaks. | [3D simulation environment](leak-detection-simulation/) |
+| **Digital facility patrol simulation\*** | Program a drone or robot to search a simulated facility for leaks. | [3D simulation environment](leak-detection-simulation/) |
+
+*\*The Drone Simulation solution was created in an older version of Godot and may need to be updated to work properly. It is advised you only choose this solution if you have experience with game engines.*
 
 ### Ways to Extend the Supported Solutions
 
