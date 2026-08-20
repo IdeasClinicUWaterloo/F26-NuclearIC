@@ -2,6 +2,19 @@
 
 There are two separate builds: dye concentration and plate temperature control. Turn off all power before moving wires and keep electronics away from water.
 
+## Motor-driver power
+
+The DRV8833 motor drivers use a 9 V battery connected through the breadboard power rails.
+
+### Connecting the 9 V battery
+
+1. Disconnect the battery from its snap connector while making connections.
+2. Connect the snap connector's red wire to the motor-driver breadboard + rail.
+3. Connect the snap connector's black wire to the motor-driver breadboard - rail.
+4. Connect each DRV8833 `VCC` pin to the + rail and each `GND` pin to the - rail.
+5. Connect Arduino `GND` to the motor-driver - rail so the Arduino and DRV8833 inputs share a ground reference. Do not connect the motor-driver + rail to Arduino `5V`.
+6. Reconnect the battery only when the circuit is ready to test. Disconnect it after testing; do not leave it attached when the apparatus is unattended.
+
 ## Dye-concentration system
 
 ### Parts
@@ -10,7 +23,7 @@ There are two separate builds: dye concentration and plate temperature control. 
 - SEN0101 colour sensor
 - Three 3 V submersible pumps
 - Two DRV8833 motor drivers
-- DC motor-driver supply with a wire-terminal adapter
+- 9 V battery with a snap connector
 - Breadboard (BB), tubing and three reservoirs (clear, dye, waste)
 - 500 mL control tank
 - Cardboard box, phone flashlight and tape
@@ -19,8 +32,8 @@ There are two separate builds: dye concentration and plate temperature control. 
 
 | From | To |
 | --- | --- |
-| Motor-driver supply `+` | BB + rail |
-| Motor-driver supply `-` | BB - rail |
+| 9 V battery red wire (`+`) | BB + rail |
+| 9 V battery black wire (`-`) | BB - rail |
 | Both drivers `VCC` | BB + rail |
 | Both drivers `GND` | BB - rail |
 | Arduino `GND` | BB - rail |
@@ -82,10 +95,10 @@ The silicone pad heats the aluminium plate. The copper tube cools the plate. The
 - DFR0473 relay and 12 V heater supply
 - DS18B20 probe and 4.7 kΩ resistor
 - One 3 V submersible pump and one DRV8833
-- DC motor-driver supply with a wire-terminal adapter
+- 9 V battery with a snap connector
 - Two breadboards (BB), copper tubing and coolant reservoir
 
-The 12 V heater supply and the motor-driver supply are separate.
+The 12 V heater supply and the 9 V motor-driver battery are separate. Never connect the heater supply to the pump breadboard.
 
 ### Arduino, sensor and pump wiring
 
@@ -93,8 +106,8 @@ The 12 V heater supply and the motor-driver supply are separate.
 | --- | --- |
 | Arduino `5V` | Logic BB + rail |
 | Arduino `GND` | Logic BB - rail |
-| Motor-driver supply `+` | Pump BB + rail |
-| Motor-driver supply `-` | Pump BB - rail |
+| 9 V battery red wire (`+`) | Pump BB + rail |
+| 9 V battery black wire (`-`) | Pump BB - rail |
 | Pump BB - rail | Logic BB - rail |
 | DRV8833 `VCC` | Pump BB + rail |
 | DRV8833 `GND` | Pump BB - rail |
