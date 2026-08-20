@@ -7,6 +7,8 @@ This folder contains two Arduino control systems:
 
 Use [WIRING.md](WIRING.md) to build either system.
 
+The DRV8833 motor drivers are powered by a 9 V battery connected to the motor-driver power rails on the breadboard. See [Motor-driver power](WIRING.md#motor-driver-power) for the connection steps.
+
 ## Dye concentration
 
 Three pumps add dyed water, add clear water and remove waste water. A SEN0101 colour sensor measures the mixture in the control tank.
