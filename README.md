@@ -181,12 +181,6 @@ Judging will begin around 2:30pm on Sunday.
 | **Employee / Operator Safety** | Does the design account for risks to workers/users, such as ergonomics, exposure, and radiation safety? |
 | **Regulatory Awareness** | Has the team identified relevant Canadian regulations, such as CNSC requirements, the Nuclear Safety and Control Act, and Packaging and Transport Regulations? |
 
-#### Security
-| Category | What judges are looking for | 
-| --- | --- |
-| **Threat Awareness** | Has the team identified risks from misuse or bad actors? |
-| **Mitigation Measures** | How effective are the proposed protections, such as access control, fail-safes, and monitoring? |
-| **Transparency vs. Security** | Does the design responsibly balance openness and public transparency with the need for security? |
 
 #### Demo / Pitch / Presentation
 | Category | What judges are looking for |
