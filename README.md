@@ -159,41 +159,41 @@ Judging will begin around 2:30pm on Sunday.
 
 
 #### Ideation
-| Category | What judges are looking for | Score |
-| --- | --- | --- |
-| **Integration of Engineering and Science** | Is there at least 20% Engineering and at least 20% Science in each solution? | /10 |
-| **Relevance** | How relevant is the solution to the problem space? | /3 |
-| **Feasibility** | How feasible is the solution? | /3 |
-| **Impact** | How positively does the idea impact stakeholders? | /3 |
+| Category | What judges are looking for | 
+| --- | --- | 
+| **Integration of Engineering and Science** | Is there at least 20% Engineering and at least 20% Science in each solution? |
+| **Relevance** | How relevant is the solution to the problem space? |
+| **Feasibility** | How feasible is the solution? |
+| **Impact** | How positively does the idea impact stakeholders? |
 
 
 #### Quality of Output
-| Category | What judges are looking for | Score |
-| --- | --- | --- |
-| **Quality of Output** | At the time of judging, how put-together is the prototype, model, proposal, etc.? | /5 |
-| **Strength of Evidence** | How solid is the evidence for the proposed solution? Examples include literature review, calculations, and experimental results. | /5 |
-| **Representation of Final Solution** | How representative of the final solution is the output of the weekend? | /5 |
+| Category | What judges are looking for | 
+| --- | --- |
+| **Quality of Output** | At the time of judging, how put-together is the prototype, model, proposal, etc.? |
+| **Strength of Evidence** | How solid is the evidence for the proposed solution? Examples include literature review, calculations, and experimental results. |
+| **Representation of Final Solution** | How representative of the final solution is the output of the weekend? |
 
 #### Safety & Regulations
-| Category | What judges are looking for | Score |
-| --- | --- | --- |
-| **Public Safety Considerations** | Are risks to the general public recognized and addressed? | /3 |
-| **Employee / Operator Safety** | Does the design account for risks to workers/users, such as ergonomics, exposure, and radiation safety? | /3 |
-| **Regulatory Awareness** | Has the team identified relevant Canadian regulations, such as CNSC requirements, the Nuclear Safety and Control Act, and Packaging and Transport Regulations? | /3 |
+| Category | What judges are looking for |
+| --- | --- |
+| **Public Safety Considerations** | Are risks to the general public recognized and addressed? | 
+| **Employee / Operator Safety** | Does the design account for risks to workers/users, such as ergonomics, exposure, and radiation safety? |
+| **Regulatory Awareness** | Has the team identified relevant Canadian regulations, such as CNSC requirements, the Nuclear Safety and Control Act, and Packaging and Transport Regulations? |
 
 #### Security
-| Category | What judges are looking for | Score |
-| --- | --- | --- |
-| **Threat Awareness** | Has the team identified risks from misuse or bad actors? | /3 |
-| **Mitigation Measures** | How effective are the proposed protections, such as access control, fail-safes, and monitoring? | /3 |
-| **Transparency vs. Security** | Does the design responsibly balance openness and public transparency with the need for security? | /3 |
+| Category | What judges are looking for | 
+| --- | --- |
+| **Threat Awareness** | Has the team identified risks from misuse or bad actors? |
+| **Mitigation Measures** | How effective are the proposed protections, such as access control, fail-safes, and monitoring? |
+| **Transparency vs. Security** | Does the design responsibly balance openness and public transparency with the need for security? |
 
 #### Demo / Pitch / Presentation
-| Category | What judges are looking for | Score |
-| --- | --- | --- |
-| **Clarity** | How clear was the presentation in terms of explanation? | /5 |
-| **Depth** | Was the extent of the team's knowledge thoroughly expressed? | /5 |
-| **Demo** | How well designed was the demonstration? Was it an impactful way to demonstrate what the team tried to accomplish? | /5 |
+| Category | What judges are looking for |
+| --- | --- | 
+| **Clarity** | How clear was the presentation in terms of explanation? |
+| **Depth** | Was the extent of the team's knowledge thoroughly expressed? |
+| **Demo** | How well designed was the demonstration? Was it an impactful way to demonstrate what the team tried to accomplish? |
 
 
 
