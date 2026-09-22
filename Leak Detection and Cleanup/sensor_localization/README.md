@@ -140,7 +140,7 @@ $$\text{vib} = |\text{mag} - \text{average}(\text{mag})|$$
 
 1. **Rolling Buffers:** Stores incoming streams in a 200-sample plotting queue and a 50-sample (~1 second) calculation window (`AVG_WINDOW = 50`).
 2. **Threshold & Peak Selection:** Filters out ambient noise where `vib1 + vib2 <= NO_VIB_THRESHOLD` and selects the $K=20$ strongest samples (`TOP_K = 20`) in the rolling window.
-3. **Differential & Interpolation:** Calculates the mean value of selected peak samples for each sensor, computes $\text{diff} = \text{avg\_v1} - \text{avg\_v2}$, and performs 1D piecewise linear interpolation (`np.interp`) against sorted calibration points.
+3. **Differential & Interpolation:** Calculates the mean value of selected peak samples for each sensor, computes `diff = {avg\_v1} - {avg\_v2}`, and performs 1D piecewise linear interpolation (`np.interp`) against sorted calibration points.
 
 ---
 
