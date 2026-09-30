@@ -2,8 +2,16 @@
 
 Welcome to the Sensor Localization Challenge. This repository provides a baseline hardware and software setup designed to estimate the position of a localized vibration source (such as a leak) along a physical structure using accelerometer sensors and real-time signal processing.
 
-The baseline implementation reads acceleration data from two BMX160 sensors connected to an ESP32 microcontroller, calculates instantaneous vibration magnitudes relative to a rolling baseline, streams the data over serial to a host machine, and estimates the relative position percentage using peak selection and linear interpolation.
+The baseline implementation uses an **ESP32-C6** microcontroller with two **BMX160** sensors connected over I2C. It calculates instantaneous vibration magnitudes relative to a rolling baseline, streams the data over serial to a host machine, and estimates the relative position percentage using peak selection and linear interpolation.
 
+> **Alternative hardware:** The same setup can also be built with an **Arduino UNO R4 Minima** and two **MMA7361** analog accelerometers read through the ADC. Starter code is not provided for this configuration but the provided code can be adapted with minor changes. The localization method and objectives stay the same.
+
+> Key differences to account for:
+> * Read each sensor's X, Y, and Z outputs with `analogRead()` on pins A0–A5 instead of using the I2C library.
+> * Convert the ADC reading to acceleration using the MMA7361's zero-g offset and sensitivity ([see its datasheet](https://www.openimpulse.com/blog/wp-content/uploads/wpsc/downloadables/Triple-Axis-Accelerometer-Module-MMA7361L-Datasheet.pdf)).
+> * Tie each sensor's **SL** pin to 3.3V (otherwise the chip stays asleep) and **GS** to GND for the ±1.5 g range.
+> * Redo the calibration (`NO_VIB_THRESHOLD` and `CALIBRATION`), since the MMA7361 produces different values than the BMX160.
+> * In the Python scripts, update `PORT`, the plot's y-axis limit in `sensor_location.py`, and the `total > 30` threshold in `median.py` to suit the MMA7361's signal levels.
 ---
 
 ## Setup and Execution Guide
