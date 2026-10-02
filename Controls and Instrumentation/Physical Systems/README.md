@@ -28,8 +28,7 @@ LIGHTING MUST REMAIN AS CONSISTENT AS POSSIBLE THROUGHOUT THE CALIBRATION PROCES
 
 Provided Arduino Uno R4 Sketches:
 
-- [Dye controller](dye%20concentration%20control/rgb/dye_concentration_controller/dye_concentration_controller.ino)
-- [Sensor test and calibration](dye%20concentration%20control/rgb/test_rgb/test_rgb.ino)
+- [Dye Concentration Regulator]:(https://github.com/IdeasClinicUWaterloo/F26-NuclearIC/tree/main/Controls%20and%20Instrumentation/Physical%20Systems/Dye%20Concentration%20Regulator)
 
 ### Concentration Calibration
 The provided Arduino sketches should walk you through the calibration fairly clearly.
