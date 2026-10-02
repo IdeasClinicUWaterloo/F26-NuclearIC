@@ -9,47 +9,37 @@ Use [WIRING.md](WIRING.md) to build either system.
 
 The DRV8833 motor drivers are powered by a 9 V battery connected to the motor-driver power rails on the breadboard. See [Motor-driver power](WIRING.md#motor-driver-power) for the connection steps.
 
-## Dye concentration
+## Dye Concentration Regulator
 
 Three pumps add dyed water, add clear water and remove waste water. A SEN0101 colour sensor measures the mixture in the control tank.
 
-Tank levels:
+It is required for accuracy and precision that the colour sensor maintains a consistent height from the liquid surface.
+For this reason, all samples should be the same mL, which by default is 350mL.
+If you intend to change the control tank, dye tank, or clear tanks volume, this information must be appropriately translated into the program.
+By default, the dye and clear tanks should contain 400mL, whereas the control tank should contain 350mL.
 
-- Normal starting level: 350 mL
-- Maximum level: 450 mL
+No lighting solutions are required to assist the colour sensor, but the lighting should remain consistent to do this avoid the following:
++ casting shadows over measurements.
++ moving to another place in the room before taking a measure.
++ introducing a different colour or background object.
++ changing the lighting in any way.
 
-Keep the phone flashlight directly opposite the sensor. Tape both in place and close the cardboard box.
+LIGHTING MUST REMAIN AS CONSISTENT AS POSSIBLE THROUGHOUT THE CALIBRATION PROCESS.
 
-Sketches:
+Provided Arduino Uno R4 Sketches:
 
 - [Dye controller](dye%20concentration%20control/rgb/dye_concentration_controller/dye_concentration_controller.ino)
 - [Sensor test and calibration](dye%20concentration%20control/rgb/test_rgb/test_rgb.ino)
 
-### Control modes
+### Concentration Calibration
+The provided Arduino sketches should walk you through the calibration fairly clearly.
+1. Prepare at least 5 solutions of dye.
+2. Enter the concentrations in terms of number of drops (a drop is considered 0.05mL).
+3. allow sensor to read concentration.
+4. Repeat steps 2 and 3 for each solution.
+5. Once you have completed all solutions, you will find a beta0 and beta1 value, these are the required linear regression values.
 
-`INTENSITY_BAND_MODE` controls around a sensor reading. Set `TARGET_INTENSITY_HZ` and `INTENSITY_TOLERANCE_HZ`. Concentration calibration is not needed.
-
-`CALIBRATED_CONCENTRATION_PID_MODE` converts the sensor reading to concentration using measured samples.
-
-### Concentration calibration
-
-1. Mix the dyed-water reservoir and record the dye-to-water recipe.
-2. Keep every sample at 350 mL.
-3. Keep the sensor, phone and tank in the same positions.
-4. Prepare samples across the expected concentration range.
-5. Include clear water as the zero sample.
-
-Example samples:
-
-| Dyed reservoir water | Add clear water to | Relative concentration |
-| --- | --- | --- |
-| 0 mL | 350 mL | 0% |
-| 7 mL | 350 mL | 2% |
-| 14 mL | 350 mL | 4% |
-| 21 mL | 350 mL | 6% |
-| 28 mL | 350 mL | 8% |
-| 35 mL | 350 mL | 10% |
-
+## UPDATE THIS SECTION
 6. Upload `test_rgb.ino` and choose the most stable colour channel.
 7. Mix each sample and average at least three readings.
 8. Enter the readings in `CAL_INTENSITY_HZ`.
