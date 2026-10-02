@@ -28,7 +28,7 @@ LIGHTING MUST REMAIN AS CONSISTENT AS POSSIBLE THROUGHOUT THE CALIBRATION PROCES
 
 Provided Arduino Uno R4 Sketches:
 
-- [Dye Concentration Regulator]:(https://github.com/IdeasClinicUWaterloo/F26-NuclearIC/tree/main/Controls%20and%20Instrumentation/Physical%20Systems/Dye%20Concentration%20Regulator)
+- [Dye Concentration Regulator](https://github.com/IdeasClinicUWaterloo/F26-NuclearIC/tree/main/Controls%20and%20Instrumentation/Physical%20Systems/Dye%20Concentration%20Regulator)
 
 ### Concentration Calibration
 The provided Arduino sketches should walk you through the calibration fairly clearly.
