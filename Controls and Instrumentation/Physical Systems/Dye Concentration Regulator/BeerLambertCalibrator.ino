@@ -1,4 +1,4 @@
-// Created by Ethan Nauta
+// Created by 3thanaut
 
 // Colour Sensor input and output pins.
 int out = 2;
