@@ -37,16 +37,26 @@ void loop() {
      H | L  | CLEAR
      H | H  | GREEN
   */
-  // start with green filter
-  digitalWrite(s2, HIGH);
-  digitalWrite(s3, HIGH);
-
-  Serial.println("What colour do you want to use?");
-  Serial.println("r = red");
-  Serial.println("g = green");
-  Serial.println("b = blue");
 
   if (!colour_chosen) {
+
+    while (true) {
+      if (Serial.available() > 0) {
+        char input = Serial.read();
+
+        if (input == 'y' || input == 'Y') {
+          break;
+        }
+      }
+      Serial.println("Enter Y to continue.");
+      delay(1000);
+    }
+
+    Serial.println("What colour do you want to use?");
+    Serial.println("r = red");
+    Serial.println("g = green");
+    Serial.println("b = blue");
+
     while (true) {
       if (Serial.available() > 0) {
         char input = Serial.read();
