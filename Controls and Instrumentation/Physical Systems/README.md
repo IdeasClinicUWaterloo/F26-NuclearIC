@@ -40,6 +40,16 @@ Upload [BeerLambertCalibrator.ino](https://github.com/IdeasClinicUWaterloo/F26-N
 5. Repeat steps 3 and 4 for each solution with dye.
 6. Once you have completed all solutions, you have all the information you need!
 
+### Solutions Example
+<img width="2160" height="2880" alt="IMG_3521" src="https://github.com/user-attachments/assets/4731959d-4d53-4e9d-b63f-20cb646186d9" />
+
+### Electronics Example
+<img width="2160" height="2880" alt="IMG_3518" src="https://github.com/user-attachments/assets/e3b0962f-ea73-4874-bd51-fe5a8a3c6a65" />
+
+### Setup Example
+<img width="2880" height="2160" alt="IMG_3520" src="https://github.com/user-attachments/assets/4d4d9817-038b-4cd8-96e8-b8c34f0771f7" />
+
+
 ### Concentration Regulation
 The information required for this program is the clear solutions frequency, beta0 and beta1 values, and the dye reservoir frequency (readable via [SimpleFrequencyChecker.ino](https://github.com/IdeasClinicUWaterloo/F26-NuclearIC/blob/main/Controls%20and%20Instrumentation/Physical%20Systems/Dye%20Concentration%20Regulator/SimpleFrequencyChecker.ino))
 
