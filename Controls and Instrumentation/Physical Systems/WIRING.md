@@ -74,15 +74,7 @@ All IN wires from the driver *must* be connected to PWM pins (those with ~)
 - Put the phone flashlight directly opposite the sensor at the same height
 - Keep the phone, sensor and tank fixed inside the closed cardboard box
 
-The code does not measure tank level. Watch the tank during operation and do not let it pass 450 mL.
-
-### Calibration
-
-For intensity control, measure the desired sensor reading with `rgb/test_rgb/test_rgb.ino` and enter it as `TARGET_INTENSITY_HZ`.
-
-For concentration control, prepare known mixtures using the same dyed-water reservoir solution used by the pump. Measure every sample at the same 350 mL volume with the sensor and phone in their fixed positions.
-
-See the [Physical Systems README](README.md#optional-dye-intensity-to-concentration-calibration) for the calibration steps.
+The code does not measure tank level, ideally, the pumps can be calibrated to keep constant tank level. Watch the tank during operation and do not let it pass 450 mL.
 
 ## Temperature-control system
 
