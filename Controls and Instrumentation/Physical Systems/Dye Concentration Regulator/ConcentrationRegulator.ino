@@ -22,11 +22,12 @@ int current_low = DYE_PUMP_LOW_PIN;
 float reservoir_volume = 400;
 float control_tank_volume = 350; // in mL
 float pump_output = 7; // in mL/s
+float residence_time = control_tank_volume / pump_output;
 
 // User input values.
-float clear_frequency = 1597.44;
-float beta0 = -0.0005042082;
-float beta1 = 0.0013905831;
+float clear_frequency = 4273.50;
+float beta0 = -0.0011347929;
+float beta1 =  0.0024182338;
 
 // Bounds so program doesn't run for eternity.
 float max_time = (reservoir_volume - 50)/pump_output; // subtracting 50mL to keep pump submerged.
@@ -70,8 +71,10 @@ float setTargetConcentration(float initial_concentration, float reservoir_concen
     current_low = CLEAR_PUMP_LOW_PIN;
   }
 
-  // equation for time derived from the differential represented by dx/dt = rate_in - rate_out. Where x is the amount of solute in the control tank
-  float time = (-control_tank_volume / pump_output) * log((target_concentration - reservoir_concentration)/(initial_concentration - reservoir_concentration));
+  // function derived from differential, need the difference in time
+  float time_to_target = -residence_time * log(1 - (target_concentration / reservoir_concentration));
+  float time_to_current = -residence_time * log(1 - (initial_concentration / reservoir_concentration));
+  float time = abs(time_to_current - time_to_target);
 
   if (time > max_time) {
     Serial.println("Target concentration outside of attainable range.");
@@ -120,9 +123,12 @@ void loop() {
      H | L  | CLEAR
      H | H  | GREEN
   */
-  // start with green filter
-  digitalWrite(s2, HIGH);
-  digitalWrite(s3, HIGH);
+  // start with proper filter
+  digitalWrite(s2, LOW);
+  digitalWrite(s3, LOW);
+
+  // give sensor breathing room.
+  delay (500);
 
   // finds the concentration of the control tank.
   float initial_frequency = 1000000/(2 * pulseIn(out, HIGH));
@@ -145,25 +151,33 @@ void loop() {
     delay(1000);
   }
 
-  Serial.print("Frequency: ");
+  Serial.print("Control Tank Frequency: ");
   Serial.println(initial_frequency);
-  Serial.print("Control tank absorption: ");
+  Serial.print("Control Tank Absorption: ");
   Serial.println(initial_absorption);
-  Serial.print("Control tank concentration: ");
+  Serial.print("Control Tank Concentration: ");
   Serial.println(initial_concentration, 10);
 
+  // after reading the tank concentration, the reservoir concentration is requested.
+  // This allows users to keep the reservoir in place, and gives time to put the control tank back.
+  // Reservoir frequency may also change between loops, same with control tank, therefore its requested alongside it.
+  // However, clear frequency and the calibration values should not have to change.
   Serial.println("Enter the dye reservoir frequency: ");
   float reservoir_frequency = readFloat();
   float reservoir_absorption = -log10(reservoir_frequency / clear_frequency);
   float reservoir_concentration = beta0 + beta1 * reservoir_absorption;
 
   float target_concentration = setTargetConcentration(initial_concentration, reservoir_concentration);
-  // equation for time derived from the differential represented by dx/dt = rate_in - rate_out. Where x is the amount of solute in the control tank
-  float time = (-control_tank_volume / pump_output) * log((target_concentration - reservoir_concentration)/(initial_concentration - reservoir_concentration));
+
+  // function derived from differential, need the difference in time
+  float time_to_target = -residence_time * log(1 - (target_concentration / reservoir_concentration));
+  float time_to_current = -residence_time * log(1 - (initial_concentration / reservoir_concentration));
+  float time = abs(time_to_current - time_to_target);
+
   Serial.println(time);
 
   // Should give roughly 3V to the required pumps
-  analogWrite(current_pwm, 85);
+  analogWrite(current_pwm, 170); // needs to be tuned to appropriately run.
   digitalWrite(current_low, LOW);
 
   analogWrite(WASTE_PUMP_PWM_PIN, 85);
@@ -181,6 +195,6 @@ void loop() {
 
   while (true) {
     Serial.println("Regulation Complete!");
-    delay(1000);
+    delay(60000);
   }
 }
