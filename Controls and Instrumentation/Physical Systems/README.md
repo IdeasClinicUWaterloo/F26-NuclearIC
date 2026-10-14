@@ -23,7 +23,7 @@ No lighting solutions are required to assist the colour sensor, but the lighting
 + moving to another place in the room before taking a measure.
 + introducing a different colour or background object.
 + changing the lighting in any way.
-
++ 
 LIGHTING MUST REMAIN AS CONSISTENT AS POSSIBLE THROUGHOUT THE CALIBRATION PROCESS.
 
 Provided Arduino Uno R4 Sketches:
@@ -52,6 +52,9 @@ Upload [BeerLambertCalibrator.ino](https://github.com/IdeasClinicUWaterloo/F26-N
 
 ### Concentration Regulation
 The information required for this program is the clear solutions frequency, beta0 and beta1 values, and the dye reservoir frequency (readable via [SimpleFrequencyChecker.ino](https://github.com/IdeasClinicUWaterloo/F26-NuclearIC/blob/main/Controls%20and%20Instrumentation/Physical%20Systems/Dye%20Concentration%20Regulator/SimpleFrequencyChecker.ino))
+
+This information is collected via the SimpleFrequencyChecker.ino program. When checking a solutions frequency, do not move the colour sensor. Try to move the solution under the colour sensor instead.
+This helps maintain a consistent light environment, which will help you assure that your readings are very accurate.
 
 Each loop initially reads the control tank frequency then requests the reservoir frequency.
 Clear frequency, beta1, and beta0 are changed manually by changing their global variable values. This is because these should not change between regulation loops.
